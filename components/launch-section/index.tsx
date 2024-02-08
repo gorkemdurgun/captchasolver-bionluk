@@ -10,7 +10,7 @@ import {
   PiShieldCheckDuotone,
   PiCheckCircleDuotone
 } from "react-icons/pi";
-import Text from "../../../../components/text";
+import Text from "../text";
 
 import { useLottie } from "lottie-react";
 import LaunchSectionLayout from "./layout";
@@ -50,31 +50,31 @@ export const LaunchSection = () => {
 
   return (
     <LaunchSectionLayout>
-      <div className="grid grid-cols-2 items-center w-full gap-4 py-8 px-6 md:py-10">
-        <div className="flex flex-col items-start justify-center gap-4">
+      <div className="grid grid-cols-1 items-center w-full gap-4 py-8 px-6 md:grid-cols-2 md:py-10">
+        <div className="flex flex-col items-start justify-center gap-4 order-2 md:order-1">
           {/* Title */}
           <span className="flex flex-col items-start justify-center gap-0">
-            <Text className="font-protest text-red-700 lg:text-5xl md:text-4xl">
+            <Text className="font-protest text-red-700 text-3xl lg:text-5xl md:text-4xl">
               Solve automation for
             </Text>
-            <Text className="font-protest text-red-700 lg:text-6xl md:text-4xl">
+            <Text className="font-protest text-red-700 text-3xl lg:text-6xl md:text-4xl">
               Recaptcha systems
             </Text>
           </span>
           {/* Description */}
-          <Text className="font-inter text-gray-800 leading-tight font-medium lg:text-lg md:text-md">
+          <Text className="font-inter text-gray-800 leading-tight font-medium text-sm mt-0 mb-0 md:text-lg mt-2 mb-4">
             We provide a simple and easy-to-use API to solve Recaptcha systems
             with a high success rate. Get started with our free plan today!
           </Text>
           {/* Features */}
-          <div className="grid items-start justify-center lg:grid-cols-2 gap-4 md:gap-2">
+          <div className="grid grid-cols-1 gap-2 items-start justify-center lg:grid-cols-2 lg:gap-4">
             {features.map((feature, index) => (
               <span
                 key={index}
                 className="flex flex-row items-center justify-start gap-2"
               >
-                <feature.icon className="text-2xl text-red-700" />
-                <Text className="text-lg font-inter text-gray-800 font-medium">
+                <feature.icon className="text-lg text-red-700 md:text-2xl" />
+                <Text className="text-md font-inter text-gray-800 font-medium md:text-xl">
                   {feature.title}
                 </Text>
               </span>
@@ -94,7 +94,7 @@ export const LaunchSection = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-4 xl:scale-125">
+        <div className="flex flex-col items-center justify-center gap-4 order-1 md:scale-125">
           <div className="h-full xl:scale-150 md:scale-150">
             {RedRobotLottieAnimation}
           </div>

@@ -1,4 +1,4 @@
-export default function LaunchSectionLayout({
+export default function UseCasesSectionLayout({
   children
 }: {
   children: React.ReactNode;
