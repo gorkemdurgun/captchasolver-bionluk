@@ -1,4 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Protest+Strike&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  /* Button Styles */
+  .primary-button {
+    @apply rounded-lg border-2 border-black p-6 !transition-all hover:bg-gray-100 hover:shadow-button-hover;
+  }
+}
+
+@layer utilities {
+  /* Utility Classes */
+  .font-protest-strike {
+    font-family: "Protest Strike", sans-serif;
+  }
+
+  .font-inter {
+    font-family: "Inter", sans-serif;
+  }
+}
+
+@layer text {
+  /* Text Styles */
+  .text-major {
+    @apply font-bold font-protest-strike;
+  }
+
+  .text-body {
+    @apply font-normal font-inter;
+  }
+}
