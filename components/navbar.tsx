@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -18,6 +20,8 @@ import { siteConfig } from "@/config/site";
 import NextLink from "next/link";
 import clsx from "clsx";
 
+import { PiCaretCircleRightDuotone as GoDashboardIcon } from "react-icons/pi";
+
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
   TwitterIcon,
@@ -30,6 +34,9 @@ import {
 import { Logo } from "@/components/icons";
 import Image from "next/image";
 import { svg } from "@/public/assets";
+import { User } from "@nextui-org/react";
+import { useState } from "react";
+import Text from "./text";
 
 export const Navbar = () => {
   const searchInput = (
@@ -52,6 +59,8 @@ export const Navbar = () => {
       type="search"
     />
   );
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -89,18 +98,45 @@ export const Navbar = () => {
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden sm:flex gap-2">
+        {/* <NavbarItem className="hidden sm:flex gap-2">
           <Link isExternal href={siteConfig.links.discord} aria-label="Discord">
             <DiscordIcon className="text-default-500" />
           </Link>
-          {/* <ThemeSwitch /> */}
-        </NavbarItem>
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+          <ThemeSwitch /> 
+        </NavbarItem> */}
+        {isAuthenticated ? (
+          <NavbarItem className="flex gap-2 items-center">
+            <User
+              className="text-body text-white font-bold"
+              name="Luisa Morris"
+              avatarProps={{
+                className: "rounded-2xl border-2 w-8 h-8",
+                src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
+              }}
+            />
+            <Button
+              className="bg-transparent p-0 hover:bg-gray-800 min-w-unit-12"
+              onClick={() => setIsAuthenticated(false)}
+            >
+              <GoDashboardIcon className="text-xl text-white" />
+            </Button>
+          </NavbarItem>
+        ) : (
+          <NavbarItem>
+            <Button
+              className="primary-button border-none bg-white/10 py-2 px-12 hover:bg-white/20"
+              onClick={() => setIsAuthenticated(true)}
+            >
+              <Text className="text-body text-white text-lg">Sign In</Text>
+            </Button>
+          </NavbarItem>
+        )}
+        {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
       </NavbarContent>
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-        <Link isExternal href={siteConfig.links.github} aria-label="Github">
+        {/* <Link isExternal href={siteConfig.links.discord} aria-label="Discord">
           <DiscordIcon className="text-default-500" />
-        </Link>
+        </Link> */}
         {/* <ThemeSwitch /> */}
         <NavbarMenuToggle />
       </NavbarContent>
