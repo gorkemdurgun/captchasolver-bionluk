@@ -12,7 +12,7 @@ import {
 } from "react-icons/pi";
 import Text from "../text";
 
-import { useLottie } from "lottie-react";
+import { LottieOptions, useLottie } from "lottie-react";
 import LaunchSectionLayout from "./layout";
 
 const features = [
@@ -40,13 +40,13 @@ const features = [
 ];
 
 export const LaunchSection = () => {
-  const options = {
-    animationData: lotties.RedRobotLottie,
+  const options: LottieOptions = {
+    animationData: lotties.SolvePuzzleLottie,
     loop: true,
     autoplay: true
   };
 
-  const { View: RedRobotLottieAnimation } = useLottie(options);
+  const { View: SolvePuzzleLottieAnimation } = useLottie(options);
 
   return (
     <LaunchSectionLayout>
@@ -62,7 +62,7 @@ export const LaunchSection = () => {
             </Text>
           </span>
           {/* Description */}
-          <Text className="font-body font-medium text-gray-800 text-sm mb-2 md:text-lg mt-2 mb-4">
+          <Text className="text-body font-medium text-gray-800 text-sm mb-2 md:text-lg mt-2 mb-4">
             We provide a simple and easy-to-use API to solve Recaptcha systems
             with a high success rate. Get started with our free plan today!
           </Text>
@@ -94,9 +94,9 @@ export const LaunchSection = () => {
             </Button>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-4 order-1 md:scale-125">
-          <div className="h-full xl:scale-150 md:scale-150">
-            {RedRobotLottieAnimation}
+        <div className="flex flex-col items-center justify-center gap-4 order-1">
+          <div className="h-full xl:scale-125">
+            {SolvePuzzleLottieAnimation}
           </div>
         </div>
       </div>
