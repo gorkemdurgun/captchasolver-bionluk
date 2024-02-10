@@ -1,4 +1,4 @@
-import { Button, Card } from "@nextui-org/react";
+import { Button, Card, Divider } from "@nextui-org/react";
 import Text from "../text";
 import PricingSectionLayout from "./layout";
 
@@ -45,9 +45,18 @@ export const PricingSection = () => {
   return (
     <PricingSectionLayout>
       <div className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
-        <Text className="text-major text-black text-3xl md:text-5xl">
-          PRICING PLANS
+        <span className="px-64 py-2 rounded-sm bg-gradient-to-r from-red-100/10 via-gray-100 to-red-100/10">
+          <Text className="text-major text-black text-3xl md:text-5xl">
+            PRICING PLANS
+          </Text>
+        </span>
+        <Text className="text-body text-black text-lg text-center">
+          Choose the right plan for your needs. We offer different plans to
+          match your requirements. You can also contact us for custom plans. If
+          have any questions, feel free to contact us. We are here to help you.
+          We also offer a 30-day money-back guarantee.
         </Text>
+        <Divider className="w-full my-4" />
         <div className="grid grid-cols-3 w-full gap-8">
           {pricingPlans?.map((plan, index) => (
             <Card

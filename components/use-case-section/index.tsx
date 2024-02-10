@@ -2,7 +2,7 @@
 
 import { lotties, svg } from "@/public/assets";
 
-import { Button, Card, Snippet, Tab, Tabs } from "@nextui-org/react";
+import { Button, Card, Divider, Snippet, Tab, Tabs } from "@nextui-org/react";
 import Image from "next/image";
 import {
   PiRocketLaunchDuotone,
@@ -57,9 +57,18 @@ export const UseCaseSection = () => {
   return (
     <UseCasesSectionLayout>
       <div className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
-        <Text className="text-major text-black text-3xl md:text-5xl">
-          HOW TO USE API ?
+        <span className="px-64 py-2 rounded-sm bg-gradient-to-r from-red-100/10 via-gray-100 to-red-100/10">
+          <Text className="text-major text-black text-3xl md:text-5xl">
+            HOW TO USE API ?
+          </Text>
+        </span>
+        <Text className="text-body text-black text-lg text-center">
+          This is a simple guide to get you started with CaptchaSolver. You can
+          use it with Python and Go. For more information, check the
+          documentation. You can also check the examples in the repository to
+          see how to use it with other languages.
         </Text>
+        <Divider className="w-full my-4" />
         <Card
           className="border-2 border-black bg-white w-full px-4 py-8 my-8"
           shadow="lg"
