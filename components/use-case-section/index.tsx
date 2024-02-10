@@ -68,7 +68,7 @@ export const UseCaseSection = () => {
           documentation. You can also check the examples in the repository to
           see how to use it with other languages.
         </Text>
-        <Divider className="w-full my-4" />
+        <Divider className="none w-full lg:my-4" />
         <Card className="bg-white w-full px-4 py-8 my-8" shadow="lg">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="flex flex-col items-start justify-between gap-4">
