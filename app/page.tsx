@@ -22,9 +22,9 @@ export default function Home() {
       <CustomDivider />
       <UseCaseSection />
       <CustomDivider />
-      <PricingSection />
-      <CustomDivider />
       <BlogSection />
+      <CustomDivider />
+      <PricingSection />
     </div>
   );
 }

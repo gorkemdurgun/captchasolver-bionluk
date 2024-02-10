@@ -2,18 +2,38 @@
 
 import { lotties, svg } from "@/public/assets";
 
-import { Button } from "@nextui-org/react";
+import { Button, Card, Divider } from "@nextui-org/react";
 import Image from "next/image";
 import {
   PiRocketLaunchDuotone,
   PiSmileyDuotone,
   PiShieldCheckDuotone,
-  PiCheckCircleDuotone
+  PiCheckCircleDuotone,
+  PiRocketDuotone as PiRocket
 } from "react-icons/pi";
 import Text from "../text";
 
 import { LottieOptions, useLottie } from "lottie-react";
 import LaunchSectionLayout from "./layout";
+
+const technologies = [
+  {
+    name: "Python",
+    icon: "https://www.svgrepo.com/show/452091/python.svg"
+  },
+  {
+    name: "Docker",
+    icon: "https://www.svgrepo.com/show/448221/docker.svg"
+  },
+  {
+    name: "React.js",
+    icon: "https://www.svgrepo.com/show/354259/react.svg"
+  },
+  {
+    name: "TypeScript",
+    icon: "https://www.svgrepo.com/show/354478/typescript-icon.svg"
+  }
+];
 
 const features = [
   {
@@ -50,38 +70,25 @@ export const LaunchSection = () => {
 
   return (
     <LaunchSectionLayout>
-      <div className="grid grid-cols-1 items-center w-full gap-4 py-8 px-6 md:grid-cols-2 md:py-10">
+      {/* Title */}
+      <span className="flex flex-col items-center justify-center mt-4 gap-0">
+        <Text className="text-major text-red-700 text-3xl  lg:text-6xl md:text-4xl">
+          Solve automation for
+        </Text>
+        <Text className="text-major text-red-700 text-3xl lg:text-7xl md:text-4xl">
+          Recaptcha systems
+        </Text>
+      </span>
+      <div className="grid grid-cols-1 items-center w-full gap-4 mb-4 py-2 px-6 md:p-8 md:grid-cols-2 md:py-2">
         <div className="flex flex-col items-start justify-center gap-4 order-2 md:order-1">
-          {/* Title */}
-          <span className="flex flex-col items-start justify-center gap-0">
-            <Text className="text-major text-red-700 text-3xl lg:text-5xl md:text-4xl">
-              Solve automation for
-            </Text>
-            <Text className="text-major text-red-700 text-3xl lg:text-6xl md:text-4xl">
-              Recaptcha systems
-            </Text>
-          </span>
           {/* Description */}
-          <Text className="text-body font-medium text-gray-800 text-sm mb-2 md:text-lg mt-2 mb-4">
+          <Text className="text-body font-Xsemibold text-black text-justify text-md mb-2 max-w-[500px] md:text-xl mt-2 mb-4">
             We provide a simple and easy-to-use API to solve Recaptcha systems
-            with a high success rate. Get started with our free plan today!
+            with a high success rate. Can be integrated into any project with
+            ease. Get started with our free plan today!
           </Text>
-          {/* Features */}
-          <div className="grid grid-cols-1 gap-2 items-start justify-center lg:grid-cols-2 lg:gap-4">
-            {features.map((feature, index) => (
-              <span
-                key={index}
-                className="flex flex-row items-center justify-start gap-2"
-              >
-                <feature.icon className="text-lg text-red-700 md:text-2xl" />
-                <Text className="font-body text-gray-800 font-medium md:text-xl">
-                  {feature.title}
-                </Text>
-              </span>
-            ))}
-          </div>
           {/* Buttons */}
-          <div className="flex flex-col items-center justify-start gap-4 mt-4 w-full lg:w-auto lg:flex-row">
+          <div className="flex flex-col items-center justify-start gap-4 mt-4 w-full max-w-[500px]">
             <Button className="primary-button bg-red-400 hover:bg-red-600 w-full">
               <Text className="font-body text-white text-lg font-bold">
                 Get Started
@@ -95,10 +102,29 @@ export const LaunchSection = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center gap-4 order-1">
-          <div className="h-full xl:scale-125">
+          <div className="h-full xl:scale-105">
             {SolvePuzzleLottieAnimation}
           </div>
         </div>
+      </div>
+      <div className="flex flex-col items-center justify-center gap-4 py-4 w-full lg:flex-row lg:gap-8">
+        {features.map((feature, index) => {
+          const Icon = feature.icon;
+          return (
+            <Card
+              key={index}
+              className="flex flex-col items-center justify-center gap-4 w-full max-w-[300px] p-4 bg-white shadow-lg rounded-md"
+            >
+              <Icon className="text-red-700 text-4xl" />
+              <Text className="text-major text-red-700 text-xl font-bold">
+                {feature.title}
+              </Text>
+              <Text className="text-body text-gray-900 text-md text-center">
+                {feature.description}
+              </Text>
+            </Card>
+          );
+        })}
       </div>
     </LaunchSectionLayout>
   );
