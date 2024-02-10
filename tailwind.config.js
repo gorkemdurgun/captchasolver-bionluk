@@ -14,7 +14,7 @@ module.exports = {
       protest: ["Protest Strike", "sans-serif"]
     },
     boxShadow: {
-      "button-hover": "5px 5px 0 rgba(0, 0, 0, 0.7)"
+      "button-hover": "0px 10px 0 rgba(0, 0, 0, 0.2)"
     }
   },
   darkMode: "class",

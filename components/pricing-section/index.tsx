@@ -61,7 +61,7 @@ export const PricingSection = () => {
           {pricingPlans?.map((plan, index) => (
             <Card
               key={index}
-              className="flex flex-col justify-start border-2 border-black bg-white w-full gap-2 px-4 pt-6 pb-8"
+              className="flex flex-col justify-start bg-white w-full gap-2 px-4 pt-6 pb-8"
               shadow="lg"
             >
               <div
@@ -92,7 +92,7 @@ export const PricingSection = () => {
                   </span>
                 ))}
               </div>
-              <Button className="primary-button bg-transparent mt-auto mb-0">
+              <Button className="primary-button bg-gray-50 mt-auto mb-0">
                 <Text className="text-body text-black text-lg">
                   Get Started
                 </Text>
