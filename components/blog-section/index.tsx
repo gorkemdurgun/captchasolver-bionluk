@@ -63,12 +63,12 @@ export const BlogSection = () => {
   return (
     <BlogSectionLayout>
       <div className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
-        <span className="px-64 py-2 rounded-sm bg-gradient-to-r from-red-100/5 via-gray-100 to-red-100/5">
+        <span className="px-12 py-2 rounded-sm bg-gradient-to-r from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
           <Text className="text-major text-black text-3xl md:text-5xl">
             BLOG POSTS
           </Text>
         </span>
-        <Text className="text-body text-black text-lg text-center">
+        <Text className="text-body text-black text-md text-center lg:text-xl">
           Read our latest blog posts to stay updated with our services and
           products. We share our knowledge and experience to help you grow your
           business. We also share tips and tricks to help you solve captchas.
@@ -118,7 +118,7 @@ export const BlogSection = () => {
             </Card>
           ))}
         </div>
-        <Button className="primary-button bg-black mt-4 min-w-[400px] hover:bg-black">
+        <Button className="primary-button bg-black mt-4 w-full hover:bg-black lg:min-w-[400px]">
           <Text className="text-body text-white text-lg">Read More</Text>
           <PiArrowDownIcon className="text-white text-xl" />
         </Button>

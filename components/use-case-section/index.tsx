@@ -57,12 +57,12 @@ export const UseCaseSection = () => {
   return (
     <UseCasesSectionLayout>
       <div className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
-        <span className="px-64 py-2 rounded-sm bg-gradient-to-r from-red-100/5 via-gray-100 to-red-100/5">
+        <span className="px-12 py-2 rounded-sm bg-gradient-to-r from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
           <Text className="text-major text-black text-3xl md:text-5xl">
             HOW TO USE API ?
           </Text>
         </span>
-        <Text className="text-body text-black text-lg text-center">
+        <Text className="text-body text-black text-md text-center lg:text-xl">
           This is a simple guide to get you started with CaptchaSolver. You can
           use it with Python and Go. For more information, check the
           documentation. You can also check the examples in the repository to
@@ -73,7 +73,7 @@ export const UseCaseSection = () => {
           className="border-2 border-black bg-white w-full px-4 py-8 my-8"
           shadow="lg"
         >
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="flex flex-col items-start justify-between gap-4">
               <span className="flex flex-col items-start justify-start gap-2">
                 <Text className="text-body text-black text-lg font-bold">
@@ -108,10 +108,10 @@ export const UseCaseSection = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center gap-4">
+            <div className="hidden flex-col items-center justify-center gap-4 lg:flex">
               <Card
                 isBlurred
-                className="border-none rounded-md w-full p-4 dark:bg-gray-700/50"
+                className=" border-none rounded-md w-full p-4 dark:bg-gray-700/50"
                 shadow="sm"
               >
                 <Tabs aria-label="Options">
@@ -122,10 +122,10 @@ export const UseCaseSection = () => {
                           key={index}
                           className="flex flex-col items-start justify-start gap-1"
                         >
-                          <Text className="text-body text-black text-sm font-bold">
+                          <Text className="text-body text-black text-xs font-bold lg:text-sm">
                             {`${index + 1}. ${step.title}`}
                           </Text>
-                          <Snippet className="text-body text-black text-sm bg-gray-200">
+                          <Snippet className="text-body text-black text-xs bg-gray-200 lg:text-xs">
                             {step.snippet}
                           </Snippet>
                         </span>

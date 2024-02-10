@@ -81,13 +81,13 @@ export const LaunchSection = () => {
             ))}
           </div>
           {/* Buttons */}
-          <div className="flex flex-row items-center justify-start gap-4 mt-4">
-            <Button className="primary-button bg-red-400 hover:bg-red-600">
+          <div className="flex flex-col items-center justify-start gap-4 mt-4 w-full lg:w-auto lg:flex-row">
+            <Button className="primary-button bg-red-400 hover:bg-red-600 w-full">
               <Text className="font-body text-white text-lg font-bold">
                 Get Started
               </Text>
             </Button>
-            <Button className="primary-button bg-white hover:bg-gray-100">
+            <Button className="primary-button bg-white hover:bg-gray-100 w-full">
               <Text className="font-body text-gray-800 text-lg font-bold">
                 Learn More
               </Text>
