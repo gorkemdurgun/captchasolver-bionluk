@@ -12,7 +12,7 @@ import {
 } from "react-icons/pi";
 import Text from "../text";
 
-import { useLottie } from "lottie-react";
+import { LottieOptions, useLottie } from "lottie-react";
 import LaunchSectionLayout from "./layout";
 
 const features = [
@@ -40,13 +40,13 @@ const features = [
 ];
 
 export const LaunchSection = () => {
-  const options = {
-    animationData: lotties.RedRobotLottie,
+  const options: LottieOptions = {
+    animationData: lotties.SolvePuzzleLottie,
     loop: true,
     autoplay: true
   };
 
-  const { View: RedRobotLottieAnimation } = useLottie(options);
+  const { View: SolvePuzzleLottieAnimation } = useLottie(options);
 
   return (
     <LaunchSectionLayout>
@@ -54,15 +54,15 @@ export const LaunchSection = () => {
         <div className="flex flex-col items-start justify-center gap-4 order-2 md:order-1">
           {/* Title */}
           <span className="flex flex-col items-start justify-center gap-0">
-            <Text className="font-protest text-red-700 text-3xl lg:text-5xl md:text-4xl">
+            <Text className="text-major text-red-700 text-3xl lg:text-5xl md:text-4xl">
               Solve automation for
             </Text>
-            <Text className="font-protest text-red-700 text-3xl lg:text-6xl md:text-4xl">
+            <Text className="text-major text-red-700 text-3xl lg:text-6xl md:text-4xl">
               Recaptcha systems
             </Text>
           </span>
           {/* Description */}
-          <Text className="font-inter text-gray-800 leading-tight font-medium text-sm mt-0 mb-0 md:text-lg mt-2 mb-4">
+          <Text className="text-body font-medium text-gray-800 text-sm mb-2 md:text-lg mt-2 mb-4">
             We provide a simple and easy-to-use API to solve Recaptcha systems
             with a high success rate. Get started with our free plan today!
           </Text>
@@ -74,29 +74,29 @@ export const LaunchSection = () => {
                 className="flex flex-row items-center justify-start gap-2"
               >
                 <feature.icon className="text-lg text-red-700 md:text-2xl" />
-                <Text className="text-md font-inter text-gray-800 font-medium md:text-xl">
+                <Text className="font-body text-gray-800 font-medium md:text-xl">
                   {feature.title}
                 </Text>
               </span>
             ))}
           </div>
           {/* Buttons */}
-          <div className="flex flex-row items-center justify-start gap-4 mt-4">
-            <Button className="bg-red-400 rounded-lg border-2 border-black p-6 !transition-all hover:bg-red-600 hover:shadow-button-hover">
-              <Text className="font-inter text-white text-lg font-bold">
+          <div className="flex flex-col items-center justify-start gap-4 mt-4 w-full lg:w-auto lg:flex-row">
+            <Button className="primary-button bg-red-400 hover:bg-red-600 w-full">
+              <Text className="font-body text-white text-lg font-bold">
                 Get Started
               </Text>
             </Button>
-            <Button className="bg-white rounded-lg border-2 border-black p-6 !transition-all hover:bg-gray-100 hover:shadow-button-hover">
-              <Text className="font-inter text-gray-800 text-lg font-bold">
+            <Button className="primary-button bg-white hover:bg-gray-100 w-full">
+              <Text className="font-body text-gray-800 text-lg font-bold">
                 Learn More
               </Text>
             </Button>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-4 order-1 md:scale-125">
-          <div className="h-full xl:scale-150 md:scale-150">
-            {RedRobotLottieAnimation}
+        <div className="flex flex-col items-center justify-center gap-4 order-1">
+          <div className="h-full xl:scale-125">
+            {SolvePuzzleLottieAnimation}
           </div>
         </div>
       </div>
