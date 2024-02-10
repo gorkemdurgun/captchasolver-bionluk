@@ -6,7 +6,7 @@
 @layer components {
   /* Button Styles */
   .primary-button {
-    @apply rounded-lg border-2 border-black p-6 !transition-all hover:bg-gray-100 hover:shadow-button-hover;
+    @apply rounded-lg border-none border-black p-6 !transition-all hover:bg-gray-100 hover:shadow-button-hover;
   }
 }
 

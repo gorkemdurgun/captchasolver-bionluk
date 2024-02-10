@@ -69,10 +69,7 @@ export const UseCaseSection = () => {
           see how to use it with other languages.
         </Text>
         <Divider className="w-full my-4" />
-        <Card
-          className="border-2 border-black bg-white w-full px-4 py-8 my-8"
-          shadow="lg"
-        >
+        <Card className="bg-white w-full px-4 py-8 my-8" shadow="lg">
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
             <div className="flex flex-col items-start justify-between gap-4">
               <span className="flex flex-col items-start justify-start gap-2">
@@ -101,7 +98,7 @@ export const UseCaseSection = () => {
                 </Text>
               </span>
               <div className="flex flex-row items-center justify-start gap-4 w-full">
-                <Button className="primary-button bg-transparent w-full hover:bg-gray-100">
+                <Button className="primary-button bg-gray-50 w-full hover:bg-gray-100">
                   <Text className="font-body text-black text-lg font-bold">
                     Read the Docs
                   </Text>
@@ -116,7 +113,7 @@ export const UseCaseSection = () => {
               >
                 <Tabs aria-label="Options">
                   <Tab key="python" title="Python">
-                    <Card className="border-2 border-black bg-white w-full p-4 my-4 gap-4">
+                    <Card className="bg-white w-full p-4 my-4 gap-4">
                       {pythonCodeSteps.map((step, index) => (
                         <span
                           key={index}
@@ -133,7 +130,7 @@ export const UseCaseSection = () => {
                     </Card>
                   </Tab>
                   <Tab key="Go" title="Go">
-                    <Card className="border-2 border-black bg-white w-full p-4 my-4 gap-4">
+                    <Card className="bg-white w-full p-4 my-4 gap-4">
                       {goCodeSteps.map((step, index) => (
                         <span
                           key={index}

@@ -110,7 +110,7 @@ export const Navbar = () => {
               className="text-body text-white font-bold"
               name="Luisa Morris"
               avatarProps={{
-                className: "rounded-2xl border-2 w-8 h-8",
+                className: "rounded-2xl w-8 h-8",
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
               }}
             />
