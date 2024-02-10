@@ -74,7 +74,7 @@ export const BlogSection = () => {
           business. We also share tips and tricks to help you solve captchas.
         </Text>
         <Divider className="w-full my-4" />
-        <div className="grid grid-cols-12 grid-rows-2 gap-4 mt-8 w-full">
+        <div className="grid grid-cols-12 grid-rows-2 gap-4 mt-4 w-full">
           {dummyBlogPosts.slice(0, 3).map((post, index) => (
             <Card
               key={index}
