@@ -8,27 +8,32 @@ import {
   CardFooter,
   CardHeader,
   Divider,
-  Input
+  Input,
+  InputSlots,
+  SlotsToClasses
 } from "@nextui-org/react";
 import { svg } from "@/public/assets";
 import Text from "@/components/text";
 import Link from "next/link";
 
-const styles = {
-  label: "text-black/50 dark:text-white/90"
+const styles: SlotsToClasses<InputSlots> = {
+  label: "text-white text-lg whitespace-nowrap",
+  input: "!text-black",
+  inputWrapper: "max-w-lg !bg-white text-body",
+  mainWrapper: "w-full"
 };
 
 export default function LoginPage() {
   return (
     <LoginLayout>
-      <div className="grid items-center w-full gap-4 px-6 ">
+      <div className="flex flex-col items-center justify-center w-full gap-4 px-6 ">
         <span className="px-12 py-2 rounded-sm bg-gradient-to-r mb-7 from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
           <p className="text-major flex justify-center text-black text-3xl md:text-5xl">
             LOGIN
           </p>
         </span>
         <Divider />
-        <Card className="mt-7">
+        <Card className="flex items-center w-full max-w-4xl bg-gray-800">
           <CardHeader className="flex gap-3">
             <div className="flex items-center gap-2">
               <Image
@@ -41,45 +46,34 @@ export default function LoginPage() {
             </div>
           </CardHeader>
           <Divider />
-          <CardBody className="flex justify-center items-center bg-gray-800">
+          <CardBody className="flex items-center gap-4 py-12 w-full max-w-xl">
             <Input
-              className="w-9/12 py-4"
+              className="grid grid-cols-[1fr,2fr]"
               type="email"
               label="Email"
               isRequired
               classNames={styles}
-              labelPlacement="inside"
+              labelPlacement="outside-left"
             ></Input>
             <Input
-              className="w-9/12 py-4"
+              className="grid grid-cols-[1fr,2fr]"
               type="password"
               label="Password"
               isRequired
               classNames={styles}
-              labelPlacement="inside"
+              labelPlacement="outside-left"
             ></Input>
-            <Input
-              className="w-9/12 py-4"
-              type="password"
-              label="Confirm Password"
-              isRequired
-              classNames={styles}
-              labelPlacement="inside"
-            ></Input>
-            <Link
-              href="/forgot-password"
-              className="flex justify-end w-9/12 text-body font-medium text-white text-md my-2 "
-            >
-              Forgot password
-            </Link>
-          </CardBody>
-          <Divider />
-          <CardFooter className="flex flex-col justify-center items-center bg-gray-700">
-            <Button className="primary-button w-9/12 flex justify-center bg-red-400 hover:bg-red-600 mb-4">
+            <div className="flex items-center justify-end w-full ">
+              <Button className="bg-gray-100/10">Forgot password</Button>
+            </div>
+            <Button className="primary-button w-full bg-red-400 hover:bg-red-600">
               <Text className="font-body text-white text-lg font-bold">
                 Login
               </Text>
             </Button>
+          </CardBody>
+          <Divider />
+          <CardFooter className="flex flex-col justify-center items-center gap-4 bg-gray-700">
             <span>
               Don&apos;t have an account?
               <Link
