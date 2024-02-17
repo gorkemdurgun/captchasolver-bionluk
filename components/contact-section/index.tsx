@@ -26,7 +26,7 @@ export const ContactSection = () => {
           look forward to hearing from you!
         </Text>
         <Divider className="w-full my-4" />
-        <Card className="grid w-full gap-4 bg-white mt-32 p-8 md:grid-cols-2 grid-cols-1 overflow-visible">
+        <Card className="grid w-full lg:gap-4 gap-8 lg:mt-32 lg:p-8 p-4 md:grid-cols-2 grid-cols-1 bg-white overflow-visible">
           <div className="flex flex-col items-start justify-between gap-4">
             <Text className="text-major text-black text-2xl font-thin">
               Contact Information
@@ -38,7 +38,7 @@ export const ContactSection = () => {
                   Address
                 </Text>
                 <Text className="text-body text-black text-md">
-                  1234 Main Street, Suite 200, New York, NY 10001
+                  Suite 200, New York, NY 10001
                 </Text>
               </span>
               <span className="flex items-center gap-2">
@@ -74,7 +74,7 @@ export const ContactSection = () => {
               as possible. We look forward to hearing from you!
             </Text>
           </div>
-          <Card className="flex flex-col items-center justify-center gap-4 p-8 bg-white -mt-32">
+          <Card className="flex flex-col items-center justify-center gap-4 lg:p-8 p-4 bg-white lg:-mt-32 -mt-0 lg:-mb-0 -mb-12">
             <Text className="text-major text-black text-2xl font-thin">
               Send us a message
             </Text>
