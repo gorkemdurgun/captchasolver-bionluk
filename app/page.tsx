@@ -2,7 +2,8 @@ import {
   BlogSection,
   LaunchSection,
   PricingSection,
-  UseCaseSection
+  UseCaseSection,
+  ContactSection
 } from "@/components";
 import { Divider } from "@nextui-org/react";
 
@@ -25,6 +26,8 @@ export default function Home() {
       <BlogSection />
       <CustomDivider />
       <PricingSection />
+      <CustomDivider />
+      <ContactSection />
     </div>
   );
 }
