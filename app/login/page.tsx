@@ -15,6 +15,8 @@ import {
 import { svg } from "@/public/assets";
 import Text from "@/components/text";
 import Link from "next/link";
+import { useAppDispatch } from "@/hooks";
+import { login } from "@/redux/actions";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
@@ -24,6 +26,17 @@ const styles: SlotsToClasses<InputSlots> = {
 };
 
 export default function LoginPage() {
+  const dispatch = useAppDispatch();
+
+  function handleLogin() {
+    dispatch(
+      login.request({
+        email: "ysadas@∑gmail.com",
+        password: "password"
+      })
+    );
+  }
+
   return (
     <LoginLayout>
       <div className="flex flex-col items-center justify-center w-full gap-4 px-6 ">
@@ -48,6 +61,12 @@ export default function LoginPage() {
           <Divider />
           <CardBody className="flex items-center gap-4 py-12 w-full max-w-xl">
             <Input
+              validate={value => {
+                if (!value.includes("@")) {
+                  return "Invalid email";
+                }
+                return "";
+              }}
               className="grid grid-cols-[1fr,2fr]"
               type="email"
               label="Email"
@@ -66,7 +85,10 @@ export default function LoginPage() {
             <div className="flex items-center justify-end w-full ">
               <Button className="bg-gray-100/10">Forgot password</Button>
             </div>
-            <Button className="primary-button w-full bg-red-400 hover:bg-red-600">
+            <Button
+              className="primary-button w-full bg-red-400 hover:bg-red-600"
+              onClick={handleLogin}
+            >
               <Text className="font-body text-white text-lg font-bold">
                 Login
               </Text>
