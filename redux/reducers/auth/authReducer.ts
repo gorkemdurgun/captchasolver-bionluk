@@ -4,7 +4,7 @@ import { LOGIN, login } from "@/redux/actions";
 
 const initialState: {
   loading: boolean;
-  error: string | null;
+  error: Error | null;
   user: User | null;
 } = {
   loading: false,
