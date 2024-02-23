@@ -80,7 +80,7 @@ export const LaunchSection = () => {
         </Text>
       </span>
       <div className="grid grid-cols-1 items-center w-full gap-4 mb-4 py-2 px-6 md:p-8 md:grid-cols-2 md:py-2">
-        <div className="flex flex-col items-start justify-center gap-4 order-2 md:order-1">
+        <div className="flex flex-col lg:items-start items-center justify-center gap-4 order-2 md:order-1">
           {/* Description */}
           <Text className="text-body font-Xsemibold text-black text-justify text-md mb-2 max-w-[500px] md:text-xl mt-2 mb-4">
             We provide a simple and easy-to-use API to solve Recaptcha systems
@@ -107,13 +107,14 @@ export const LaunchSection = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-4 py-4 w-full lg:flex-row lg:gap-8">
+      <div className="grid items-center justify-center gap-4 py-4 px-6 w-full lg:grid-cols-4 md:grid-cols-2">
         {features.map((feature, index) => {
           const Icon = feature.icon;
           return (
             <Card
               key={index}
-              className="flex flex-col items-center justify-center gap-4 w-full max-w-[300px] p-4 bg-white shadow-lg rounded-md"
+              className="flex flex-col
+               items-center justify-center gap-4 w-full lg:max-w-[300px] max-w-full p-4 bg-white shadow-lg rounded-md"
             >
               <Icon className="text-red-700 text-4xl" />
               <Text className="text-major text-red-700 text-xl font-bold">
