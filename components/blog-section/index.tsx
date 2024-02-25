@@ -20,9 +20,9 @@ const dummyBlogPosts = [
   {
     image:
       "https://plus.unsplash.com/premium_photo-1675282443407-b9c9ada52b82?q=80&w=3000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "How can I get free trial of CaptchaSolver?",
+    title: "How can I get free trial of Capsmasher?",
     description:
-      "CaptchaSolver is a captcha solving service that allows you to solve captchas for free. You can get a free trial of CaptchaSolver by signing up for an account and using the free trial credits that are provided to you. The free trial credits allow you to solve a limited number of captchas for free, so you can test out the service and see if it meets your needs before you decide to purchase more credits.",
+      "Capsmasher is a captcha solving service that allows you to solve captchas for free. You can get a free trial of Capsmasher by signing up for an account and using the free trial credits that are provided to you. The free trial credits allow you to solve a limited number of captchas for free, so you can test out the service and see if it meets your needs before you decide to purchase more credits.",
     date: "2021-09-01"
   },
   {
@@ -44,17 +44,17 @@ const dummyBlogPosts = [
   {
     image:
       "https://images.unsplash.com/photo-1526925539332-aa3b66e35444?q=80&w=3330&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Is Enterprise Plan available for CaptchaSolver?",
+    title: "Is Enterprise Plan available for Capsmasher?",
     description:
-      "Yes, CaptchaSolver offers an Enterprise Plan for businesses that need to solve captchas in bulk. The Enterprise Plan is designed to help businesses solve captchas quickly and easily, so they can focus on other tasks. It is especially useful for businesses that need to solve captchas in bulk, as it can save them time and money by automating the process of solving captchas.",
+      "Yes, Capsmasher offers an Enterprise Plan for businesses that need to solve captchas in bulk. The Enterprise Plan is designed to help businesses solve captchas quickly and easily, so they can focus on other tasks. It is especially useful for businesses that need to solve captchas in bulk, as it can save them time and money by automating the process of solving captchas.",
     date: "2022-01-01"
   },
   {
     image:
       "https://images.unsplash.com/photo-1614064642261-3ccbfafa481b?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Why I choose CaptchaSolver for my business?",
+    title: "Why I choose Capsmasher for my business?",
     description:
-      "CaptchaSolver is a captcha solving service that allows you to solve captchas quickly and easily. It is especially useful for businesses that need to solve captchas in bulk, as it can save them time and money by automating the process of solving captchas.",
+      "Capsmasher is a captcha solving service that allows you to solve captchas quickly and easily. It is especially useful for businesses that need to solve captchas in bulk, as it can save them time and money by automating the process of solving captchas.",
     date: "2022-02-22"
   }
 ];

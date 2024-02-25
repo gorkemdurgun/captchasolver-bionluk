@@ -22,11 +22,11 @@ const pythonCodeSteps = [
   },
   {
     title: "Import the package",
-    snippet: "from captcha_solver import CaptchaSolver"
+    snippet: "from captcha_solver import Capsmasher"
   },
   {
     title: "Create a solver instance",
-    snippet: "solver = CaptchaSolver()"
+    snippet: "solver = Capsmasher()"
   },
   {
     title: "Solve a captcha",
@@ -63,10 +63,10 @@ export const UseCaseSection = () => {
           </Text>
         </span>
         <Text className="text-body text-black text-md text-center lg:text-xl">
-          This is a simple guide to get you started with CaptchaSolver. You can
-          use it with Python and Go. For more information, check the
-          documentation. You can also check the examples in the repository to
-          see how to use it with other languages.
+          This is a simple guide to get you started with Capsmasher. You can use
+          it with Python and Go. For more information, check the documentation.
+          You can also check the examples in the repository to see how to use it
+          with other languages.
         </Text>
         <Divider className="none w-full lg:my-4" />
         <Card className="bg-white w-full px-4 py-8 my-8" shadow="lg">
@@ -74,17 +74,17 @@ export const UseCaseSection = () => {
             <div className="flex flex-col items-start justify-between gap-4">
               <span className="flex flex-col items-start justify-start gap-2">
                 <Text className="text-body text-black text-lg font-bold">
-                  How to use CaptchaSolver?
+                  How to use Capsmasher?
                 </Text>
                 <Text className="text-major text-black text-3xl">
-                  Use CaptchaSolver to solve Recaptcha systems
+                  Use Capsmasher to solve Recaptcha systems
                 </Text>
               </span>
               <span className="flex flex-col items-start justify-start gap-2">
                 <Text className="text-body text-black text-md">
-                  CaptchaSolver is a simple and easy-to-use API to solve
-                  Recaptcha systems. You can use it with Python and Go. This is
-                  a simple guide to get you started.
+                  Capsmasher is a simple and easy-to-use API to solve Recaptcha
+                  systems. You can use it with Python and Go. This is a simple
+                  guide to get you started.
                 </Text>
                 <Text className="text-body text-black text-md">
                   For more information, check the documentation. You can also

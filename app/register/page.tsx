@@ -20,8 +20,8 @@ import { PiArrowBendDoubleUpLeftBold as BackLoginIcon } from "react-icons/pi";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
-  input: "!text-black",
-  inputWrapper: "max-w-lg !bg-white text-body",
+  input: "!text-black pl-4",
+  inputWrapper: "max-w-lg !bg-white text-body p-0",
   mainWrapper: "w-full"
 };
 
@@ -40,11 +40,11 @@ export default function RegisterPage() {
             <div className="flex items-center gap-2">
               <Image
                 src={svg.Logo}
-                alt="CAPTCHASOLVER LOGO"
+                alt="Capsmasher LOGO"
                 width={40}
                 height={40}
               />
-              <p className="font-bold text-inherit">CAPTCHASOLVER</p>
+              <p className="font-bold text-inherit">Capsmasher</p>
             </div>
           </CardHeader>
           <Divider />

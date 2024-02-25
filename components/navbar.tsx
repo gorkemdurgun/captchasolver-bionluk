@@ -69,11 +69,11 @@ export const Navbar = () => {
           <NextLink className="flex justify-start items-center gap-2" href="/">
             <Image
               src={svg.Logo}
-              alt="CAPTCHASOLVER LOGO"
+              alt="Capsmasher LOGO"
               width={40}
               height={40}
             />
-            <p className="font-bold text-inherit">CAPTCHASOLVER</p>
+            <p className="font-bold text-inherit">Capsmasher</p>
           </NextLink>
         </NavbarBrand>
         <ul className="hidden lg:flex gap-4 justify-start ml-2">

@@ -6,7 +6,7 @@ type LoginResponse = {
 };
 
 export const login = (email: string, password: string) => {
-  return Axios.post<LoginResponse>("/auth/login", {
+  return Axios.post<LoginResponse>("/login", {
     email,
     password
   });
