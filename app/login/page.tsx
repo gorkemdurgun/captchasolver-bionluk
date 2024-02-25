@@ -31,10 +31,23 @@ export default function LoginPage() {
   function handleLogin() {
     dispatch(
       login.request({
-        email: "ysadas@∑gmail.com",
-        password: "password"
+        email: "gowosa@gowomail.com",
+        password: "Gowosa1."
       })
     );
+
+    /*
+    fetch('https://dummyjson.com/posts/add', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: 'Post add TRIES G!',
+        userId: 5,
+      })
+    })
+    .then(res => res.json())
+    .then(console.log);
+    */
   }
 
   return (

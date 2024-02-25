@@ -1,10 +1,14 @@
 import axios from "axios";
 
 export const Axios = axios.create({
-  baseURL: "http://localhost:3000",
-  timeout: 1000,
+  baseURL: "https://capsmasher.com/api/v1",
   headers: {
-    "Content-Type": "application/json"
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+    "Access-Control-Allow-Headers":
+      "Content-Type, Authorization, Content-Length, X-Requested-With",
+    "Content-Type": "application/json",
+    Accept: "application/json"
   }
 });
 
