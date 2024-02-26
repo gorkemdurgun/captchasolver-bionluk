@@ -1,0 +1,315 @@
+"use client";
+
+import { Button } from "@nextui-org/button";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { useEffect, useState } from "react";
+
+import { Color } from "@tiptap/extension-color";
+import Document from "@tiptap/extension-document";
+import Heading from "@tiptap/extension-heading";
+import Paragraph from "@tiptap/extension-paragraph";
+import Text from "@tiptap/extension-text";
+import TextStyle from "@tiptap/extension-text-style";
+import ListItem from "@tiptap/extension-list-item";
+import BulletList from "@tiptap/extension-bullet-list";
+import OrderedList from "@tiptap/extension-ordered-list";
+
+import {
+  Divider,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger
+} from "@nextui-org/react";
+
+import {
+  LuBold as BoldIcon,
+  LuItalic as ItalicIcon,
+  LuStrikethrough as StrikeIcon,
+  LuCode as CodeIcon,
+  LuListOrdered as OrderedListIcon,
+  LuList as BulletListIcon,
+  LuHeading1 as H1Icon,
+  LuHeading2 as H2Icon,
+  LuHeading3 as H3Icon,
+  LuType as ParagraphIcon,
+  LuUndo2 as UndoIcon,
+  LuRedo2 as RedoIcon
+} from "react-icons/lu";
+
+import { PiPaletteDuotone as ColorIcon } from "react-icons/pi";
+
+export default function AdminPage() {
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Document,
+      Paragraph,
+      Text,
+      TextStyle,
+      Color,
+      BulletList,
+      OrderedList,
+      ListItem,
+      Heading.configure({
+        levels: [1, 2, 3]
+      })
+    ],
+    content: "<p>Hello World! 🌎️</p>"
+  });
+
+  const pages: {
+    title: string;
+    subItems: {
+      title: string;
+      content: string;
+    }[];
+  }[] = [
+    {
+      title: "Getting Started",
+      subItems: [
+        {
+          title: "Introduction",
+          content:
+            "<p>Introduction</p> <br> <p>Some content</p> <br> <h1>Heading</h1>"
+        },
+        {
+          title: "Installation",
+          content:
+            "<b>Installation</b> <p>Some installation</p> <h3>Heading</h3> <strong>Strong</strong>"
+        },
+        {
+          title: "Configuration",
+          content: "<p>Configuration</p> <h5>Some configuration</h5>"
+        }
+      ]
+    },
+    {
+      title: "Customization",
+      subItems: [
+        {
+          title: "Themes",
+          content: "<p>Themes</p>"
+        },
+        {
+          title: "Components",
+          content: "<p>Components</p>"
+        }
+      ]
+    }
+  ];
+
+  const editorFontStyles = [
+    {
+      action: "bold",
+      icon: <BoldIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleBold().run()
+    },
+    {
+      action: "italic",
+      icon: <ItalicIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleItalic().run()
+    },
+    {
+      action: "strike",
+      icon: <StrikeIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleStrike().run()
+    },
+    {
+      action: "code",
+      icon: <CodeIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleCode().run()
+    }
+  ];
+  const editorTextStyles = [
+    {
+      action: "heading1",
+      icon: <H1Icon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleHeading({ level: 1 }).run()
+    },
+    {
+      action: "heading2",
+      icon: <H2Icon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleHeading({ level: 2 }).run()
+    },
+    {
+      action: "heading3",
+      icon: <H3Icon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleHeading({ level: 3 }).run()
+    },
+    {
+      action: "paragraph",
+      icon: <ParagraphIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().setParagraph().run()
+    }
+  ];
+  const editorListStyles = [
+    {
+      action: "bullet",
+      icon: <BulletListIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleBulletList().run()
+    },
+    {
+      action: "ordered",
+      icon: <OrderedListIcon className="w-6 h-6" />,
+      function: () => editor?.chain().focus().toggleOrderedList().run()
+    }
+  ];
+  const editorColors = ["red", "green", "blue", "purple", "black"];
+
+  const [selectedPage, setSelectedPage] = useState(0);
+  const [selectedSubItem, setSelectedSubItem] = useState(0);
+
+  function handleSelectPage(index: number) {
+    setSelectedPage(index);
+    setSelectedSubItem(0);
+  }
+
+  function handleSelectSubItem(index: number) {
+    setSelectedSubItem(index);
+  }
+
+  useEffect(() => {
+    if (editor) {
+      editor?.commands.setContent(
+        pages[selectedPage].subItems[selectedSubItem].content
+      );
+    }
+  }, [selectedPage, selectedSubItem]);
+
+  return (
+    <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
+      <div className="w-full flex flex-col justify-start gap-2">
+        <span className="text-white">Select a page:</span>
+        <div className="flex gap-4">
+          {pages.map((page, index) => (
+            <Button
+              key={index}
+              aria-checked={selectedPage === index}
+              className="text-white bg-transparent border-2 aria-checked:border-green-500"
+              onClick={() => handleSelectPage(index)}
+            >
+              {page.title}
+            </Button>
+          ))}
+        </div>
+      </div>
+      <div className="w-full flex flex-col justify-start gap-2">
+        <span className="text-white">Select a sub page:</span>
+        <div className="flex gap-4">
+          {pages[selectedPage].subItems.map((subItem, index) => (
+            <Button
+              key={index}
+              aria-checked={selectedSubItem === index}
+              className="text-white bg-transparent border-2 aria-checked:border-green-500"
+              onClick={() => handleSelectSubItem(index)}
+            >
+              {subItem.title}
+            </Button>
+          ))}
+        </div>
+      </div>
+      <div className="w-full flex flex-col justify-start mt-8">
+        <div className="flex flex-wrap items-center  gap-2 bg-gray-800 p-4 rounded-t-lg">
+          {/* Dropdown for text styles */}
+          {editorTextStyles.map((button, index) => (
+            <Button
+              key={index}
+              onClick={button.function}
+              className="bg-transparent text-white border-2 rounded-md"
+            >
+              {button.icon}
+            </Button>
+          ))}
+          <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
+          {/* Dropdown for list styles */}
+          {editorListStyles.map((button, index) => (
+            <Button
+              key={index}
+              onClick={button.function}
+              className="bg-transparent text-white border-2 rounded-md"
+            >
+              {button.icon}
+            </Button>
+          ))}
+          <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
+          {/* Dropdown for font styles */}
+          {editorFontStyles.map((button, index) => (
+            <Button
+              key={index}
+              onClick={button.function}
+              className="bg-transparent text-white border-2 rounded-md"
+            >
+              {button.icon}
+            </Button>
+          ))}
+          <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
+          {/* Dropdown for color selection */}
+          <Dropdown
+            classNames={{
+              base: "bg-white",
+              content: "bg-white"
+            }}
+          >
+            <DropdownTrigger>
+              <Button className="bg-transparent text-white border-2 min-w-1 rounded-md">
+                <ColorIcon className="w-4 h-4 color-white" />
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Static Actions">
+              {editorColors.map((color, index) => (
+                <DropdownItem
+                  key={index}
+                  className="bg-white text-black"
+                  onClick={() => {
+                    if (color !== "black") {
+                      editor?.chain().focus().setColor(color).run();
+                    } else {
+                      editor?.chain().focus().unsetColor().run();
+                    }
+                  }}
+                >
+                  <div className="flex flex-row items-center">
+                    <div
+                      style={{ backgroundColor: color }}
+                      className="w-4 h-4 rounded-full mr-2"
+                    />
+                    {color}
+                  </div>
+                </DropdownItem>
+              ))}
+            </DropdownMenu>
+          </Dropdown>
+          {/* Undo and Redo */}
+          <div className="flex gap-2">
+            <Button
+              onClick={() => editor?.chain().focus().undo().run()}
+              className="bg-transparent text-white border-2 min-w-1 rounded-md"
+            >
+              <UndoIcon className="w-4 h-4" />
+            </Button>
+            <Button
+              onClick={() => editor?.chain().focus().redo().run()}
+              className="bg-transparent text-white border-2 min-w-1 rounded-md"
+            >
+              <RedoIcon className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+        <EditorContent
+          className="w-full h-full p-4 outline-none bg-white text-black rounded-b-lg shadow-md text-body"
+          editor={editor}
+        />
+      </div>
+      <Button
+        color="success"
+        onClick={() => {
+          console.log(editor?.getHTML());
+        }}
+      >
+        Save
+      </Button>
+    </div>
+  );
+}
