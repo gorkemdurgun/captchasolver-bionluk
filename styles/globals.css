@@ -3,6 +3,52 @@
 @tailwind components;
 @tailwind utilities;
 
+h1 {
+  @apply text-4xl text-body;
+}
+h2 {
+  @apply text-3xl text-body;
+}
+h3 {
+  @apply text-2xl text-body;
+}
+p {
+  @apply text-body;
+}
+
+ul {
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+
+    &:before {
+      content: "•";
+      color: #000;
+
+      width: 0.5rem;
+    }
+  }
+}
+
+ol {
+  list-style: none;
+  counter-reset: list;
+
+  li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &:before {
+      counter-increment: list;
+      content: counter(list) ". ";
+      color: #000;
+    }
+  }
+}
+
 @layer components {
   /* Button Styles */
   .primary-button {

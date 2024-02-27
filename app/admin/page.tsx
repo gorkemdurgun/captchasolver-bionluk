@@ -20,7 +20,8 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
-  DropdownTrigger
+  DropdownTrigger,
+  Input
 } from "@nextui-org/react";
 
 import {
@@ -38,7 +39,10 @@ import {
   LuRedo2 as RedoIcon
 } from "react-icons/lu";
 
-import { PiPaletteDuotone as ColorIcon } from "react-icons/pi";
+import {
+  PiPaletteDuotone as ColorIcon,
+  PiCheck as CheckIcon
+} from "react-icons/pi";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -56,10 +60,10 @@ export default function AdminPage() {
         levels: [1, 2, 3]
       })
     ],
-    content: "<p>Hello World! 🌎️</p>"
+    content: "<p>Please select a page and sub page for editing</p>"
   });
 
-  const pages: {
+  const initialPages: {
     title: string;
     subItems: {
       title: string;
@@ -99,6 +103,16 @@ export default function AdminPage() {
       ]
     }
   ];
+
+  const [docTrees, setDocTrees] = useState<
+    {
+      title: string;
+      subItems: {
+        title: string;
+        content: string;
+      }[];
+    }[]
+  >(initialPages);
 
   const editorFontStyles = [
     {
@@ -158,22 +172,48 @@ export default function AdminPage() {
   ];
   const editorColors = ["red", "green", "blue", "purple", "black"];
 
-  const [selectedPage, setSelectedPage] = useState(0);
+  const [selectedPage, setSelectedPage] = useState(-1);
   const [selectedSubItem, setSelectedSubItem] = useState(0);
+
+  function addNewPage() {
+    setDocTrees([
+      ...docTrees,
+      {
+        title: "New Page",
+        subItems: [
+          {
+            title: "New Sub Page",
+            content: "<p>New Sub Page</p>"
+          }
+        ]
+      }
+    ]);
+  }
+  function addNewSubItem(index: number) {
+    const newSubItems = docTrees[index].subItems;
+    newSubItems.push({
+      title: "New Sub Page " + (newSubItems.length + 1),
+      content: "<p>New Sub Page " + (newSubItems.length + 1) + "</p>"
+    });
+    setDocTrees([
+      ...docTrees.slice(0, index),
+      { ...docTrees[index], subItems: newSubItems },
+      ...docTrees.slice(index + 1)
+    ]);
+  }
 
   function handleSelectPage(index: number) {
     setSelectedPage(index);
     setSelectedSubItem(0);
   }
-
   function handleSelectSubItem(index: number) {
     setSelectedSubItem(index);
   }
 
   useEffect(() => {
-    if (editor) {
+    if (editor && selectedPage !== null) {
       editor?.commands.setContent(
-        pages[selectedPage].subItems[selectedSubItem].content
+        docTrees[selectedPage]?.subItems[selectedSubItem]?.content
       );
     }
   }, [selectedPage, selectedSubItem]);
@@ -183,7 +223,13 @@ export default function AdminPage() {
       <div className="w-full flex flex-col justify-start gap-2">
         <span className="text-white">Select a page:</span>
         <div className="flex gap-4">
-          {pages.map((page, index) => (
+          <Button
+            className="text-black bg-white border-2 text-xs font-bold"
+            onClick={addNewPage}
+          >
+            + ADD PAGE
+          </Button>
+          {docTrees.map((page, index) => (
             <Button
               key={index}
               aria-checked={selectedPage === index}
@@ -194,11 +240,38 @@ export default function AdminPage() {
             </Button>
           ))}
         </div>
+        <div className="flex flex-row items-center gap-4">
+          <Input
+            className="w-full max-w-lg mt-2"
+            placeholder="Rename selected page"
+            value={docTrees[selectedPage]?.title}
+            onChange={e => {
+              const newDocTrees = docTrees;
+              newDocTrees[selectedPage].title = e.target.value;
+              setDocTrees(newDocTrees);
+            }}
+          />
+          <Button
+            className="bg-green-500 text-white"
+            onClick={() => {
+              /* API call to save the new page name */
+            }}
+          >
+            Rename
+          </Button>
+        </div>
       </div>
       <div className="w-full flex flex-col justify-start gap-2">
         <span className="text-white">Select a sub page:</span>
         <div className="flex gap-4">
-          {pages[selectedPage].subItems.map((subItem, index) => (
+          <Button
+            disabled={selectedPage === -1}
+            className="text-black bg-white border-2 text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={() => addNewSubItem(selectedPage)}
+          >
+            + ADD SUB PAGE
+          </Button>
+          {docTrees[selectedPage]?.subItems?.map((subItem, index) => (
             <Button
               key={index}
               aria-checked={selectedSubItem === index}
@@ -208,6 +281,32 @@ export default function AdminPage() {
               {subItem.title}
             </Button>
           ))}
+        </div>
+        <div className="flex flex-row items-center gap-4">
+          <Input
+            disabled={selectedPage === -1}
+            className="w-full max-w-lg mt-2"
+            placeholder="Rename selected sub page"
+            value={docTrees[selectedPage]?.subItems[selectedSubItem]?.title}
+            onChange={e => {
+              const newSubItems = docTrees[selectedPage].subItems;
+              newSubItems[selectedSubItem].title = e.target.value;
+              setDocTrees([
+                ...docTrees.slice(0, selectedPage),
+                { ...docTrees[selectedPage], subItems: newSubItems },
+                ...docTrees.slice(selectedPage + 1)
+              ]);
+            }}
+          />
+          <Button
+            disabled={selectedPage === -1}
+            className="bg-green-500 text-white"
+            onClick={() => {
+              /* API call to save the new sub page name */
+            }}
+          >
+            Rename
+          </Button>
         </div>
       </div>
       <div className="w-full flex flex-col justify-start mt-8">
@@ -303,7 +402,7 @@ export default function AdminPage() {
         />
       </div>
       <Button
-        color="success"
+        className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
         onClick={() => {
           console.log(editor?.getHTML());
         }}
