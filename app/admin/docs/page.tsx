@@ -179,11 +179,11 @@ export default function AdminPage() {
     setDocTrees([
       ...docTrees,
       {
-        title: "New Page",
+        title: "New Page " + (docTrees.length + 1),
         subItems: [
           {
-            title: "New Sub Page",
-            content: "<p>New Sub Page</p>"
+            title: "New Sub Page 1",
+            content: "<p>New Sub Page 1</p>"
           }
         ]
       }
@@ -242,19 +242,25 @@ export default function AdminPage() {
         </div>
         <div className="flex flex-row items-center gap-4">
           <Input
+            disabled={selectedPage === -1}
             className="w-full max-w-lg mt-2"
             placeholder="Rename selected page"
             value={docTrees[selectedPage]?.title}
             onChange={e => {
-              const newDocTrees = docTrees;
-              newDocTrees[selectedPage].title = e.target.value;
-              setDocTrees(newDocTrees);
+              const newTitle = e.target.value;
+              setDocTrees([
+                ...docTrees.slice(0, selectedPage),
+                { ...docTrees[selectedPage], title: newTitle },
+                ...docTrees.slice(selectedPage + 1)
+              ]);
             }}
           />
           <Button
-            className="bg-green-500 text-white"
+            disabled={selectedPage === -1}
+            className="bg-green-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => {
               /* API call to save the new page name */
+              console.log(docTrees[selectedPage]?.title);
             }}
           >
             Rename
@@ -273,6 +279,7 @@ export default function AdminPage() {
           </Button>
           {docTrees[selectedPage]?.subItems?.map((subItem, index) => (
             <Button
+              disabled={selectedPage === -1}
               key={index}
               aria-checked={selectedSubItem === index}
               className="text-white bg-transparent border-2 aria-checked:border-green-500"
@@ -300,9 +307,12 @@ export default function AdminPage() {
           />
           <Button
             disabled={selectedPage === -1}
-            className="bg-green-500 text-white"
+            className="bg-green-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => {
               /* API call to save the new sub page name */
+              console.log(
+                docTrees[selectedPage]?.subItems[selectedSubItem]?.title
+              );
             }}
           >
             Rename
