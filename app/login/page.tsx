@@ -31,8 +31,8 @@ export default function LoginPage() {
   function handleLogin() {
     dispatch(
       login.request({
-        email: "gowosa@gowomail.com",
-        password: "Gowosa1."
+        email: "asdjasdkassdssjkasw@gmail.com",
+        password: "FHAKDJSKDDadsa14512!"
       })
     );
 
