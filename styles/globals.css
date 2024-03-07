@@ -32,6 +32,16 @@ ul {
   }
 }
 
+ul[aria-busy] {
+  list-style: none;
+
+  li {
+    &:before {
+      content: "";
+    }
+  }
+}
+
 ol {
   list-style: none;
   counter-reset: list;

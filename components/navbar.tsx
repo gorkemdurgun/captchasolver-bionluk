@@ -64,8 +64,8 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
+      <NavbarContent aria-busy="true" className="basis-1/5 sm:basis-full" justify="start">
+        <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-2" href="/">
             <Image
               src={svg.Logo}
@@ -76,9 +76,15 @@ export const Navbar = () => {
             <p className="font-bold text-inherit">Capsmasher</p>
           </NextLink>
         </NavbarBrand>
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+        <ul
+          aria-busy="true"
+          className="hidden lg:flex gap-4 justify-start ml-2 !list-none"
+        >
           {siteConfig.navItems.map(item => (
-            <NavbarItem key={item.href}>
+            <NavbarItem
+              className="!before:hidden !after:hidden"
+              key={item.href}
+            >
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
@@ -95,6 +101,7 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent
+        aria-busy="true"
         className="hidden sm:flex basis-1/5 sm:basis-full"
         justify="end"
       >
@@ -133,7 +140,9 @@ export const Navbar = () => {
         )}
         {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
       </NavbarContent>
-      <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+      <NavbarContent 
+      aria-busy="true"
+      className="sm:hidden basis-1 pl-4" justify="end">
         {/* <Link isExternal href={siteConfig.links.discord} aria-label="Discord">
           <DiscordIcon className="text-default-500" />
         </Link> */}
