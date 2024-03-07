@@ -208,7 +208,7 @@ export default function AdminPage() {
           <div className="w-full flex flex-row justify-between">
             <Input className="w-full max-w-xl" placeholder="Search blog post" />
             <Button
-              className="h-full bg-blue-500 text-white text-sm"
+              className="h-full bg-gray-500 text-white text-sm"
               onClick={handleAddPost}
             >
               <AddIcon className="w-8 h-8" />
