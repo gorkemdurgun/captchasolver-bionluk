@@ -19,6 +19,7 @@ import { useAppDispatch } from "@/hooks";
 import { login as loginAction } from "@/redux/actions";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
@@ -31,11 +32,23 @@ export default function LoginPage() {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: ""
+  });
+
+  function handleChangeForm(e: React.ChangeEvent<HTMLInputElement>) {
+    setLoginForm({
+      ...loginForm,
+      [e.target.name]: e.target.value
+    });
+  }
+
   function handleLogin() {
     dispatch(
       loginAction.request({
-        email: "asdjasdkassdssjkasw@gmail.com",
-        password: "FHAKDJSKDDadsa14512!",
+        email: loginForm.email,
+        password: loginForm.password,
         onSuccess() {
           router.push("/");
         }
@@ -76,6 +89,9 @@ export default function LoginPage() {
               className="grid grid-cols-[1fr,2fr]"
               type="email"
               label="Email"
+              name="email"
+              value={loginForm.email}
+              onChange={handleChangeForm}
               isRequired
               classNames={styles}
               labelPlacement="outside-left"
@@ -84,6 +100,9 @@ export default function LoginPage() {
               className="grid grid-cols-[1fr,2fr]"
               type="password"
               label="Password"
+              name="password"
+              value={loginForm.password}
+              onChange={handleChangeForm}
               isRequired
               classNames={styles}
               labelPlacement="outside-left"
