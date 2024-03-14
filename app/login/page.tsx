@@ -16,7 +16,10 @@ import { svg } from "@/public/assets";
 import Text from "@/components/text";
 import Link from "next/link";
 import { useAppDispatch } from "@/hooks";
-import { login } from "@/redux/actions";
+import { login as loginAction } from "@/redux/actions";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
@@ -26,28 +29,31 @@ const styles: SlotsToClasses<InputSlots> = {
 };
 
 export default function LoginPage() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
+
+  const [loginForm, setLoginForm] = useState({
+    email: "",
+    password: ""
+  });
+
+  function handleChangeForm(e: React.ChangeEvent<HTMLInputElement>) {
+    setLoginForm({
+      ...loginForm,
+      [e.target.name]: e.target.value
+    });
+  }
 
   function handleLogin() {
     dispatch(
-      login.request({
-        email: "gowosa@gowomail.com",
-        password: "Gowosa1."
+      loginAction.request({
+        email: loginForm.email,
+        password: loginForm.password,
+        onSuccess() {
+          router.push("/");
+        }
       })
     );
-
-    /*
-    fetch('https://dummyjson.com/posts/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: 'Post add TRIES G!',
-        userId: 5,
-      })
-    })
-    .then(res => res.json())
-    .then(console.log);
-    */
   }
 
   return (
@@ -83,6 +89,9 @@ export default function LoginPage() {
               className="grid grid-cols-[1fr,2fr]"
               type="email"
               label="Email"
+              name="email"
+              value={loginForm.email}
+              onChange={handleChangeForm}
               isRequired
               classNames={styles}
               labelPlacement="outside-left"
@@ -91,6 +100,9 @@ export default function LoginPage() {
               className="grid grid-cols-[1fr,2fr]"
               type="password"
               label="Password"
+              name="password"
+              value={loginForm.password}
+              onChange={handleChangeForm}
               isRequired
               classNames={styles}
               labelPlacement="outside-left"

@@ -1,15 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-import { LOGIN, login } from "@/redux/actions";
+import { LOGIN, login, getUser, GET_USER } from "@/redux/actions";
 
 const initialState: {
   loading: boolean;
   error: Error | null;
   user: User | null;
+  token: string | null;
 } = {
   loading: false,
   error: null,
-  user: null
+  user: null,
+  token: null
 };
 
 export const authReducer = createReducer(initialState, builder => {
@@ -22,11 +24,20 @@ export const authReducer = createReducer(initialState, builder => {
       LOGIN.success,
       (state, action: ReturnType<typeof login.success>) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.token = action.payload.token;
       }
     )
-    .addCase(LOGIN.failure, (state, action: ReturnType<typeof login.failure>) => {
-      state.loading = false;
-      state.error = action.payload.error;
-    });
+    .addCase(
+      LOGIN.failure,
+      (state, action: ReturnType<typeof login.failure>) => {
+        state.loading = false;
+        state.error = action.payload.error;
+      }
+    );
+  builder.addCase(
+    GET_USER.success,
+    (state, action: ReturnType<typeof getUser.success>) => {
+      state.user = action.payload.user;
+    }
+  );
 });

@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ["via.placeholder.com"]
+  },
   async headers() {
     return [
       {
@@ -23,6 +26,14 @@ const nextConfig = {
             value: "true"
           }
         ]
+      }
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/api/v1/login",
+        destination: "http://localhost:3000/api/v1/login"
       }
     ];
   }

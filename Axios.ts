@@ -1,23 +1,46 @@
-import axios from "axios";
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const Axios = axios.create({
   baseURL: "https://capsmasher.com/api/v1",
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
-    "Access-Control-Allow-Headers":
-      "Content-Type, Authorization, Content-Length, X-Requested-With",
-    "Content-Type": "application/json",
-    Accept: "application/json"
-  }
+  timeout: 10000
+  //FIXME: when file uploading, timeout is not enough
 });
 
-export const setToken = (token: string) => {
-  Axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+Axios.defaults.headers.post["Content-Type"] = "application/json";
+Axios.defaults.timeout = 10000;
+
+const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
+  return config;
 };
 
-export const removeToken = () => {
-  delete Axios.defaults.headers.common.Authorization;
+const onRequestError = (error: AxiosError): Promise<AxiosError> => {
+  return Promise.reject(error);
 };
 
-export default Axios;
+const onResponse = (response: AxiosResponse): AxiosResponse => {
+  // if (response.data?.success === false) {
+  //   throw new Error(response.data?.message || 'Something went wrong');
+  // }
+  return response;
+};
+
+const onResponseError = (error: AxiosError): Promise<AxiosError> => {
+  if (error?.response?.status === 401) {
+    // store.dispatch(logoutAction.request());
+  }
+  return Promise.reject(error);
+};
+
+// REQUEST INTERCEPTOR
+// Axios.interceptors.request.use(onRequest, onRequestError);
+
+// RESPONSE INTERCEPTOR
+Axios.interceptors.response.use(onResponse, onResponseError);
+
+export function setToken(accessToken?: string) {
+  if (accessToken) {
+    Axios.defaults.headers.common.authorization = `Bearer ${accessToken}`;
+  } else {
+    delete Axios.defaults.headers.common.authorization;
+  }
+}

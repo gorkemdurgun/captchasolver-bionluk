@@ -3,26 +3,36 @@ import { authReducer } from "@/redux/reducers/auth/authReducer";
 
 import createSagaMiddleware from "redux-saga";
 import rootSaga from "@/redux/sagas";
-import { createMigrate, persistReducer, persistStore } from "redux-persist";
+import {
+  createMigrate,
+  persistReducer,
+  persistStore,
+  persistCombineReducers,
+  PersistConfig
+} from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import storageSession from "redux-persist/lib/storage/session";
 
 const sagaMiddleware = createSagaMiddleware();
 
 const persistConfig = {
   key: "root",
-  storage,
-  version: 0
+  storage: storage,
+  whitelist: ["auth"],
+  version: 1
 };
 
-const reducers = combineReducers({
+const persistedReducer = persistCombineReducers(persistConfig, {
   auth: authReducer
 });
 
 export const store = configureStore({
-  reducer: persistReducer(persistConfig, reducers),
+  reducer: persistedReducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(sagaMiddleware)
+    getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware)
 });
+
+export const persistor = persistStore(store);
 
 sagaMiddleware.run(rootSaga);
 
