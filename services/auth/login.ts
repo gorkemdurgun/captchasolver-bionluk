@@ -1,8 +1,7 @@
-import {Axios} from "@/Axios";
+import { Axios } from "@/Axios";
 
 type LoginResponse = {
-  token: string;
-  user: User;
+  accessToken: string;
 };
 
 export const login = (email: string, password: string) => {

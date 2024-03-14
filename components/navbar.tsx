@@ -35,10 +35,17 @@ import { Logo } from "@/components/icons";
 import Image from "next/image";
 import { svg } from "@/public/assets";
 import { User } from "@nextui-org/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Text from "./text";
+import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/hooks";
 
 export const Navbar = () => {
+  const router = useRouter();
+  const { user } = useAppSelector(state => ({
+    user: state.auth.user
+  }));
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -60,11 +67,13 @@ export const Navbar = () => {
     />
   );
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
-      <NavbarContent aria-busy="true" className="basis-1/5 sm:basis-full" justify="start">
+      <NavbarContent
+        aria-busy="true"
+        className="basis-1/5 sm:basis-full"
+        justify="start"
+      >
         <NavbarBrand className="gap-3 max-w-fit">
           <NextLink className="flex justify-start items-center gap-2" href="/">
             <Image
@@ -111,11 +120,11 @@ export const Navbar = () => {
           </Link>
           <ThemeSwitch /> 
         </NavbarItem> */}
-        {isAuthenticated ? (
+        {user ? (
           <NavbarItem className="flex gap-2 items-center">
             <User
               className="text-body text-white font-bold"
-              name="Luisa Morris"
+              name={user.email}
               avatarProps={{
                 className: "rounded-2xl w-8 h-8",
                 src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
@@ -123,7 +132,7 @@ export const Navbar = () => {
             />
             <Button
               className="bg-transparent p-0 hover:bg-gray-800 min-w-unit-12"
-              onClick={() => setIsAuthenticated(false)}
+              onClick={() => {}}
             >
               <GoDashboardIcon className="text-xl text-white" />
             </Button>
@@ -132,7 +141,7 @@ export const Navbar = () => {
           <NavbarItem>
             <Button
               className="primary-button border-none bg-white/10 py-2 px-12 hover:bg-white/20"
-              onClick={() => setIsAuthenticated(true)}
+              onClick={() => router.push("/login")}
             >
               <Text className="text-body text-white text-lg">Sign In</Text>
             </Button>
@@ -140,9 +149,11 @@ export const Navbar = () => {
         )}
         {/* <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem> */}
       </NavbarContent>
-      <NavbarContent 
-      aria-busy="true"
-      className="sm:hidden basis-1 pl-4" justify="end">
+      <NavbarContent
+        aria-busy="true"
+        className="sm:hidden basis-1 pl-4"
+        justify="end"
+      >
         {/* <Link isExternal href={siteConfig.links.discord} aria-label="Discord">
           <DiscordIcon className="text-default-500" />
         </Link> */}

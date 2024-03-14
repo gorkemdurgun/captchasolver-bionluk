@@ -1,5 +1,7 @@
 type User = {
-  id: string;
-  name: string;
+  userId: string;
+  token: string;
   email: string;
+  balance: number;
+  clientKey: string;
 };

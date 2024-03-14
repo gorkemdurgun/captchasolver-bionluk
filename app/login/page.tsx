@@ -16,8 +16,9 @@ import { svg } from "@/public/assets";
 import Text from "@/components/text";
 import Link from "next/link";
 import { useAppDispatch } from "@/hooks";
-import { login } from "@/redux/actions";
+import { login as loginAction } from "@/redux/actions";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
@@ -27,25 +28,17 @@ const styles: SlotsToClasses<InputSlots> = {
 };
 
 export default function LoginPage() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
 
   function handleLogin() {
-    /*
-    const api = "https://capsmasher.com/api/v1/login";
-    axios
-      .post(api, {
-        email: "asdjasdkassasddssjasdkasws@gmail.com",
-        password: "FHAKDJSKDDadsa14512!"
-      })
-      .then(res => {
-        console.log("Response:", res);
-      });
-      */
-
     dispatch(
-      login.request({
+      loginAction.request({
         email: "asdjasdkassdssjkasw@gmail.com",
-        password: "FHAKDJSKDDadsa14512!"
+        password: "FHAKDJSKDDadsa14512!",
+        onSuccess() {
+          router.push("/");
+        }
       })
     );
   }

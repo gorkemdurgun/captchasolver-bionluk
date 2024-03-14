@@ -2,12 +2,12 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 export const Axios = axios.create({
   baseURL: "https://capsmasher.com/api/v1",
-  timeout: 120
+  timeout: 10000
   //FIXME: when file uploading, timeout is not enough
 });
 
 Axios.defaults.headers.post["Content-Type"] = "application/json";
-Axios.defaults.timeout = 120;
+Axios.defaults.timeout = 10000;
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   return config;
