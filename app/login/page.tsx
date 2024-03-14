@@ -17,6 +17,7 @@ import Text from "@/components/text";
 import Link from "next/link";
 import { useAppDispatch } from "@/hooks";
 import { login } from "@/redux/actions";
+import axios from "axios";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
@@ -29,25 +30,24 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
 
   function handleLogin() {
+    /*
+    const api = "https://capsmasher.com/api/v1/login";
+    axios
+      .post(api, {
+        email: "asdjasdkassasddssjasdkasws@gmail.com",
+        password: "FHAKDJSKDDadsa14512!"
+      })
+      .then(res => {
+        console.log("Response:", res);
+      });
+      */
+
     dispatch(
       login.request({
         email: "asdjasdkassdssjkasw@gmail.com",
         password: "FHAKDJSKDDadsa14512!"
       })
     );
-
-    /*
-    fetch('https://dummyjson.com/posts/add', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title: 'Post add TRIES G!',
-        userId: 5,
-      })
-    })
-    .then(res => res.json())
-    .then(console.log);
-    */
   }
 
   return (
