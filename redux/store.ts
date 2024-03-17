@@ -12,6 +12,8 @@ import {
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import storageSession from "redux-persist/lib/storage/session";
+import { Router } from "next/router";
+import { authClearLoadingsAndErrors } from "./actions";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -32,7 +34,12 @@ export const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }).concat(sagaMiddleware)
 });
 
-export const persistor = persistStore(store);
+export const persistor = persistStore(store, {}, () => {
+  store.dispatch(authClearLoadingsAndErrors.request());
+  Router.events.on("routeChangeStart", () => {
+    store.dispatch(authClearLoadingsAndErrors.request());
+  });
+});
 
 sagaMiddleware.run(rootSaga);
 

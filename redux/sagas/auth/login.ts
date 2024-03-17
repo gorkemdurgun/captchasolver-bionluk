@@ -7,6 +7,7 @@ import {
   getUser as getUserAction
 } from "@/redux/actions";
 import { toError } from "@/utils";
+import { errorToast, successToast } from "@/components/toaster";
 
 export function* login() {
   while (true) {
@@ -25,16 +26,17 @@ export function* login() {
         })
       );
 
-      yield* delay(1000);
+      successToast("You have successfully logged in!");
 
       if (onSuccess) {
         onSuccess();
       }
 
       yield* put(getUserAction.request());
-    } catch (error) {
-      const e = toError(error);
-      yield* put(loginAction.failure({ error: e }));
+    } catch (error: any) {
+      const errorMessage = error.response.data.errorDescription as string;
+      errorToast(errorMessage);
+      yield* put(loginAction.failure({ errorMessage: errorMessage }));
     }
   }
 }
