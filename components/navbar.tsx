@@ -20,7 +20,12 @@ import { siteConfig } from "@/config/site";
 import NextLink from "next/link";
 import clsx from "clsx";
 
-import { PiCaretCircleRightDuotone as GoDashboardIcon } from "react-icons/pi";
+import {
+  PiCaretCircleRightDuotone as GoDashboardIcon,
+  PiUserDuotone as UserIcon,
+  PiGearDuotone as SettingsIcon,
+  PiSignOutDuotone as LogoutIcon
+} from "react-icons/pi";
 
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
@@ -34,14 +39,16 @@ import {
 import { Logo } from "@/components/icons";
 import Image from "next/image";
 import { svg } from "@/public/assets";
-import { User } from "@nextui-org/react";
+import { Avatar, User } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Text from "./text";
 import { useRouter } from "next/navigation";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { logout as logoutAction } from "@/redux/actions";
 
 export const Navbar = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector(state => ({
     user: state.auth.user
   }));
@@ -66,6 +73,10 @@ export const Navbar = () => {
       type="search"
     />
   );
+
+  function handleLogout() {
+    dispatch(logoutAction.request());
+  }
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -121,20 +132,22 @@ export const Navbar = () => {
           <ThemeSwitch /> 
         </NavbarItem> */}
         {user ? (
-          <NavbarItem className="flex gap-2 items-center">
-            <User
-              className="text-body text-white font-bold"
-              name={user.email}
-              avatarProps={{
-                className: "rounded-2xl w-8 h-8",
-                src: "https://i.pravatar.cc/150?u=a04258114e29026702d"
-              }}
-            />
+          <NavbarItem className="flex items-center">
+            <div className="flex gap-2 items-center bg-gray-100/10 p-2 rounded-full">
+              <UserIcon className="text-md text-white" />
+              <span className="text-white text-sm">{user.email}</span>
+            </div>
             <Button
-              className="bg-transparent p-0 hover:bg-gray-800 min-w-unit-12"
+              className="bg-transparent p-0 rounded-full min-w-unit-10"
               onClick={() => {}}
             >
-              <GoDashboardIcon className="text-xl text-white" />
+              <SettingsIcon className="text-lg text-white" />
+            </Button>
+            <Button
+              className="bg-transparent p-0 rounded-full min-w-unit-10"
+              onClick={handleLogout}
+            >
+              <LogoutIcon className="text-lg text-white" />
             </Button>
           </NavbarItem>
         ) : (

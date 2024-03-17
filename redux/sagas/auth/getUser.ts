@@ -14,7 +14,7 @@ export function* getUser() {
       yield* put(getUserAction.success({ user: response }));
     } catch (error) {
       const e = toError(error);
-      yield* put(getUserAction.failure({ error: e }));
+      yield* put(getUserAction.failure({ errorMessage: e.message }));
     }
   }
 }

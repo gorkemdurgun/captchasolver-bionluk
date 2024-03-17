@@ -19,7 +19,8 @@ import { useAppDispatch } from "@/hooks";
 import { login as loginAction } from "@/redux/actions";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { successToast } from "@/components/toaster";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",

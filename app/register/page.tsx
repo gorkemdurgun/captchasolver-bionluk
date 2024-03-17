@@ -17,6 +17,13 @@ import Text from "@/components/text";
 import Link from "next/link";
 
 import { PiArrowBendDoubleUpLeftBold as BackLoginIcon } from "react-icons/pi";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { errorToast, successToast } from "@/components/toaster";
+import { useAppDispatch, useAppSelector } from "@/hooks";
+import { register as registerAction } from "@/redux/actions";
+import { useRouter } from "next/navigation";
 
 const styles: SlotsToClasses<InputSlots> = {
   label: "text-white text-lg whitespace-nowrap",
@@ -26,11 +33,60 @@ const styles: SlotsToClasses<InputSlots> = {
 };
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const { error } = useAppSelector(state => ({
+    error: state.auth.errorMessage
+  }));
+
+  const [registerForm, setRegisterForm] = useState({
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+
+  function formValidation() {
+    let isValid = true;
+
+    if (registerForm.email === "") {
+      isValid = false;
+    } else if (registerForm.password === "") {
+      isValid = false;
+    } else if (registerForm.confirmPassword === "") {
+      isValid = false;
+    } else if (registerForm.password !== registerForm.confirmPassword) {
+      isValid = false;
+    } else {
+      isValid = true;
+    }
+
+    return isValid;
+  }
+
+  function handleChangeForm(e: React.ChangeEvent<HTMLInputElement>) {
+    setRegisterForm({ ...registerForm, [e.target.name]: e.target.value });
+  }
+
+  function handleRegister() {
+    dispatch(
+      registerAction.request({
+        email: registerForm.email,
+        password: registerForm.password,
+        onSuccess: () => {
+          router.push("/");
+        }
+      })
+    );
+  }
+
   return (
     <RegisterLayout>
       <div className="flex flex-col items-center justify-center w-full gap-4 px-6 ">
         <span className="px-12 py-2 rounded-sm bg-gradient-to-r mb-7 from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
-          <p className="text-major flex justify-center text-black text-3xl md:text-5xl">
+          <p
+            className="text-major flex justify-center text-black text-3xl md:text-5xl"
+            onClick={() => successToast("reg successful")}
+          >
             REGISTER
           </p>
         </span>
@@ -51,37 +107,42 @@ export default function RegisterPage() {
           <CardBody className="flex items-center gap-4 py-12 w-full max-w-xl">
             <Input
               className="grid grid-cols-[1fr,2fr]"
-              type="name"
-              label="Fullname"
-              isRequired
-              classNames={styles}
-              labelPlacement="outside-left"
-            ></Input>
-            <Input
-              className="grid grid-cols-[1fr,2fr]"
               type="email"
               label="Email"
+              name="email"
               isRequired
               classNames={styles}
               labelPlacement="outside-left"
+              value={registerForm.email}
+              onChange={handleChangeForm}
             ></Input>
             <Input
               className="grid grid-cols-[1fr,2fr]"
               type="password"
               label="Password"
+              name="password"
               isRequired
               classNames={styles}
               labelPlacement="outside-left"
+              value={registerForm.password}
+              onChange={handleChangeForm}
             ></Input>
             <Input
               className="grid grid-cols-[1fr,2fr]"
               type="password"
               label="Confirm Password"
+              name="confirmPassword"
               isRequired
               classNames={styles}
               labelPlacement="outside-left"
+              value={registerForm.confirmPassword}
+              onChange={handleChangeForm}
             ></Input>
-            <Button className="primary-button  w-full bg-red-400 hover:bg-red-600">
+            <Button
+              disabled={!formValidation()}
+              className="primary-button  w-full bg-red-400 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleRegister}
+            >
               <Text className="font-body text-white text-lg font-bold">
                 Sign Up
               </Text>

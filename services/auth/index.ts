@@ -1,4 +1,5 @@
-import { login as loginService} from "./login";
+import { login as loginService } from "./login";
+import { register as registerService } from "./register";
 import { getUser as getUserService } from "./getUser";
 
-export { loginService, getUserService };
+export { loginService, registerService, getUserService };
