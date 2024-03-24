@@ -62,7 +62,9 @@ const dummyBlogPosts = [
 export const BlogSection = () => {
   return (
     <BlogSectionLayout>
-      <div className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
+      <div 
+      id="landing-blog-section"
+      className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
         <span className="px-12 py-2 rounded-sm bg-gradient-to-r from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
           <Text className="text-major text-black text-3xl md:text-5xl">
             BLOG POSTS
