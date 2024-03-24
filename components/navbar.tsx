@@ -21,7 +21,7 @@ import NextLink from "next/link";
 import clsx from "clsx";
 
 import {
-  PiCaretCircleRightDuotone as GoDashboardIcon,
+  PiArrowCircleRight as GoDashboardIcon,
   PiUserDuotone as UserIcon,
   PiGearDuotone as SettingsIcon,
   PiSignOutDuotone as LogoutIcon
@@ -42,40 +42,46 @@ import { svg } from "@/public/assets";
 import { Avatar, User } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import Text from "./text";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { logout as logoutAction } from "@/redux/actions";
 
 export const Navbar = () => {
+  const pathname = usePathname();
   const router = useRouter();
   const dispatch = useAppDispatch();
+
   const { user } = useAppSelector(state => ({
     user: state.auth.user
   }));
 
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm"
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
+  const scrollTo = (elementId: string) => {
+    if (pathname === "/") {
+      const element = document.getElementById(elementId);
+      if (element) {
+        if (elementId === "landing-hero-section") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
       }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
-  );
+    } else {
+      router.push("/");
+      setTimeout(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          if (elementId !== "landing-hero-section") {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      }, 300);
+    }
+  };
 
   function handleLogout() {
     dispatch(logoutAction.request());
+    router.push("/");
   }
 
   return (
@@ -105,16 +111,18 @@ export const Navbar = () => {
               className="!before:hidden !after:hidden"
               key={item.href}
             >
-              <NextLink
+              <span
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium"
+                  "data-[active=true]:text-primary data-[active=true]:font-medium cursor-pointer"
                 )}
                 color="foreground"
-                href={item.href}
+                onClick={() => {
+                  scrollTo(item.section);
+                }}
               >
                 {item.label}
-              </NextLink>
+              </span>
             </NavbarItem>
           ))}
         </ul>
@@ -133,15 +141,12 @@ export const Navbar = () => {
         </NavbarItem> */}
         {user ? (
           <NavbarItem className="flex items-center">
-            <div className="flex gap-2 items-center bg-gray-100/10 p-2 rounded-full">
+            <Button
+              className="flex gap-2 items-center bg-gray-100/10 p-2 rounded-full"
+              onClick={() => router.push("/dashboard")}
+            >
               <UserIcon className="text-md text-white" />
               <span className="text-white text-sm">{user.email}</span>
-            </div>
-            <Button
-              className="bg-transparent p-0 rounded-full min-w-unit-10"
-              onClick={() => {}}
-            >
-              <SettingsIcon className="text-lg text-white" />
             </Button>
             <Button
               className="bg-transparent p-0 rounded-full min-w-unit-10"
@@ -175,25 +180,34 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarMenu>
-        {searchInput}
         <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
+          {user ? (
+            <div className="flex flex-row items-center gap-2 bg-gray-100/10 p-4 rounded-full">
+              <UserIcon className="text-md text-white" />
+              <span className="text-white text-sm">{user.email}</span>
+              <div className="flex flex-row items-center gap-2 ml-auto">
+                <Button
+                  className="bg-transparent p-0 rounded-full min-w-unit-10"
+                  onClick={() => router.push("/dashboard")}
+                >
+                  <GoDashboardIcon className="text-lg text-white" />
+                </Button>
+                <Button
+                  className="bg-transparent p-0 rounded-full min-w-unit-10"
+                  onClick={handleLogout}
+                >
+                  <LogoutIcon className="text-lg text-white" />
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <Button
+              className="primary-button border-none bg-white/10 py-2 px-12 hover:bg-white/20"
+              onClick={() => router.push("/login")}
+            >
+              <Text className="text-body text-white text-lg">Sign In</Text>
+            </Button>
+          )}
         </div>
       </NavbarMenu>
     </NextUINavbar>

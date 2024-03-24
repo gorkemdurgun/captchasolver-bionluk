@@ -14,6 +14,7 @@ import {
 import { useLottie } from "lottie-react";
 import UseCasesSectionLayout from "./layout";
 import Text from "@/components/text";
+import { useRouter } from "next/navigation";
 
 const pythonCodeSteps = [
   {
@@ -54,9 +55,14 @@ const goCodeSteps = [
 ];
 
 export const UseCaseSection = () => {
+  const router = useRouter();
+
   return (
     <UseCasesSectionLayout>
-      <div className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10">
+      <div
+        id="landing-docs-section"
+        className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10"
+      >
         <span className="px-12 py-2 rounded-sm bg-gradient-to-r from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
           <Text className="text-major text-black text-3xl md:text-5xl">
             HOW TO USE API ?
@@ -98,7 +104,10 @@ export const UseCaseSection = () => {
                 </Text>
               </span>
               <div className="flex flex-row items-center justify-start gap-4 w-full">
-                <Button className="primary-button bg-gray-50 w-full hover:bg-gray-100">
+                <Button
+                  className="primary-button bg-gray-50 w-full hover:bg-gray-100"
+                  onClick={() => router.push("/docs")}
+                >
                   <Text className="font-body text-black text-lg font-bold">
                     Read the Docs
                   </Text>

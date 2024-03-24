@@ -8,6 +8,7 @@ import { ThemeProviderProps } from "next-themes/dist/types";
 import { store, persistor } from "@/redux/store";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { LoadingStore } from "@/components";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <ReduxProvider store={store}>
-          <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+          <PersistGate  loading={<LoadingStore />} persistor={persistor}>
             {children}
           </PersistGate>
         </ReduxProvider>
