@@ -109,7 +109,7 @@ export const UseCaseSection = () => {
                   onClick={() => router.push("/docs")}
                 >
                   <Text className="font-body text-black text-lg font-bold">
-                    Read the Docs
+                    Read the Documentation
                   </Text>
                 </Button>
               </div>

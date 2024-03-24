@@ -10,7 +10,7 @@ export const siteConfig = {
       section: "landing-hero-section"
     },
     {
-      label: "Docs",
+      label: "Documentation",
       href: "/docs",
       section: "landing-docs-section"
     },
