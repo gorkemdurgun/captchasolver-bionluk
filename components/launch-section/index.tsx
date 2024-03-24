@@ -15,25 +15,7 @@ import Text from "../text";
 
 import { LottieOptions, useLottie } from "lottie-react";
 import LaunchSectionLayout from "./layout";
-
-const technologies = [
-  {
-    name: "Python",
-    icon: "https://www.svgrepo.com/show/452091/python.svg"
-  },
-  {
-    name: "Docker",
-    icon: "https://www.svgrepo.com/show/448221/docker.svg"
-  },
-  {
-    name: "React.js",
-    icon: "https://www.svgrepo.com/show/354259/react.svg"
-  },
-  {
-    name: "TypeScript",
-    icon: "https://www.svgrepo.com/show/354478/typescript-icon.svg"
-  }
-];
+import { useRouter, usePathname } from "next/navigation";
 
 const features = [
   {
@@ -60,6 +42,9 @@ const features = [
 ];
 
 export const LaunchSection = () => {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const options: LottieOptions = {
     animationData: lotties.SolvePuzzleLottie,
     loop: true,
@@ -68,18 +53,44 @@ export const LaunchSection = () => {
 
   const { View: SolvePuzzleLottieAnimation } = useLottie(options);
 
+  const scrollTo = (elementId: string) => {
+    if (pathname === "/") {
+      const element = document.getElementById(elementId);
+      if (element) {
+        if (elementId === "landing-hero-section") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    } else {
+      router.push("/");
+      setTimeout(() => {
+        const element = document.getElementById(elementId);
+        if (element) {
+          if (elementId !== "landing-hero-section") {
+            element.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      }, 300);
+    }
+  };
+
   return (
     <LaunchSectionLayout>
       {/* Title */}
-      <span className="flex flex-col items-center justify-center mt-4 gap-0">
-        <Text className="text-major text-red-700 text-3xl  lg:text-6xl md:text-4xl">
+      <div
+        id="landing-hero-section"
+        className="flex flex-col items-center justify-center mt-4 md:mt-0 mx-4 gap-0 p-4 bg-red-300/50 rounded-xl"
+      >
+        <Text className="text-major text-red-700 text-3xl  lg:text-5xl md:text-4xl">
           Solve automation for
         </Text>
-        <Text className="text-major text-red-700 text-3xl lg:text-7xl md:text-4xl">
+        <Text className="text-major text-red-700 text-3xl lg:text-6xl md:text-4xl">
           Recaptcha systems
         </Text>
-      </span>
-      <div className="grid grid-cols-1 items-center w-full gap-4 mb-4 py-2 px-6 md:p-8 md:grid-cols-2 md:py-2">
+      </div>
+      <div className="grid grid-cols-1 items-center w-full mt-4 gap-4 mb-4 py-2 md:py-2 px-6 md:p-8 md:grid-cols-[4fr,3fr] ">
         <div className="flex flex-col lg:items-start items-center justify-center gap-4 order-2 md:order-1">
           {/* Description */}
           <Text className="text-body font-Xsemibold text-black text-justify text-md mb-2 max-w-[500px] md:text-xl mt-2 mb-4">
@@ -89,14 +100,20 @@ export const LaunchSection = () => {
           </Text>
           {/* Buttons */}
           <div className="flex flex-col items-center justify-start gap-4 mt-4 w-full max-w-[500px]">
-            <Button className="primary-button bg-red-400 hover:bg-red-600 w-full">
-              <Text className="font-body text-white text-lg font-bold">
-                Get Started
+            <Button
+              className="primary-button bg-red-400 hover:bg-red-600 w-full"
+              onClick={() => scrollTo("landing-pricing-section")}
+            >
+              <Text className="font-body text-white text-lg font-semibold">
+                Get started with free trial
               </Text>
             </Button>
-            <Button className="primary-button bg-white hover:bg-gray-100 w-full">
+            <Button
+              className="primary-button bg-white hover:bg-gray-100 w-full"
+              onClick={() => router.push("/docs")}
+            >
               <Text className="font-body text-gray-800 text-lg font-bold">
-                Learn More
+                Learn more about our API
               </Text>
             </Button>
           </div>
@@ -107,14 +124,15 @@ export const LaunchSection = () => {
           </div>
         </div>
       </div>
-      <div className="grid items-center justify-center gap-4 py-4 px-6 w-full lg:grid-cols-4 md:grid-cols-2">
+      <div className="grid items-center justify-center gap-4 py-2 px-6 w-full lg:grid-cols-4 md:grid-cols-2">
         {features.map((feature, index) => {
           const Icon = feature.icon;
           return (
             <Card
               key={index}
-              className="flex flex-col
-               items-center justify-center gap-4 w-full lg:max-w-[300px] max-w-full p-4 bg-white shadow-lg rounded-md"
+              className={`
+              flex flex-col
+               items-center justify-center gap-1 w-full lg:max-w-[300px] max-w-full p-4 bg-red-200/50 shadow-lg rounded-sm`}
             >
               <Icon className="text-red-700 text-4xl" />
               <Text className="text-major text-red-700 text-xl font-bold">

@@ -6,57 +6,28 @@ export const siteConfig = {
   navItems: [
     {
       label: "Home",
-      href: "/"
+      href: "/",
+      section: "landing-hero-section"
     },
     {
       label: "Docs",
-      href: "/docs"
-    },
-    {
-      label: "Pricing",
-      href: "/pricing"
+      href: "/docs",
+      section: "landing-docs-section"
     },
     {
       label: "Blog",
-      href: "/blog"
-    },
-    {
-      label: "About",
-      href: "/about"
-    }
-  ],
-  navMenuItems: [
-    {
-      label: "Home",
-      href: "/"
-    },
-    {
-      label: "Docs",
-      href: "/docs"
+      href: "/blog",
+      section: "landing-blog-section"
     },
     {
       label: "Pricing",
-      href: "/pricing"
+      href: "/pricing",
+      section: "landing-pricing-section"
     },
     {
-      label: "Blog",
-      href: "/blog"
-    },
-    {
-      label: "About",
-      href: "/about"
-    },
-    {
-      label: "Settings",
-      href: "/settings"
-    },
-    {
-      label: "Help & Feedback",
-      href: "/help-feedback"
-    },
-    {
-      label: "Logout",
-      href: "/logout"
+      label: "Contact",
+      href: "/contact",
+      section: "landing-contact-section"
     }
   ],
   links: {

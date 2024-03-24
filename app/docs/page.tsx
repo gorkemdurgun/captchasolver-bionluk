@@ -1,6 +1,7 @@
 "use client";
 
 import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 // import { LuArrowUpDown as ExpandIcon } from "react-icons/lu";
 import { FaChevronDown as ExpandIcon } from "react-icons/fa6";
@@ -105,7 +106,15 @@ export default function DocsPage() {
     return { __html: html };
   }
 
+  const params = useSearchParams();
+
   const [activePage, setActivePage] = useState<string>("0_0");
+
+  useEffect(() => {
+    if (params.has("category")) {
+      setActivePage(params.get("category") as string);
+    }
+  }, [params]);
 
   return (
     <div className="relative overflow-hidden w-full h-full flex">
