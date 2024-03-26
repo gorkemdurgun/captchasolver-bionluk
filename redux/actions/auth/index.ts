@@ -53,3 +53,10 @@ export const getUser = {
   success: createAction<{ user: User }>(GET_USER.success),
   failure: createAction<{ errorMessage: string }>(GET_USER.failure)
 };
+
+export const RESET_CLIENT_KEY = createAsyncAction("RESET_CLIENT_KEY");
+export const resetClientKey = {
+  request: createAction(RESET_CLIENT_KEY.request),
+  success: createAction<{ clientKey: string }>(RESET_CLIENT_KEY.success),
+  failure: createAction<{ errorMessage: string }>(RESET_CLIENT_KEY.failure)
+};

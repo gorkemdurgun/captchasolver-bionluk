@@ -35,8 +35,12 @@ import {
   PiArrowClockwise as RefreshKeyIcon
 } from "react-icons/pi";
 import { motion } from "framer-motion";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useRouter } from "next/navigation";
+import {
+  resetClientKey as resetClientKeyAction,
+  getUser as getUserAction
+} from "@/redux/actions";
 
 const dummyPurchaseData = [
   {
@@ -67,21 +71,17 @@ const dummyTicketData = [
     subject: "How can I change my email address?",
     message:
       "You can change your email address by clicking the Edit Information button in the Personal Information section."
-  },
-  {
-    status: "closed",
-    subject: "How can I change my username?",
-    message:
-      "You can change your username by clicking the Edit Information button in the Personal Information section. If you have any problem, please contact us. We are here to help you."
   }
 ];
 
 export default function DashboardPage() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { userId, userEmail } = useAppSelector(state => ({
+  const { userId, userEmail, cliKey } = useAppSelector(state => ({
     userId: state.auth.user?.userId,
-    userEmail: state.auth.user?.email
+    userEmail: state.auth.user?.email,
+    cliKey: state.auth.user?.clientKey
   }));
 
   const [editMode, setEditMode] = useState(false);
@@ -105,6 +105,10 @@ export default function DashboardPage() {
       setInputPasswordConfirm("*".repeat(8));
     }
   }, [editMode]);
+
+  useEffect(() => {
+    dispatch(getUserAction.request());
+  }, []);
 
   return (
     <div className="relative overflow-hidden w-full h-full flex">
@@ -335,7 +339,7 @@ export default function DashboardPage() {
                   }}
                 >
                   <span className="max-w-[200px] sm:max-w-[320px] truncate sm:whitespace-nowrap">
-                    SMASH-GZYNA4KF9DLBR1NMHWX44EPMB0XIR4OC
+                    {cliKey}
                   </span>
                 </Snippet>
               </div>
@@ -347,7 +351,10 @@ export default function DashboardPage() {
                   <QuestionIcon />
                   How can I use this key?
                 </Button>
-                <Button className="bg-indigo-50 text-indigo-900 w-full">
+                <Button
+                  className="bg-indigo-50 text-indigo-900 w-full"
+                  onClick={() => dispatch(resetClientKeyAction.request())}
+                >
                   <RefreshKeyIcon />
                   Refresh Key
                 </Button>
@@ -373,30 +380,42 @@ export default function DashboardPage() {
                   Open Tickets
                 </span>
               </div>
-              <Accordion>
-                {dummyTicketData
-                  .filter(ticket => ticket.status === "open")
-                  .map(ticket => (
-                    <AccordionItem
-                      key={ticket.subject}
-                      classNames={{
-                        title: "text-body text-sm text-gray-900"
-                      }}
-                      title={ticket.subject}
-                      indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
-                    >
-                      <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
-                        <span className="flex items-center gap-1 text-body text-sm text-red-500">
-                          <AdminIcon className="w-4 h-4" />
-                          admin:
-                        </span>
-                        <span className="text-body text-sm text-gray-900">
-                          {ticket.message}
-                        </span>
-                      </div>
-                    </AccordionItem>
-                  ))}
-              </Accordion>
+              {dummyTicketData.filter(ticket => ticket.status === "open")
+                .length > 0 && (
+                <Accordion>
+                  {dummyTicketData
+                    .filter(ticket => ticket.status === "open")
+                    .map(ticket => (
+                      <AccordionItem
+                        key={ticket.subject}
+                        classNames={{
+                          title: "text-body text-sm text-gray-900"
+                        }}
+                        title={ticket.subject}
+                        indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
+                      >
+                        <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
+                          <span className="flex items-center gap-1 text-body text-sm text-red-500">
+                            <AdminIcon className="w-4 h-4" />
+                            admin:
+                          </span>
+                          <span className="text-body text-sm text-gray-900">
+                            {ticket.message}
+                          </span>
+                        </div>
+                      </AccordionItem>
+                    ))}
+                </Accordion>
+              )}
+              {dummyTicketData.filter(ticket => ticket.status === "open")
+                .length === 0 && (
+                <div className="flex flex-col gap-4 items-center justify-center pt-8">
+                  <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
+                    <TicketIcon className="w-4 h-4" />
+                    Any open ticket found.
+                  </span>
+                </div>
+              )}
             </motion.div>
             {/* Tickets Section - Closed Tickets */}
             <motion.div
@@ -410,30 +429,42 @@ export default function DashboardPage() {
                   Closed Tickets
                 </span>
               </div>
-              <Accordion>
-                {dummyTicketData
-                  .filter(ticket => ticket.status === "closed")
-                  .map(ticket => (
-                    <AccordionItem
-                      key={ticket.subject}
-                      classNames={{
-                        title: "text-body text-sm text-gray-900"
-                      }}
-                      title={ticket.subject}
-                      indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
-                    >
-                      <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
-                        <span className="flex items-center gap-1 text-body text-sm text-red-500">
-                          <AdminIcon className="w-4 h-4" />
-                          admin:
-                        </span>
-                        <span className="text-body text-sm text-gray-900">
-                          {ticket.message}
-                        </span>
-                      </div>
-                    </AccordionItem>
-                  ))}
-              </Accordion>
+              {dummyTicketData.filter(ticket => ticket.status === "closed")
+                .length > 0 && (
+                <Accordion>
+                  {dummyTicketData
+                    .filter(ticket => ticket.status === "closed")
+                    .map(ticket => (
+                      <AccordionItem
+                        key={ticket.subject}
+                        classNames={{
+                          title: "text-body text-sm text-gray-900"
+                        }}
+                        title={ticket.subject}
+                        indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
+                      >
+                        <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
+                          <span className="flex items-center gap-1 text-body text-sm text-red-500">
+                            <AdminIcon className="w-4 h-4" />
+                            admin:
+                          </span>
+                          <span className="text-body text-sm text-gray-900">
+                            {ticket.message}
+                          </span>
+                        </div>
+                      </AccordionItem>
+                    ))}
+                </Accordion>
+              )}
+              {dummyTicketData.filter(ticket => ticket.status === "closed")
+                .length === 0 && (
+                <div className="flex flex-col gap-4 items-center justify-center pt-8">
+                  <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
+                    <TicketIcon className="w-4 h-4" />
+                    Any closed ticket found.
+                  </span>
+                </div>
+              )}
             </motion.div>
           </div>
           <motion.div

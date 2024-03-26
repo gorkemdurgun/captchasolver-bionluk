@@ -9,7 +9,9 @@ import {
   getUser,
   GET_USER,
   register,
-  REGISTER
+  REGISTER,
+  resetClientKey,
+  RESET_CLIENT_KEY
 } from "@/redux/actions";
 
 const initialState: {
@@ -79,6 +81,13 @@ export const authReducer = createReducer(initialState, builder => {
     GET_USER.success,
     (state, action: ReturnType<typeof getUser.success>) => {
       state.user = action.payload.user;
+    }
+  );
+  // Reset client key
+  builder.addCase(
+    RESET_CLIENT_KEY.success,
+    (state, action: ReturnType<typeof resetClientKey.success>) => {
+      state.user!.clientKey = action.payload.clientKey;
     }
   );
 });
