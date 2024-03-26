@@ -6,7 +6,6 @@ import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
-import { ToastContainer, ToastContainerProps } from "react-toastify";
 
 export const metadata: Metadata = {
   title: {
@@ -23,15 +22,6 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png"
   }
-};
-
-const toastOptions: ToastContainerProps = {
-  position: "top-center",
-  autoClose: 5000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  closeButton: false,
-  className: "!p-0"
 };
 
 export default function RootLayout({
@@ -73,10 +63,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
-            <main className="w-full mx-auto flex-grow">
-              <ToastContainer {...toastOptions} />
-              {children}
-            </main>
+            <main className="w-full mx-auto flex-grow">{children}</main>
             <footer className="w-full flex items-center justify-center py-3">
               <Link className="flex items-center gap-1 text-current">
                 <span className="text-default-600">Developing by</span>

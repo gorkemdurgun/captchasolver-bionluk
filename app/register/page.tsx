@@ -18,8 +18,7 @@ import Link from "next/link";
 
 import { PiArrowBendDoubleUpLeftBold as BackLoginIcon } from "react-icons/pi";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { errorToast, successToast } from "@/components/toaster";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { register as registerAction } from "@/redux/actions";

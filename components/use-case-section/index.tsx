@@ -131,7 +131,7 @@ export const UseCaseSection = () => {
                           <Text className="text-body text-black text-xs font-bold lg:text-sm">
                             {`${index + 1}. ${step.title}`}
                           </Text>
-                          <Snippet className="text-body text-black text-xs bg-gray-200 lg:text-xs">
+                          <Snippet className="text-body text-black text-xs bg-gray-200 lg:text-sm">
                             {step.snippet}
                           </Snippet>
                         </span>
@@ -145,10 +145,10 @@ export const UseCaseSection = () => {
                           key={index}
                           className="flex flex-col items-start justify-start gap-1"
                         >
-                          <Text className="text-body text-black text-sm font-bold">
+                          <Text className="text-body text-black text-xs font-bold lg:text-sm">
                             {`${index + 1}. ${step.title}`}
                           </Text>
-                          <Snippet className="text-body text-black text-sm bg-gray-200">
+                          <Snippet className="text-body text-black text-xs bg-gray-200 lg:text-sm">
                             {step.snippet}
                           </Snippet>
                         </span>

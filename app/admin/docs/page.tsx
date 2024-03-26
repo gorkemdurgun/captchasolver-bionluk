@@ -43,6 +43,7 @@ import {
   PiPaletteDuotone as ColorIcon,
   PiCheck as CheckIcon
 } from "react-icons/pi";
+import { getDocumentations } from "@/services/docs";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -63,56 +64,7 @@ export default function AdminPage() {
     content: "<p>Please select a page and sub page for editing</p>"
   });
 
-  const initialPages: {
-    title: string;
-    subItems: {
-      title: string;
-      content: string;
-    }[];
-  }[] = [
-    {
-      title: "Getting Started",
-      subItems: [
-        {
-          title: "Introduction",
-          content:
-            "<p>Introduction</p> <br> <p>Some content</p> <br> <h1>Heading</h1>"
-        },
-        {
-          title: "Installation",
-          content:
-            "<b>Installation</b> <p>Some installation</p> <h3>Heading</h3> <strong>Strong</strong>"
-        },
-        {
-          title: "Configuration",
-          content: "<p>Configuration</p> <h5>Some configuration</h5>"
-        }
-      ]
-    },
-    {
-      title: "Customization",
-      subItems: [
-        {
-          title: "Themes",
-          content: "<p>Themes</p>"
-        },
-        {
-          title: "Components",
-          content: "<p>Components</p>"
-        }
-      ]
-    }
-  ];
-
-  const [docTrees, setDocTrees] = useState<
-    {
-      title: string;
-      subItems: {
-        title: string;
-        content: string;
-      }[];
-    }[]
-  >(initialPages);
+  const [docTrees, setDocTrees] = useState<Documentation[]>([]);
 
   const editorFontStyles = [
     {
@@ -217,6 +169,12 @@ export default function AdminPage() {
       );
     }
   }, [selectedPage, selectedSubItem]);
+
+  useEffect(() => {
+    getDocumentations().then(({ data }) => {
+      setDocTrees(data);
+    });
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
