@@ -46,7 +46,7 @@ export const BlogSection = () => {
             <div
               key={index}
               className="relative cursor-pointer col-span-12 sm:col-span-4 h-[300px] border-4 rounded-3xl transition-all hover:scale-95"
-              onClick={() => router.push(`/blog/${post.id}`)}
+              onClick={() => router.push(`/blog?${post.id}`)}
             >
               <div className="absolute z-10 top-4 left-4">
                 <h4 className="text-white font-medium text-large">
@@ -65,7 +65,7 @@ export const BlogSection = () => {
             <div
               key={index}
               className="relative cursor-pointer col-span-12 sm:col-span-6 h-[300px] border-4 rounded-3xl transition-all hover:scale-95"
-              onClick={() => router.push(`/blog/${post.id}`)}
+              onClick={() => router.push(`/blog?${post.id}`)}
             >
               <div className="absolute z-10 top-4 left-4">
                 <h4 className="text-white font-medium text-large">

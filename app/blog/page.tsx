@@ -15,7 +15,6 @@ import { useEffect, useState } from "react";
 import { FaChevronRight as ReadIcon } from "react-icons/fa6";
 import { PiDotDuotone as ActivePageIcon } from "react-icons/pi";
 
-
 export default function BlogPage() {
   function htmlParser(html: string) {
     return { __html: html };
@@ -45,7 +44,7 @@ export default function BlogPage() {
   return (
     <div className="max-w-7xl relative overflow-hidden w-full h-full flex flex-col items-center">
       <div className="relative overflow-hidden w-full h-full flex gap-4">
-        <div className="sticky top-0 w-1/4 h-[87.5vh] flex-col gap-2 p-4 sm:flex hidden">
+        <div className="sticky top-0 w-1/4 h-auto flex-col gap-2 p-4 sm:flex hidden">
           <div className="flex flex-col gap-2">
             <h1 className="text-major text-3xl text-black">Blog</h1>
             <span className="text-md text-gray-800">
@@ -122,7 +121,7 @@ export default function BlogPage() {
             </div>
           </ScrollShadow>
         </div>
-        <div className="w-full sm:w-3/4 h-[87.5vh] overflow-scroll flex flex-col gap-4 p-4 text-black">
+        <div className="w-full sm:w-3/4 min-h-[100vh] max-h-[150vh] overflow-scroll flex flex-col gap-4 p-4 pb-24 text-black">
           <div className="flex items-center gap-2">
             <ActivePageIcon className="text-2xl text-gray-500" />
             <span className="text-lg font-bold">{selectedBlog?.title}</span>

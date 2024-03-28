@@ -33,7 +33,8 @@ export default function DocsPage() {
   return (
     <div className="max-w-7xl relative overflow-hidden w-full h-full flex flex-col items-center">
       <div className="relative overflow-hidden w-full h-full flex">
-        <div className="sticky top-0 w-1/4 h-[87.5vh] overflow-scroll scroll-smooth p-4 border-l border-gray-100 bg-white drop-shadow-2xl">
+        <div className="sticky top-0 w-1/4 h-auto overflow-scroll scroll-smooth p-4 border-l border-gray-100 bg-white drop-shadow-2xl">
+          <h1 className="text-major text-3xl text-black">Documentation</h1>
           {docTrees.map((page, index) => (
             <Accordion
               defaultExpandedKeys="all"
@@ -47,17 +48,20 @@ export default function DocsPage() {
                 key={index}
                 title={page.title}
                 classNames={{
+                  base: "p-0",
+                  titleWrapper: "pl-2 text-major font-light",
+                  indicator: "mr-4",
                   content: "py-0"
                 }}
                 indicator={
-                  <ExpandIcon className="text-gray-900 w-4 h-4 rotate-90" />
+                  <ExpandIcon className="text-gray-800 w-4 h-4 rotate-90" />
                 }
               >
                 {page.subItems.map((subItem, subIndex) => (
                   <Button
                     aria-checked={activePage === `${index}_${subIndex}`}
                     key={index}
-                    className="w-full flex justify-between bg-transparent aria-checked:bg-red-100/50"
+                    className="w-full flex justify-between pr-2 bg-transparent aria-checked:bg-red-100/50"
                     onClick={() => setActivePage(`${index}_${subIndex}`)}
                   >
                     <span className="text-body text-md text-gray-900">
@@ -72,7 +76,7 @@ export default function DocsPage() {
             </Accordion>
           ))}
         </div>
-        <div className="w-3/4 h-[87.5vh] overflow-scroll p-4 bg-white text-black">
+        <div className="w-3/4 min-h-[100vh] max-h-[150vh] overflow-scroll p-4 bg-white text-black">
           <div
             dangerouslySetInnerHTML={htmlParser(
               docTrees[parseInt(activePage.split("_")[0])]?.subItems[
