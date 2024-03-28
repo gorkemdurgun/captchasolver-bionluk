@@ -31,11 +31,16 @@ import {
   PiCalendarBlank as CalendarIcon,
   PiCurrencyDollar as AmountIcon,
   PiTicketDuotone as TicketIcon,
-  PiRobotDuotone as AdminIcon
+  PiRobotDuotone as AdminIcon,
+  PiArrowClockwise as RefreshKeyIcon
 } from "react-icons/pi";
 import { motion } from "framer-motion";
-import { useAppSelector } from "@/hooks";
+import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useRouter } from "next/navigation";
+import {
+  resetClientKey as resetClientKeyAction,
+  getUser as getUserAction
+} from "@/redux/actions";
 
 const dummyPurchaseData = [
   {
@@ -66,27 +71,44 @@ const dummyTicketData = [
     subject: "How can I change my email address?",
     message:
       "You can change your email address by clicking the Edit Information button in the Personal Information section."
-  },
-  {
-    status: "closed",
-    subject: "How can I change my username?",
-    message:
-      "You can change your username by clicking the Edit Information button in the Personal Information section. If you have any problem, please contact us. We are here to help you."
   }
 ];
 
 export default function DashboardPage() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { userId, userEmail } = useAppSelector(state => ({
+  const { userId, userEmail, cliKey } = useAppSelector(state => ({
     userId: state.auth.user?.userId,
-    userEmail: state.auth.user?.email
+    userEmail: state.auth.user?.email,
+    cliKey: state.auth.user?.clientKey
   }));
+
+  const [editMode, setEditMode] = useState(false);
+  const [inputEmail, setInputEmail] = useState(userEmail || "");
+  const [inputPassword, setInputPassword] = useState("*".repeat(8));
+  const [inputPasswordConfirm, setInputPasswordConfirm] = useState(
+    "*".repeat(8)
+  );
 
   const scrollTo = (elementId: string) => {
     const element = document.getElementById(elementId);
     element?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    if (editMode) {
+      setInputPassword("");
+      setInputPasswordConfirm("");
+    } else {
+      setInputPassword("*".repeat(8));
+      setInputPasswordConfirm("*".repeat(8));
+    }
+  }, [editMode]);
+
+  useEffect(() => {
+    dispatch(getUserAction.request());
+  }, []);
 
   return (
     <div className="relative overflow-hidden w-full h-full flex">
@@ -110,47 +132,89 @@ export default function DashboardPage() {
                 </span>
               </div>
               <div className="flex flex-col gap-2 pt-2">
-                <div className="flex items-center justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
-                  <span className="flex items-center gap-2 text-body text-sm text-gray-600">
-                    <UserIcon className="w-4 h-4" />
-                    Username:
-                  </span>
-                  <span className="text-body text-md text-gray-900">
-                    {userEmail?.split("@")[0]}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
-                  <span className="flex items-center gap-2 text-body text-sm text-gray-600">
-                    <UserIdIcon className="w-4 h-4" />
-                    User ID:
-                  </span>
-                  <span className="text-body text-md text-gray-900">
-                    @{userId}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
+                <div className="grid grid-cols-2 items-center justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
                   <span className="flex items-center gap-2 text-body text-sm text-gray-600">
                     <EmailIcon className="w-4 h-4" />
                     Email Address:
                   </span>
                   <span className="text-body text-md text-gray-900">
-                    {userEmail}
+                    <Input
+                      readOnly={!editMode}
+                      classNames={{
+                        base: "w-full",
+                        inputWrapper: `h-8 ${editMode ? "!bg-gray-200" : "!bg-gray-100"}`,
+                        input: "!text-gray-900",
+                        label: "!text-gray-600"
+                      }}
+                      value={inputEmail}
+                      onChange={e => setInputEmail(e.target.value)}
+                    />
                   </span>
                 </div>
-                <div className="flex items-center justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
+                <div className="grid grid-cols-2 justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
                   <span className="flex items-center gap-2 text-body text-sm text-gray-600">
                     <PasswordIcon className="w-4 h-4" />
                     Password:
                   </span>
                   <span className="text-body text-md text-gray-900">
-                    ********
+                    <Input
+                      readOnly={!editMode}
+                      type="password"
+                      classNames={{
+                        base: "w-full",
+                        inputWrapper: `h-8 ${editMode ? "!bg-gray-200" : "!bg-gray-100"}`,
+                        input: "!text-gray-900",
+                        label: "!text-gray-600"
+                      }}
+                      value={inputPassword}
+                      onChange={e => setInputPassword(e.target.value)}
+                    />
                   </span>
                 </div>
+                {editMode && (
+                  <div className="grid grid-cols-2 justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
+                    <span className="flex items-center gap-2 text-body text-sm text-gray-600">
+                      <PasswordIcon className="w-4 h-4" />
+                      Confirm Password:
+                    </span>
+                    <span className="text-body text-md text-gray-900">
+                      <Input
+                        readOnly={!editMode}
+                        type="password"
+                        classNames={{
+                          base: "w-full",
+                          inputWrapper: `h-8 ${editMode ? "!bg-gray-200" : "!bg-gray-100"}`,
+                          input: "!text-gray-900",
+                          label: "!text-gray-600"
+                        }}
+                        value={inputPasswordConfirm}
+                        onChange={e => setInputPasswordConfirm(e.target.value)}
+                      />
+                    </span>
+                  </div>
+                )}
               </div>
-              <Button className="bg-yellow-50 text-yellow-900 mt-auto">
-                <EditIcon />
-                Edit Information
-              </Button>
+              <div className="flex flex-row items-center justify-end gap-2 mt-auto">
+                <Button
+                  className="bg-yellow-50 text-yellow-900 w-full"
+                  onClick={() => setEditMode(!editMode)}
+                >
+                  <EditIcon />
+                  {editMode ? "Cancel Edit Mode" : "Edit Information"}
+                </Button>
+                <Button
+                  disabled={
+                    !editMode ||
+                    inputPassword !== inputPasswordConfirm ||
+                    inputPassword.length < 8
+                  }
+                  className="bg-green-50 text-green-900 w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => {}}
+                >
+                  <EditIcon />
+                  Save Information
+                </Button>
+              </div>
             </motion.div>
             {/* User Info Section - Last Purchasings */}
             <motion.div
@@ -275,17 +339,26 @@ export default function DashboardPage() {
                   }}
                 >
                   <span className="max-w-[200px] sm:max-w-[320px] truncate sm:whitespace-nowrap">
-                    SMASH-GZYNA4KF9DLBR1NMHWX44EPMB0XIR4OC
+                    {cliKey}
                   </span>
                 </Snippet>
               </div>
-              <Button
-                className="bg-blue-50 text-blue-900 mt-auto"
-                onClick={() => router.push("/docs" + "?category=0_2")}
-              >
-                <QuestionIcon />
-                How can I use this key?
-              </Button>
+              <div className="flex flex-row items-center justify-end gap-2 mt-auto">
+                <Button
+                  className="bg-blue-50 text-blue-900 w-full"
+                  onClick={() => router.push("/docs" + "?category=1_0")}
+                >
+                  <QuestionIcon />
+                  How can I use this key?
+                </Button>
+                <Button
+                  className="bg-indigo-50 text-indigo-900 w-full"
+                  onClick={() => dispatch(resetClientKeyAction.request())}
+                >
+                  <RefreshKeyIcon />
+                  Refresh Key
+                </Button>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -307,30 +380,42 @@ export default function DashboardPage() {
                   Open Tickets
                 </span>
               </div>
-              <Accordion>
-                {dummyTicketData
-                  .filter(ticket => ticket.status === "open")
-                  .map(ticket => (
-                    <AccordionItem
-                      key={ticket.subject}
-                      classNames={{
-                        title: "text-body text-sm text-gray-900"
-                      }}
-                      title={ticket.subject}
-                      indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
-                    >
-                      <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
-                        <span className="flex items-center gap-1 text-body text-sm text-red-500">
-                          <AdminIcon className="w-4 h-4" />
-                          admin:
-                        </span>
-                        <span className="text-body text-sm text-gray-900">
-                          {ticket.message}
-                        </span>
-                      </div>
-                    </AccordionItem>
-                  ))}
-              </Accordion>
+              {dummyTicketData.filter(ticket => ticket.status === "open")
+                .length > 0 && (
+                <Accordion>
+                  {dummyTicketData
+                    .filter(ticket => ticket.status === "open")
+                    .map(ticket => (
+                      <AccordionItem
+                        key={ticket.subject}
+                        classNames={{
+                          title: "text-body text-sm text-gray-900"
+                        }}
+                        title={ticket.subject}
+                        indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
+                      >
+                        <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
+                          <span className="flex items-center gap-1 text-body text-sm text-red-500">
+                            <AdminIcon className="w-4 h-4" />
+                            admin:
+                          </span>
+                          <span className="text-body text-sm text-gray-900">
+                            {ticket.message}
+                          </span>
+                        </div>
+                      </AccordionItem>
+                    ))}
+                </Accordion>
+              )}
+              {dummyTicketData.filter(ticket => ticket.status === "open")
+                .length === 0 && (
+                <div className="flex flex-col gap-4 items-center justify-center pt-8">
+                  <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
+                    <TicketIcon className="w-4 h-4" />
+                    Any open ticket found.
+                  </span>
+                </div>
+              )}
             </motion.div>
             {/* Tickets Section - Closed Tickets */}
             <motion.div
@@ -344,30 +429,42 @@ export default function DashboardPage() {
                   Closed Tickets
                 </span>
               </div>
-              <Accordion>
-                {dummyTicketData
-                  .filter(ticket => ticket.status === "closed")
-                  .map(ticket => (
-                    <AccordionItem
-                      key={ticket.subject}
-                      classNames={{
-                        title: "text-body text-sm text-gray-900"
-                      }}
-                      title={ticket.subject}
-                      indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
-                    >
-                      <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
-                        <span className="flex items-center gap-1 text-body text-sm text-red-500">
-                          <AdminIcon className="w-4 h-4" />
-                          admin:
-                        </span>
-                        <span className="text-body text-sm text-gray-900">
-                          {ticket.message}
-                        </span>
-                      </div>
-                    </AccordionItem>
-                  ))}
-              </Accordion>
+              {dummyTicketData.filter(ticket => ticket.status === "closed")
+                .length > 0 && (
+                <Accordion>
+                  {dummyTicketData
+                    .filter(ticket => ticket.status === "closed")
+                    .map(ticket => (
+                      <AccordionItem
+                        key={ticket.subject}
+                        classNames={{
+                          title: "text-body text-sm text-gray-900"
+                        }}
+                        title={ticket.subject}
+                        indicator={<ExpandIcon className="w-4 h-4 rotate-90" />}
+                      >
+                        <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
+                          <span className="flex items-center gap-1 text-body text-sm text-red-500">
+                            <AdminIcon className="w-4 h-4" />
+                            admin:
+                          </span>
+                          <span className="text-body text-sm text-gray-900">
+                            {ticket.message}
+                          </span>
+                        </div>
+                      </AccordionItem>
+                    ))}
+                </Accordion>
+              )}
+              {dummyTicketData.filter(ticket => ticket.status === "closed")
+                .length === 0 && (
+                <div className="flex flex-col gap-4 items-center justify-center pt-8">
+                  <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
+                    <TicketIcon className="w-4 h-4" />
+                    Any closed ticket found.
+                  </span>
+                </div>
+              )}
             </motion.div>
           </div>
           <motion.div

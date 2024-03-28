@@ -49,6 +49,7 @@ import {
 } from "react-icons/md";
 
 import Image from "next/image";
+import { mockBlogPosts } from "@/mocks/blogs";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -69,52 +70,7 @@ export default function AdminPage() {
     content: "<p>Please select a page and sub page for editing</p>"
   });
 
-  const initialPosts: {
-    image: string;
-    title: string;
-    content: string;
-    tags: string[];
-  }[] = [
-    {
-      image: "https://via.placeholder.com/150",
-      title: "First Blog Post",
-      content: "<p>First blog post content</p>",
-      tags: ["first", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Second Blog Post",
-      content: "<p>Second blog post content</p>",
-      tags: ["second", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Third Blog Post",
-      content: "<p>Third blog post content</p>",
-      tags: ["third", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Fourth Blog Post",
-      content: "<p>Fourth blog post content</p>",
-      tags: ["fourth", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Fifth Blog Post",
-      content: "<p>Fifth blog post content</p>",
-      tags: ["fifth", "blog", "post"]
-    }
-  ];
-
-  const [blogPosts, setBlogPosts] = useState<
-    {
-      image: string;
-      title: string;
-      content: string;
-      tags: string[];
-    }[]
-  >(initialPosts);
+  const [blogPosts, setBlogPosts] = useState<Blog[]>(mockBlogPosts);
 
   const editorFontStyles = [
     {
@@ -175,11 +131,13 @@ export default function AdminPage() {
   const editorColors = ["red", "green", "blue", "purple", "black"];
 
   const [selectedPost, setSelectedPost] = useState<number>(0);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   function handleAddPost() {
     const newPosts = [...blogPosts];
     newPosts.push({
-      image: "https://via.placeholder.com/150",
+      id: `${blogPosts.length + 1}`,
+      imageUrl: "https://via.placeholder.com/150",
       title: "New Blog Post",
       content: "<p>New blog post content</p>",
       tags: ["new", "blog", "post"]
@@ -204,9 +162,14 @@ export default function AdminPage() {
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
       <div className="w-full flex flex-row gap-20">
-        <div className="w-full flex flex-col justify-start gap-2 p-4">
+        <div className="w-full flex flex-col justify-start gap-4 p-4">
           <div className="w-full flex flex-row justify-between">
-            <Input className="w-full max-w-xl" placeholder="Search blog post" />
+            <Input
+              className="w-full max-w-xl"
+              placeholder="Search blog post"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
             <Button
               className="h-full bg-gray-500 text-white text-sm"
               onClick={handleAddPost}
@@ -214,37 +177,41 @@ export default function AdminPage() {
               <AddIcon className="w-8 h-8" />
             </Button>
           </div>
-          <div className="w-full flex flex-col justify-start gap-2 py-4 max-h-[300px] overflow-scroll">
-            {blogPosts.map((post, index) => (
-              <div
-                className="flex flex-row items-center justify-start p-1 pr-3 gap-2 min-h-[60px] bg-gray-600"
-                key={index}
-                onClick={() => handleSelectPost(index)}
-              >
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  width={50}
-                  height={50}
-                />
-                <Input
-                  className="w-full max-w-lg"
-                  value={post.title}
-                  onChange={e => handleChangeName(e.target.value)}
-                />
-
-                <Button
-                  size="sm"
-                  className="ml-auto bg-yellow-500 text-white text-sm"
+          <div className="w-full grid grid-cols-2 justify-start gap-2 p-2 max-h-[300px] overflow-scroll bg-gray-800 rounded-md">
+            {blogPosts
+              .filter(post =>
+                post.title.toLowerCase().includes(searchQuery.toLowerCase())
+              )
+              .map((post, index) => (
+                <div
+                  className="flex flex-row items-center justify-start p-2 gap-2 min-h-[80px] rounded-md bg-gray-600"
+                  key={index}
                   onClick={() => handleSelectPost(index)}
                 >
-                  <EditIcon className="w-4 h-4" />
-                </Button>
-                <Button size="sm" className="bg-red-500 text-white text-sm">
-                  <DeleteIcon className="w-4 h-4" />
-                </Button>
-              </div>
-            ))}
+                  <Image
+                    src={post.imageUrl}
+                    alt={post.title}
+                    width={50}
+                    height={50}
+                  />
+                  <Input
+                    className="w-full max-w-lg"
+                    value={post.title}
+                    onChange={e => handleChangeName(e.target.value)}
+                  />
+
+                  <Button
+                    size="sm"
+                    className="ml-auto bg-gray-500 text-white text-sm"
+                    onClick={() => handleSelectPost(index)}
+                  >
+                    <EditIcon className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" className="bg-gray-500 text-white text-sm">
+                    <DeleteIcon className="w-4 h-4" />
+                  </Button>
+                </div>
+              ))}
           </div>
         </div>
       </div>

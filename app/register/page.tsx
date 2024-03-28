@@ -18,8 +18,7 @@ import Link from "next/link";
 
 import { PiArrowBendDoubleUpLeftBold as BackLoginIcon } from "react-icons/pi";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { errorToast, successToast } from "@/components/toaster";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { register as registerAction } from "@/redux/actions";
@@ -81,7 +80,7 @@ export default function RegisterPage() {
 
   return (
     <RegisterLayout>
-      <div className="flex flex-col items-center justify-center w-full gap-4 px-6 ">
+      <div className="flex flex-col items-center justify-start w-full gap-4 px-6 min-h-[100vh]">
         <span className="px-12 py-2 rounded-sm bg-gradient-to-r mb-7 from-red-100/5 via-gray-100 to-red-100/5 lg:px-64">
           <p
             className="text-major flex justify-center text-black text-3xl md:text-5xl"

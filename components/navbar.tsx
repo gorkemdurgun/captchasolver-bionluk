@@ -56,29 +56,6 @@ export const Navbar = () => {
     user: state.auth.user
   }));
 
-  const scrollTo = (elementId: string) => {
-    if (pathname === "/") {
-      const element = document.getElementById(elementId);
-      if (element) {
-        if (elementId === "landing-hero-section") {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        } else {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
-      }
-    } else {
-      router.push("/");
-      setTimeout(() => {
-        const element = document.getElementById(elementId);
-        if (element) {
-          if (elementId !== "landing-hero-section") {
-            element.scrollIntoView({ behavior: "smooth" });
-          }
-        }
-      }, 300);
-    }
-  };
-
   function handleLogout() {
     dispatch(logoutAction.request());
     router.push("/");
@@ -118,7 +95,7 @@ export const Navbar = () => {
                 )}
                 color="foreground"
                 onClick={() => {
-                  scrollTo(item.section);
+                  router.push(item.href);
                 }}
               >
                 {item.label}
