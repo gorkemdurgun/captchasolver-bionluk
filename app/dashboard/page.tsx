@@ -346,7 +346,7 @@ export default function DashboardPage() {
               <div className="flex flex-row items-center justify-end gap-2 mt-auto">
                 <Button
                   className="bg-blue-50 text-blue-900 w-full"
-                  onClick={() => router.push("/docs" + "?category=0_2")}
+                  onClick={() => router.push("/docs" + "?category=1_0")}
                 >
                   <QuestionIcon />
                   How can I use this key?

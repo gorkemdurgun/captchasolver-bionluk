@@ -49,6 +49,7 @@ import {
 } from "react-icons/md";
 
 import Image from "next/image";
+import { mockBlogPosts } from "@/mocks/blogs";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -69,52 +70,7 @@ export default function AdminPage() {
     content: "<p>Please select a page and sub page for editing</p>"
   });
 
-  const initialPosts: {
-    image: string;
-    title: string;
-    content: string;
-    tags: string[];
-  }[] = [
-    {
-      image: "https://via.placeholder.com/150",
-      title: "First Blog Post",
-      content: "<p>First blog post content</p>",
-      tags: ["first", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Second Blog Post",
-      content: "<p>Second blog post content</p>",
-      tags: ["second", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Third Blog Post",
-      content: "<p>Third blog post content</p>",
-      tags: ["third", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Fourth Blog Post",
-      content: "<p>Fourth blog post content</p>",
-      tags: ["fourth", "blog", "post"]
-    },
-    {
-      image: "https://via.placeholder.com/150",
-      title: "Fifth Blog Post",
-      content: "<p>Fifth blog post content</p>",
-      tags: ["fifth", "blog", "post"]
-    }
-  ];
-
-  const [blogPosts, setBlogPosts] = useState<
-    {
-      image: string;
-      title: string;
-      content: string;
-      tags: string[];
-    }[]
-  >(initialPosts);
+  const [blogPosts, setBlogPosts] = useState<Blog[]>(mockBlogPosts);
 
   const editorFontStyles = [
     {
@@ -180,7 +136,8 @@ export default function AdminPage() {
   function handleAddPost() {
     const newPosts = [...blogPosts];
     newPosts.push({
-      image: "https://via.placeholder.com/150",
+      id: `${blogPosts.length + 1}`,
+      imageUrl: "https://via.placeholder.com/150",
       title: "New Blog Post",
       content: "<p>New blog post content</p>",
       tags: ["new", "blog", "post"]
@@ -232,7 +189,7 @@ export default function AdminPage() {
                   onClick={() => handleSelectPost(index)}
                 >
                   <Image
-                    src={post.image}
+                    src={post.imageUrl}
                     alt={post.title}
                     width={50}
                     height={50}
