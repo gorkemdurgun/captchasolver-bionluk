@@ -146,27 +146,27 @@ export default function AdminPage() {
         <div className="flex justify-start w-full gap-4">
           <Input
             className="w-full"
-            placeholder="Search"
+            placeholder="Search by topic"
             onChange={onSearchChange}
           />
           <Button
             size="sm"
             aria-checked={gridView}
-            className="h-100 border-2 border-orange-300 bg-transparent text-orange-800 aria-checked:bg-orange-300"
+            className="h-100 border-2 border-gray-300 bg-transparent text-gray-300 aria-checked:bg-white"
             onClick={() => setGridView(!gridView)}
           >
             <MdGridOn className="text-xl" />
           </Button>
           <Button
             aria-checked={filters.includes("open")}
-            className="h-100 border-2 border-green-300 bg-transparent text-green-800 aria-checked:bg-green-300"
+            className="h-100 border-2 border-gray-300 bg-transparent text-gray-300 aria-checked:bg-white"
             onClick={() => onClickFilter("open")}
           >
             Open tickets
           </Button>
           <Button
             aria-checked={filters.includes("closed")}
-            className="h-100 border-2 border-red-300 bg-transparent text-red-800 aria-checked:bg-red-300"
+            className="h-100 border-2 border-gray-300 bg-transparent text-gray-300 aria-checked:bg-white"
             onClick={() => onClickFilter("closed")}
           >
             Closed tickets
