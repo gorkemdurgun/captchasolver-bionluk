@@ -4,6 +4,10 @@ import PricingSectionLayout from "./layout";
 
 import { PiDotDuotone as PiMatterIcon } from "react-icons/pi";
 
+type Props = {
+  layoutClassName?: string;
+};
+
 const pricingPlans = [
   {
     title: "BASIC",
@@ -41,9 +45,9 @@ const pricingPlans = [
   }
 ];
 
-export const PricingSection = () => {
+export const PricingSection = ({ layoutClassName }: Props) => {
   return (
-    <PricingSectionLayout>
+    <PricingSectionLayout className={layoutClassName}>
       <div
         id="landing-pricing-section"
         className="flex flex-col items-center justify-center w-full gap-4 py-8 px-6 md:py-10"

@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { FaChevronRight as ReadIcon } from "react-icons/fa6";
 import { PiDotDuotone as ActivePageIcon } from "react-icons/pi";
 
+
 export default function BlogPage() {
   function htmlParser(html: string) {
     return { __html: html };
@@ -46,13 +47,13 @@ export default function BlogPage() {
       <div className="relative overflow-hidden w-full h-full flex gap-4">
         <div className="sticky top-0 w-1/4 h-[87.5vh] flex-col gap-2 p-4 sm:flex hidden">
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-black">Blog</h1>
-            <span className="text-lg text-gray-800">
+            <h1 className="text-major text-3xl text-black">Blog</h1>
+            <span className="text-md text-gray-800">
               All blog posts ({mockBlogPosts.length})
             </span>
           </div>
           <div className="flex flex-col gap-2">
-            <h2 className="text-lg font-bold text-gray-800">Filter by tags</h2>
+            <span className="text-md font-bold text-black">Tags</span>
             <div className="flex flex-wrap gap-2">
               {mockBlogPosts
                 .flatMap(blog => blog.tags)

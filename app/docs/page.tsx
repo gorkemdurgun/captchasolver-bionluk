@@ -31,54 +31,56 @@ export default function DocsPage() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden w-full h-full flex">
-      <div className="sticky top-0 w-1/4 h-[87.5vh] overflow-scroll scroll-smooth p-4 bg-gradient-to-l from-gray-100 via-gray-200 to-white">
-        {docTrees.map((page, index) => (
-          <Accordion
-            defaultExpandedKeys="all"
-            key={index}
-            itemClasses={{
-              titleWrapper: "text-major font-normal",
-              title: "text-gray-900"
-            }}
-          >
-            <AccordionItem
+    <div className="max-w-7xl relative overflow-hidden w-full h-full flex flex-col items-center">
+      <div className="relative overflow-hidden w-full h-full flex">
+        <div className="sticky top-0 w-1/4 h-[87.5vh] overflow-scroll scroll-smooth p-4 border-l border-gray-100 bg-white drop-shadow-2xl">
+          {docTrees.map((page, index) => (
+            <Accordion
+              defaultExpandedKeys="all"
               key={index}
-              title={page.title}
-              classNames={{
-                content: "py-0"
+              itemClasses={{
+                titleWrapper: "text-major font-normal",
+                title: "text-gray-900"
               }}
-              indicator={
-                <ExpandIcon className="text-gray-900 w-4 h-4 rotate-90" />
-              }
             >
-              {page.subItems.map((subItem, subIndex) => (
-                <Button
-                  aria-checked={activePage === `${index}_${subIndex}`}
-                  key={index}
-                  className="w-full flex justify-between bg-transparent aria-checked:bg-red-100/50"
-                  onClick={() => setActivePage(`${index}_${subIndex}`)}
-                >
-                  <span className="text-body text-md text-gray-900">
-                    {subItem.title}
-                  </span>
-                  {activePage === `${index}_${subIndex}` && (
-                    <ActivePageIcon className="w-8 h-8 text-red-500" />
-                  )}
-                </Button>
-              ))}
-            </AccordionItem>
-          </Accordion>
-        ))}
-      </div>
-      <div className="w-3/4 h-[87.5vh] overflow-scroll p-4 bg-white text-black">
-        <div
-          dangerouslySetInnerHTML={htmlParser(
-            docTrees[parseInt(activePage.split("_")[0])]?.subItems[
-              parseInt(activePage.split("_")[1])
-            ].content
-          )}
-        />
+              <AccordionItem
+                key={index}
+                title={page.title}
+                classNames={{
+                  content: "py-0"
+                }}
+                indicator={
+                  <ExpandIcon className="text-gray-900 w-4 h-4 rotate-90" />
+                }
+              >
+                {page.subItems.map((subItem, subIndex) => (
+                  <Button
+                    aria-checked={activePage === `${index}_${subIndex}`}
+                    key={index}
+                    className="w-full flex justify-between bg-transparent aria-checked:bg-red-100/50"
+                    onClick={() => setActivePage(`${index}_${subIndex}`)}
+                  >
+                    <span className="text-body text-md text-gray-900">
+                      {subItem.title}
+                    </span>
+                    {activePage === `${index}_${subIndex}` && (
+                      <ActivePageIcon className="w-8 h-8 text-red-500" />
+                    )}
+                  </Button>
+                ))}
+              </AccordionItem>
+            </Accordion>
+          ))}
+        </div>
+        <div className="w-3/4 h-[87.5vh] overflow-scroll p-4 bg-white text-black">
+          <div
+            dangerouslySetInnerHTML={htmlParser(
+              docTrees[parseInt(activePage.split("_")[0])]?.subItems[
+                parseInt(activePage.split("_")[1])
+              ].content
+            )}
+          />
+        </div>
       </div>
     </div>
   );
