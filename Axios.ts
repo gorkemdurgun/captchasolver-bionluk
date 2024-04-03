@@ -10,6 +10,8 @@ export const Axios = axios.create({
 
 Axios.defaults.headers.post["Content-Type"] = "application/json";
 Axios.defaults.timeout = 10000;
+Axios.defaults.headers.common["Authorization"] =
+  `Bearer ${localStorage.getItem("accessToken")}`;
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   return config;
@@ -29,7 +31,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   if (error?.response?.status === 401) {
     store.dispatch(logoutAction.request());
-    window.location.href = "/login";
+    // window.location.href = "/login";
   }
   return Promise.reject(error);
 };
@@ -42,8 +44,9 @@ Axios.interceptors.response.use(onResponse, onResponseError);
 
 export function setToken(accessToken?: string) {
   if (accessToken) {
+    localStorage.setItem("accessToken", accessToken);
     Axios.defaults.headers.common.authorization = `Bearer ${accessToken}`;
   } else {
-    delete Axios.defaults.headers.common.authorization;
+    // delete Axios.defaults.headers.common.authorization;
   }
 }

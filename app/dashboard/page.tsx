@@ -41,6 +41,7 @@ import {
   resetClientKey as resetClientKeyAction,
   getUser as getUserAction
 } from "@/redux/actions";
+import { createNewTicket } from "@/services/tickets";
 
 const dummyPurchaseData = [
   {
@@ -78,10 +79,11 @@ export default function DashboardPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const { userId, userEmail, cliKey } = useAppSelector(state => ({
+  const { userId, userEmail, cliKey, balance } = useAppSelector(state => ({
     userId: state.auth.user?.userId,
     userEmail: state.auth.user?.email,
-    cliKey: state.auth.user?.clientKey
+    cliKey: state.auth.user?.clientKey,
+    balance: state.auth.user?.balance
   }));
 
   const [editMode, setEditMode] = useState(false);
@@ -90,10 +92,24 @@ export default function DashboardPage() {
   const [inputPasswordConfirm, setInputPasswordConfirm] = useState(
     "*".repeat(8)
   );
+  const [ticketForm, setTicketForm] = useState({
+    subject: "",
+    message: ""
+  });
 
   const scrollTo = (elementId: string) => {
     const element = document.getElementById(elementId);
     element?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleChangeTicketForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTicketForm({
+      ...ticketForm,
+      [e.target.name]: e.target.value
+    });
+  };
+  const handleOpenTicket = () => {
+    createNewTicket(ticketForm);
   };
 
   useEffect(() => {
@@ -121,7 +137,7 @@ export default function DashboardPage() {
           <div className="flex flex-col gap-4 sm:gap-8 lg:flex-row">
             {/* User Info Section - Personal Info */}
             <motion.div
-              className="flex flex-col gap-2 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5 min-h-60"
+              className="flex flex-col gap-2 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-3/5 min-h-60"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5 }}
@@ -218,7 +234,7 @@ export default function DashboardPage() {
             </motion.div>
             {/* User Info Section - Last Purchasings */}
             <motion.div
-              className="flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-3/5"
+              className="!opacity-0 flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
               initial={{ y: -50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5 }}
@@ -282,39 +298,6 @@ export default function DashboardPage() {
             Overview
           </h1>
           <div className="flex flex-col gap-4 sm:gap-8 lg:flex-row">
-            {/* Overview Section - Credit */}
-            <motion.div
-              className="flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5 h-60"
-              initial={{ y: -50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex items-center justify-between gap-2 border-b border-gray-200 pb-2 h-[50px]">
-                <span className="text-major text-lg font-light text-gray-900">
-                  Credits
-                </span>
-                <Button
-                  disableRipple
-                  className="bg-transparent text-body text-sm text-gray-500 p-0"
-                >
-                  <AddCreditIcon />
-                  Add Credit
-                </Button>
-              </div>
-              <div className="flex items-end justify-between gap-2">
-                <span className="text-body text-md text-gray-600">
-                  Active Credit
-                </span>
-                <span className="text-body text-2xl text-gray-900">$ 0.00</span>
-              </div>
-              <Button
-                className="bg-red-50 text-red-900 mt-auto"
-                onClick={() => scrollTo("open-ticket-modal")}
-              >
-                <WarningIcon />
-                Do you have any problem?
-              </Button>
-            </motion.div>
             {/* Overview Section - Client Key */}
             <motion.div
               className="flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-3/5 h-60"
@@ -359,6 +342,41 @@ export default function DashboardPage() {
                   Refresh Key
                 </Button>
               </div>
+            </motion.div>
+            {/* Overview Section - Credit */}
+            <motion.div
+              className="flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5 h-60"
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flex items-center justify-between gap-2 border-b border-gray-200 pb-2 h-[50px]">
+                <span className="text-major text-lg font-light text-gray-900">
+                  Credits
+                </span>
+                <Button
+                  disableRipple
+                  className="bg-transparent text-body text-sm text-gray-500 p-0"
+                >
+                  <AddCreditIcon />
+                  Add Credit
+                </Button>
+              </div>
+              <div className="flex items-end justify-between gap-2">
+                <span className="text-body text-md text-gray-600">
+                  Active Credit
+                </span>
+                <span className="text-body text-2xl text-gray-900">
+                  {balance}
+                </span>
+              </div>
+              <Button
+                className="bg-red-50 text-red-900 mt-auto"
+                onClick={() => scrollTo("open-ticket-modal")}
+              >
+                <WarningIcon />
+                Do you have any problem?
+              </Button>
             </motion.div>
           </div>
         </div>
@@ -486,8 +504,11 @@ export default function DashboardPage() {
                   input: "!text-gray-900",
                   label: "!text-gray-600"
                 }}
+                name="subject"
                 label="Subject"
                 placeholder="Enter the subject of the ticket"
+                value={ticketForm.subject}
+                onChange={handleChangeTicketForm}
               />
               <Textarea
                 classNames={{
@@ -495,11 +516,17 @@ export default function DashboardPage() {
                   input: "!text-gray-900",
                   label: "!text-gray-600"
                 }}
+                name="message"
                 label="Message"
                 placeholder="Enter the message of the ticket"
+                value={ticketForm.message}
+                onChange={handleChangeTicketForm}
               />
               <div className="flex justify-end mt-2">
-                <Button className="bg-green-500 text-green-50 w-full sm:max-w-[200px]">
+                <Button
+                  className="bg-green-500 text-green-50 w-full sm:max-w-[200px]"
+                  onClick={handleOpenTicket}
+                >
                   Open Ticket
                   <TicketIcon className="w-4 h-4" />
                 </Button>
