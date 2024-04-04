@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionItem,
   Button,
+  Card,
   Input,
   Modal,
   ModalBody,
@@ -45,8 +46,10 @@ import {
   resetClientKey as resetClientKeyAction,
   getUser as getUserAction
 } from "@/redux/actions";
-import { createNewTicket } from "@/services/tickets";
+import { createNewTicket, getUserTickets } from "@/services/tickets";
 import toast from "react-hot-toast";
+import { Dater } from "@/utils/Dater";
+import { successToast } from "@/components/toaster";
 
 const dummyPurchaseData = [
   {
@@ -63,20 +66,6 @@ const dummyPurchaseData = [
     date: "16 September 2023",
     amount: 120.0,
     credit: 1200
-  }
-];
-const dummyTicketData = [
-  {
-    status: "open",
-    subject: "How can I change my password?",
-    message:
-      "You can change your password by clicking the Edit Information button in the Personal Information section."
-  },
-  {
-    status: "open",
-    subject: "How can I change my email address?",
-    message:
-      "You can change your email address by clicking the Edit Information button in the Personal Information section."
   }
 ];
 
@@ -102,6 +91,7 @@ export default function DashboardPage() {
     subject: "",
     message: ""
   });
+  const [tickets, setTickets] = useState<Ticket[]>([]);
 
   const scrollTo = (elementId: string) => {
     const element = document.getElementById(elementId);
@@ -115,7 +105,16 @@ export default function DashboardPage() {
     });
   };
   const handleOpenTicket = () => {
-    createNewTicket(ticketForm);
+    createNewTicket(ticketForm).then(response => {
+      successToast("Ticket opened successfully.");
+      setTicketForm({
+        subject: "",
+        message: ""
+      });
+      getUserTickets().then(response => {
+        setTickets(response.data);
+      });
+    });
   };
 
   useEffect(() => {
@@ -130,6 +129,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     dispatch(getUserAction.request());
+    getUserTickets().then(response => {
+      setTickets(response.data);
+    });
   }, []);
 
   return (
@@ -448,14 +450,14 @@ export default function DashboardPage() {
                     Open Tickets
                   </span>
                 </div>
-                {dummyTicketData.filter(ticket => ticket.status === "open")
-                  .length > 0 && (
+                {tickets.filter(ticket => ticket.status === "pending").length >
+                  0 && (
                   <Accordion>
-                    {dummyTicketData
-                      .filter(ticket => ticket.status === "open")
+                    {tickets
+                      .filter(ticket => ticket.status === "pending")
                       .map(ticket => (
                         <AccordionItem
-                          key={ticket.subject}
+                          key={ticket.id}
                           classNames={{
                             title: "text-body text-sm text-gray-900"
                           }}
@@ -464,20 +466,35 @@ export default function DashboardPage() {
                             <ExpandIcon className="w-4 h-4 rotate-90" />
                           }
                         >
-                          <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
-                            <span className="flex items-center gap-1 text-body text-sm text-red-500">
-                              <AdminIcon className="w-4 h-4" />
-                              admin:
-                            </span>
-                            <span className="text-body text-sm text-gray-900">
-                              {ticket.message}
-                            </span>
-                          </div>
+                          {ticket?.messages.map((message, index) => (
+                            <div
+                              key={index}
+                              className={`w-full flex text-start gap-4 p-2 border-b bg-transparent  ${
+                                message.senderEmail !==
+                                "development@capsmasher.com"
+                                  ? "text-gray-800"
+                                  : "text-blue-800"
+                              }`}
+                            >
+                              {message.senderEmail !==
+                              "development@capsmasher.com" ? (
+                                <UserIcon className="w-4 h-4 text-gray-800" />
+                              ) : (
+                                <AdminIcon className="w-4 h-4 text-blue-800" />
+                              )}
+                              <div>
+                                <p>{message.message}</p>
+                                <small>
+                                  {Dater.timeAgo(message.timestamp)}
+                                </small>
+                              </div>
+                            </div>
+                          ))}
                         </AccordionItem>
                       ))}
                   </Accordion>
                 )}
-                {dummyTicketData.filter(ticket => ticket.status === "open")
+                {tickets.filter(ticket => ticket.status === "pending")
                   .length === 0 && (
                   <div className="flex flex-col gap-4 items-center justify-center pt-8">
                     <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
@@ -499,14 +516,14 @@ export default function DashboardPage() {
                     Closed Tickets
                   </span>
                 </div>
-                {dummyTicketData.filter(ticket => ticket.status === "closed")
-                  .length > 0 && (
+                {tickets.filter(ticket => ticket.status === "closed").length >
+                  0 && (
                   <Accordion>
-                    {dummyTicketData
+                    {tickets
                       .filter(ticket => ticket.status === "closed")
                       .map(ticket => (
                         <AccordionItem
-                          key={ticket.subject}
+                          key={ticket.id}
                           classNames={{
                             title: "text-body text-sm text-gray-900"
                           }}
@@ -515,21 +532,38 @@ export default function DashboardPage() {
                             <ExpandIcon className="w-4 h-4 rotate-90" />
                           }
                         >
-                          <div className="flex flex-col items-start gap-2 p-2 bg-gray-100 rounded-lg">
-                            <span className="flex items-center gap-1 text-body text-sm text-red-500">
-                              <AdminIcon className="w-4 h-4" />
-                              admin:
-                            </span>
-                            <span className="text-body text-sm text-gray-900">
-                              {ticket.message}
-                            </span>
+                          <div className="flex flex-col gap-2 p-2 bg-gray-100 rounded-lg shadow-lg">
+                            {ticket?.messages.map((message, index) => (
+                              <div
+                                key={index}
+                                className={`w-full flex text-start gap-4 p-2 border-b bg-transparent  ${
+                                  message.senderEmail !==
+                                  "development@capsmasher.com"
+                                    ? "text-gray-800"
+                                    : "text-blue-800"
+                                }`}
+                              >
+                                {message.senderEmail !==
+                                "development@capsmasher.com" ? (
+                                  <UserIcon className="w-4 h-4 text-gray-800" />
+                                ) : (
+                                  <AdminIcon className="w-4 h-4 text-blue-800" />
+                                )}
+                                <div>
+                                  <p>{message.message}</p>
+                                  <small>
+                                    {Dater.timeAgo(message.timestamp)}
+                                  </small>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </AccordionItem>
                       ))}
                   </Accordion>
                 )}
-                {dummyTicketData.filter(ticket => ticket.status === "closed")
-                  .length === 0 && (
+                {tickets.filter(ticket => ticket.status === "closed").length ===
+                  0 && (
                   <div className="flex flex-col gap-4 items-center justify-center pt-8">
                     <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
                       <TicketIcon className="w-4 h-4" />
