@@ -10,16 +10,15 @@ export const Axios = axios.create({
 
 const localToken = () => {
   try {
-    return localStorage.getItem("accessToken");
+    return typeof window !== "undefined" ? window.localStorage.getItem("accessToken") : null;
   } catch (e) {
     return null;
   }
-}
+};
 
 Axios.defaults.headers.post["Content-Type"] = "application/json";
 Axios.defaults.timeout = 10000;
-Axios.defaults.headers.common["Authorization"] =
-  `Bearer ${localToken()}`;
+Axios.defaults.headers.common["Authorization"] = `Bearer ${localToken()}`;
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   return config;
