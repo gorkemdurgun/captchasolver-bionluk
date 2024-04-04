@@ -6,6 +6,7 @@ import {
   ContactSection
 } from "@/components";
 import { Divider } from "@nextui-org/react";
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   // isDark default false
