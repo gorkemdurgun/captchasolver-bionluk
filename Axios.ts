@@ -8,10 +8,18 @@ export const Axios = axios.create({
   //FIXME: when file uploading, timeout is not enough
 });
 
+const localToken = () => {
+  try {
+    return localStorage.getItem("accessToken");
+  } catch (e) {
+    return null;
+  }
+}
+
 Axios.defaults.headers.post["Content-Type"] = "application/json";
 Axios.defaults.timeout = 10000;
 Axios.defaults.headers.common["Authorization"] =
-  `Bearer ${localStorage.getItem("accessToken")}`;
+  `Bearer ${localToken()}`;
 
 const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
   return config;
@@ -44,7 +52,11 @@ Axios.interceptors.response.use(onResponse, onResponseError);
 
 export function setToken(accessToken?: string) {
   if (accessToken) {
-    localStorage.setItem("accessToken", accessToken);
+    try {
+      localStorage.setItem("accessToken", accessToken);
+    } catch (e) {
+      console.error(e);
+    }
     Axios.defaults.headers.common.authorization = `Bearer ${accessToken}`;
   } else {
     // delete Axios.defaults.headers.common.authorization;
