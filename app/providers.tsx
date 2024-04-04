@@ -9,6 +9,7 @@ import { store, persistor } from "@/redux/store";
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { LoadingStore } from "@/components";
+import { Toaster } from "react-hot-toast";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -22,7 +23,8 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
         <ReduxProvider store={store}>
-          <PersistGate  loading={<LoadingStore />} persistor={persistor}>
+          <PersistGate loading={<LoadingStore />} persistor={persistor}>
+            <Toaster toastOptions={{ duration: 3000 }} />
             {children}
           </PersistGate>
         </ReduxProvider>

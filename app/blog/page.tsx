@@ -86,7 +86,7 @@ export default function BlogPage() {
             hideScrollBar
             visibility={"both"}
           >
-            <div className="flex flex-col items-start gap-3 overflow-scroll scroll-smooth">
+            <div className="flex flex-col items-start gap-3 overflow-auto scroll-smooth">
               {mockBlogPosts
                 .filter(blog =>
                   selectedTags.every(tag => blog.tags.includes(tag))
@@ -121,7 +121,7 @@ export default function BlogPage() {
             </div>
           </ScrollShadow>
         </div>
-        <div className="w-full sm:w-3/4 min-h-[100vh] max-h-[150vh] overflow-scroll flex flex-col gap-4 p-4 pb-24 text-black">
+        <div className="w-full sm:w-3/4 min-h-[100vh] max-h-[150vh] overflow-auto flex flex-col gap-4 p-4 pb-24 text-black">
           <div className="flex items-center gap-2">
             <ActivePageIcon className="text-2xl text-gray-500" />
             <span className="text-lg font-bold">{selectedBlog?.title}</span>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Card, Divider, Input, Textarea } from "@nextui-org/react";
 import Text from "../text";
 import ContactSectionLayout from "./layout";
@@ -9,12 +11,31 @@ import {
   PiEnvelopeSimpleDuotone as MailIcon,
   PiClockDuotone as ClockIcon
 } from "react-icons/pi";
+import { useState } from "react";
+import { sendContactForm } from "@/services/tickets";
 
 type Props = {
   layoutClassName?: string;
 };
 
 export const ContactSection = ({ layoutClassName }: Props) => {
+  const [contactForm, setContactForm] = useState({
+    fullName: "",
+    email: "",
+    subject: "",
+    content: ""
+  });
+
+  const handleContactFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContactForm({
+      ...contactForm,
+      [e.target.name]: e.target.value
+    });
+  };
+  const handleContactFormSubmit = () => {
+    sendContactForm(contactForm);
+  };
+
   return (
     <ContactSectionLayout className={layoutClassName}>
       <div
@@ -95,6 +116,9 @@ export const ContactSection = ({ layoutClassName }: Props) => {
                 }}
                 label="Full Name"
                 placeholder="John Doe"
+                name="fullName"
+                value={contactForm.fullName}
+                onChange={handleContactFormChange}
               />
               <Input
                 className="w-full"
@@ -105,6 +129,9 @@ export const ContactSection = ({ layoutClassName }: Props) => {
                 }}
                 label="Email"
                 placeholder="example@gmail.com"
+                name="email"
+                value={contactForm.email}
+                onChange={handleContactFormChange}
               />
               <Input
                 className="w-full"
@@ -115,6 +142,9 @@ export const ContactSection = ({ layoutClassName }: Props) => {
                 }}
                 label="Subject"
                 placeholder="Subject"
+                name="subject"
+                value={contactForm.subject}
+                onChange={handleContactFormChange}
               />
               <Textarea
                 className="w-full"
@@ -125,8 +155,14 @@ export const ContactSection = ({ layoutClassName }: Props) => {
                 }}
                 label="Message"
                 placeholder="Your message here"
+                name="content"
+                value={contactForm.content}
+                onChange={handleContactFormChange}
               />
-              <Button className="w-full bg-black py-6">
+              <Button
+                className="w-full bg-black py-6"
+                onClick={handleContactFormSubmit}
+              >
                 <Text className="text-body text-white text-lg font-thin">
                   Send Message
                 </Text>

@@ -43,7 +43,11 @@ import {
   PiPaletteDuotone as ColorIcon,
   PiCheck as CheckIcon
 } from "react-icons/pi";
-import { getDocumentations } from "@/services/docs";
+import {
+  createDocumentation,
+  editDocumentation,
+  getDocumentations
+} from "@/services/docs";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -128,20 +132,12 @@ export default function AdminPage() {
   const [selectedSubItem, setSelectedSubItem] = useState(0);
 
   function addNewPage() {
-    setDocTrees([
-      ...docTrees,
-      {
-        title: "New Page " + (docTrees.length + 1),
-        subItems: [
-          {
-            title: "New Sub Page 1",
-            content: "<p>New Sub Page 1</p>"
-          }
-        ]
-      }
-    ]);
+    createDocumentation().then(({ data }) => {
+      getDocumentations();
+    });
   }
   function addNewSubItem(index: number) {
+    /*
     const newSubItems = docTrees[index].subItems;
     newSubItems.push({
       title: "New Sub Page " + (newSubItems.length + 1),
@@ -152,6 +148,7 @@ export default function AdminPage() {
       { ...docTrees[index], subItems: newSubItems },
       ...docTrees.slice(index + 1)
     ]);
+    */
   }
 
   function handleSelectPage(index: number) {
@@ -160,6 +157,12 @@ export default function AdminPage() {
   }
   function handleSelectSubItem(index: number) {
     setSelectedSubItem(index);
+  }
+
+  function handleSave(selectedDoc: Documentation) {
+    editDocumentation(selectedDoc).then(({ data }) => {
+      getDocumentations();
+    });
   }
 
   useEffect(() => {
@@ -213,23 +216,14 @@ export default function AdminPage() {
               ]);
             }}
           />
-          <Button
-            disabled={selectedPage === -1}
-            className="bg-green-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => {
-              /* API call to save the new page name */
-              console.log(docTrees[selectedPage]?.title);
-            }}
-          >
-            Rename
-          </Button>
         </div>
       </div>
       <div className="w-full flex flex-col justify-start gap-2">
         <span className="text-white">Select a sub page:</span>
         <div className="flex gap-4">
           <Button
-            disabled={selectedPage === -1}
+            disabled
+            // disabled={selectedPage === -1}
             className="text-black bg-white border-2 text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => addNewSubItem(selectedPage)}
           >
@@ -263,18 +257,6 @@ export default function AdminPage() {
               ]);
             }}
           />
-          <Button
-            disabled={selectedPage === -1}
-            className="bg-green-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => {
-              /* API call to save the new sub page name */
-              console.log(
-                docTrees[selectedPage]?.subItems[selectedSubItem]?.title
-              );
-            }}
-          >
-            Rename
-          </Button>
         </div>
       </div>
       <div className="w-full flex flex-col justify-start mt-8">
@@ -372,7 +354,17 @@ export default function AdminPage() {
       <Button
         className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
         onClick={() => {
-          console.log(editor?.getHTML());
+          const newDoc = {
+            id: docTrees[selectedPage].id,
+            title: docTrees[selectedPage].title,
+            subItems: docTrees[selectedPage].subItems.map(subItem => {
+              return {
+                title: subItem.title,
+                content: editor?.getHTML() || ""
+              };
+            })
+          };
+          handleSave(newDoc);
         }}
       >
         Save

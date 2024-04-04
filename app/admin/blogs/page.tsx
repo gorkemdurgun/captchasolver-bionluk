@@ -177,7 +177,7 @@ export default function AdminPage() {
               <AddIcon className="w-8 h-8" />
             </Button>
           </div>
-          <div className="w-full grid grid-cols-2 justify-start gap-2 p-2 max-h-[300px] overflow-scroll bg-gray-800 rounded-md">
+          <div className="w-full grid grid-cols-2 justify-start gap-2 p-2 max-h-[300px] overflow-auto bg-gray-800 rounded-md">
             {blogPosts
               .filter(post =>
                 post.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -304,7 +304,7 @@ export default function AdminPage() {
           </div>
         </div>
         <EditorContent
-          className="w-full h-full p-4 outline-none bg-white text-black rounded-b-lg shadow-md text-body max-h-[1000px] overflow-scroll"
+          className="w-full h-full p-4 outline-none bg-white text-black rounded-b-lg shadow-md text-body max-h-[1000px] overflow-auto"
           editor={editor}
         />
       </div>

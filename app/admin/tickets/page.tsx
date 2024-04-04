@@ -1,273 +1,266 @@
 "use client";
 
-import { Button } from "@nextui-org/button";
+import { Button, ButtonGroup } from "@nextui-org/button";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Input } from "@nextui-org/react";
+import {
+  Card,
+  Input,
+  Pagination,
+  Switch,
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+  getKeyValue
+} from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from "@nextui-org/react";
 
 import {
   PiChatCircleDotsDuotone as FromUserIcon,
-  PiAndroidLogoDuotone as FromAdminIcon
+  PiAndroidLogoDuotone as FromAdminIcon,
+  PiClock as PendingIcon,
+  PiX as ClosedIcon
 } from "react-icons/pi";
 import {
   MdGridOn,
   MdOutlineReply as ReplyIcon,
-  MdClose as CloseIcon
+  MdSwapHoriz as SwapIcon
 } from "react-icons/md";
+import {
+  getContactForms,
+  getAllTickets,
+  editTicketStatus,
+  addMessageToTicket
+} from "@/services/tickets";
+import { Dater } from "@/utils/Dater";
 
 export default function AdminPage() {
-  const initialTickets: {
-    id: string;
-    userId: string;
-    topic: string;
-    description: string;
-    status: "open" | "closed";
-    createdAt: string;
-    comments?: {
-      userId: string;
-      content: string;
-      createdAt: string;
-    }[];
-  }[] = [
-    {
-      id: "1",
-      userId: "1",
-      topic: "Payment issue",
-      description:
-        "I don't like this service. I want my money back. Can I get a refund?",
-      status: "open",
-      createdAt: "2021-10-01T12:00:00Z",
-      comments: [
-        {
-          userId: "2",
-          content: "Sorry, we don't offer refunds.",
-          createdAt: "2021-10-01T12:30:00Z"
-        }
-      ]
-    },
-    {
-      id: "2",
-      userId: "2",
-      topic: "Feature request",
-      description:
-        "I would like to request a feature to be able to change the color of the text in the editor.",
-      status: "closed",
-      createdAt: "2021-10-02T12:00:00Z",
-      comments: [
-        {
-          userId: "1",
-          content: "We have added this feature.",
-          createdAt: "2021-10-02T12:30:00Z"
-        }
-      ]
-    }
-  ];
+  const [tickets, setTickets] = useState<Ticket[]>();
+  const [ticketListPage, setTicketListPage] = useState<number>(1);
+  const [selectedTicket, setSelectedTicket] = useState<Ticket>();
+  const [ticketReplyModal, setTicketReplyModal] = useState<boolean>(false);
+  const [ticketReply, setTicketReply] = useState<string>("");
 
-  const [filters, setFilters] = useState<string[]>(["open", "closed"]);
-  const [gridView, setGridView] = useState<boolean>(false);
-  const [openReplyId, setOpenReplyId] = useState<string | null>(null);
-  const [replyValue, setReplyValue] = useState<string>("");
-  const [tickets, setTickets] = useState<
-    {
-      id: string;
-      userId: string;
-      topic: string;
-      description: string;
-      status: "open" | "closed";
-      createdAt: string;
-      comments?: {
-        userId: string;
-        content: string;
-        createdAt: string;
-      }[];
-    }[]
-  >(initialTickets);
+  const [contacts, setContacts] = useState<ContactForm[]>([]);
+  const [contactListPage, setContactListPage] = useState<number>(1);
 
-  function handleAddReply(ticketId: string, content: string) {
-    const newTickets = tickets.map(ticket => {
-      if (ticket.id === ticketId) {
-        ticket.comments?.push({
-          userId: "2",
-          content: content,
-          createdAt: new Date().toISOString()
-        });
-      }
-      return ticket;
+  useEffect(() => {
+    getAllTickets().then(response => {
+      setTickets(response.data);
     });
-    setTickets(newTickets);
-    setReplyValue("");
-    setOpenReplyId(null);
-  }
-  function onClickFilter(filter: string) {
-    if (filters.includes(filter)) {
-      setFilters(filters.filter(f => f !== filter));
-    } else {
-      setFilters([...filters, filter]);
-    }
-  }
-  function onSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const search = e.target.value;
-    const newTickets = initialTickets.filter(ticket =>
-      ticket.topic.toLowerCase().includes(search.toLowerCase())
-    );
-    setTickets(newTickets);
-  }
-  function formatTimeToAgo(time: string) {
-    const date = new Date(time);
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30);
-    const years = Math.floor(months / 12);
+    getContactForms().then(res => setContacts(res.data));
+  }, []);
 
-    if (years > 0) {
-      return `${years} year${years > 1 ? "s" : ""} ago`;
-    } else if (months > 0) {
-      return `${months} month${months > 1 ? "s" : ""} ago`;
-    } else if (days > 0) {
-      return `${days} day${days > 1 ? "s" : ""} ago`;
-    } else if (hours > 0) {
-      return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-    } else if (minutes > 0) {
-      return `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
-    } else {
-      return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
-    }
-  }
+  const ticketItems = React.useMemo(() => {
+    const start = (ticketListPage - 1) * 5;
+    const end = start + 5;
+
+    return tickets?.slice(start, end);
+  }, [tickets, ticketListPage]);
+
+  const contactFormItems = React.useMemo(() => {
+    const start = (contactListPage - 1) * 5;
+    const end = start + 5;
+
+    return contacts?.slice(start, end);
+  }, [contacts, contactListPage]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl rounded-sm">
-      <h1 className="text-3xl font-bold">Tickets</h1>
-      <div className="flex flex-col gap-4 w-full">
-        <div className="flex justify-start w-full gap-4">
-          <Input
-            className="w-full"
-            placeholder="Search by topic"
-            onChange={onSearchChange}
-          />
-          <Button
-            size="sm"
-            aria-checked={gridView}
-            className="h-100 border-2 border-gray-300 bg-transparent text-gray-300 aria-checked:bg-white"
-            onClick={() => setGridView(!gridView)}
-          >
-            <MdGridOn className="text-xl" />
-          </Button>
-          <Button
-            aria-checked={filters.includes("open")}
-            className="h-100 border-2 border-gray-300 bg-transparent text-gray-300 aria-checked:bg-white"
-            onClick={() => onClickFilter("open")}
-          >
-            Open tickets
-          </Button>
-          <Button
-            aria-checked={filters.includes("closed")}
-            className="h-100 border-2 border-gray-300 bg-transparent text-gray-300 aria-checked:bg-white"
-            onClick={() => onClickFilter("closed")}
-          >
-            Closed tickets
-          </Button>
-        </div>
-      </div>
-      <div
-        className={`grid w-full gap-4 ${gridView ? "grid-cols-3" : "grid-cols-1"}`}
+    <>
+      <Modal
+        isOpen={ticketReplyModal}
+        onClose={() => setTicketReplyModal(false)}
       >
-        {tickets
-          .filter(ticket => filters.includes(ticket.status))
-          .map((ticket, index) => (
-            <div
-              key={index}
-              className="flex flex-col w-full gap-4 p-4 bg-white rounded-sm shadow-md"
-            >
-              <div className="flex justify-between">
-                <h2 className="text-lg text-gray-800 font-bold">
-                  {ticket.topic}
-                </h2>
+        <ModalContent>
+          <ModalHeader>Reply to Ticket</ModalHeader>
+          <ModalBody>
+            <Card className="flex items-center justify-center gap-2 p-4">
+              {selectedTicket?.messages.map((message, index) => (
                 <span
-                  className={`w-min px-2 py-1 text-xs font-bold ${
-                    ticket.status === "open"
-                      ? "bg-green-300 text-green-800"
-                      : "bg-red-300 text-red-800"
-                  } rounded-sm`}
-                >
-                  {ticket.status}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <FromUserIcon className="text-2xl text-green-500" />
-                <div
                   key={index}
-                  className="w-full flex flex-col gap-1 p-2 bg-gray-100 rounded-sm"
-                >
-                  <span className="text-sm text-gray-800">
-                    {ticket.description}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    {formatTimeToAgo(ticket.createdAt)}
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                {ticket.comments?.map((comment, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <FromAdminIcon className="text-2xl text-blue-500" />
-                    <div className="flex flex-col gap-1 p-2 bg-gray-100 rounded-sm">
-                      <span className="text-sm text-gray-800">
-                        {comment.content}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {formatTimeToAgo(comment.createdAt)}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-                <div
-                  className={`flex items-center gap-2 ${
-                    openReplyId === ticket.id ? "" : "hidden"
+                  className={`w-full flex text-start gap-4 p-4 ${
+                    message.senderEmail !== "development@capsmasher.com"
+                      ? "bg-gray-800"
+                      : "bg-gray-900"
                   }`}
                 >
-                  <FromAdminIcon className="text-2xl text-blue-500" />
-                  <div className="w-full flex flex-col gap-1 p-2 bg-gray-100 rounded-sm">
-                    <Input
-                      className="w-full"
-                      placeholder="Reply to this ticket"
-                      value={replyValue}
-                      onChange={e => setReplyValue(e.target.value)}
-                    />
-                    <Button
-                      size="sm"
-                      className="bg-blue-500 text-white"
-                      onClick={() => {
-                        handleAddReply(ticket.id, replyValue);
-                      }}
-                    >
-                      Send
-                    </Button>
+                  {message.senderEmail !== "development@capsmasher.com" ? (
+                    <FromUserIcon size={24} />
+                  ) : (
+                    <FromAdminIcon size={24} />
+                  )}
+                  <div>
+                    <p>{message.message}</p>
+                    <small>{Dater.timeAgo(message.timestamp)}</small>
                   </div>
-                </div>
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button
-                  disabled={ticket.status === "closed"}
-                  className="bg-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => setOpenReplyId(ticket.id)}
-                >
-                  <ReplyIcon className="text-xl text-blue-900" />
-                </Button>
-                <Button
-                  disabled={ticket.status === "closed"}
-                  className="bg-red-500 text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <CloseIcon className="text-xl text-red-900" />
-                </Button>
-              </div>
-            </div>
-          ))}
+                </span>
+              ))}
+            </Card>
+            <Input
+              type="text"
+              placeholder="Your reply"
+              value={ticketReply}
+              onChange={e => setTicketReply(e.target.value)}
+            />
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              onClick={() =>
+                selectedTicket &&
+                addMessageToTicket(
+                  parseInt(selectedTicket?.id),
+                  ticketReply
+                ).then(() => {
+                  getAllTickets().then(response => {
+                    setTickets(response.data);
+                  });
+                  setTicketReplyModal(false);
+                })
+              }
+            >
+              Send
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl rounded-sm">
+        <h1 className="text-3xl font-bold">Tickets & Contact Forms</h1>
+        <div className="flex flex-col gap-4 w-full">
+          <h1 className="text-3xl font-bold">Ticket List</h1>
+          {tickets && ticketItems && ticketItems.length > 0 && (
+            <Table
+              isStriped
+              bottomContent={
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="default"
+                  page={ticketListPage}
+                  total={
+                    tickets?.length % 5 === 0
+                      ? tickets?.length / 5
+                      : Math.floor(tickets?.length / 5) + 1
+                  }
+                  onChange={page => setTicketListPage(page)}
+                />
+              }
+            >
+              <TableHeader>
+                <TableColumn>Subject</TableColumn>
+                <TableColumn>Status</TableColumn>
+                <TableColumn>Created At</TableColumn>
+                <TableColumn>First Message</TableColumn>
+                <TableColumn>Last Reply</TableColumn>
+                <TableColumn>Reply</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {ticketItems.map((ticket, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{ticket.subject}</TableCell>
+                    <TableCell>
+                      {
+                        <div className="grid grid-cols-2">
+                          {ticket.status === "closed" ? "Closed" : "Pending"}
+                          <Switch
+                            color="danger"
+                            isSelected={ticket.status === "closed"}
+                            onValueChange={value => {
+                              editTicketStatus(
+                                parseInt(ticket.id),
+                                ticket.status === "closed"
+                                  ? "pending"
+                                  : "closed"
+                              ).then(() => {
+                                getAllTickets().then(response => {
+                                  setTickets(response.data);
+                                });
+                              });
+                            }}
+                            thumbIcon={({ isSelected, className }) =>
+                              isSelected ? (
+                                <ClosedIcon className={className} />
+                              ) : (
+                                <PendingIcon className={className} />
+                              )
+                            }
+                          />
+                        </div>
+                      }
+                    </TableCell>
+                    <TableCell>{Dater.timeAgo(ticket.timestamp)}</TableCell>
+                    <TableCell>{ticket.messages[0].message}</TableCell>
+                    <TableCell>
+                      {ticket.messages[ticket.messages.length - 1].message}
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        className="bg-green-500"
+                        onClick={() => {
+                          setSelectedTicket(ticket);
+                          setTicketReplyModal(true);
+                        }}
+                      >
+                        <ReplyIcon />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </div>
+        <div className="flex flex-col gap-4 w-full">
+          <h1 className="text-3xl font-bold">Contact Form List</h1>
+          {contacts && contactFormItems && contactFormItems.length > 0 && (
+            <Table
+              isStriped
+              bottomContent={
+                <Pagination
+                  isCompact
+                  showControls
+                  showShadow
+                  color="default"
+                  page={contactListPage}
+                  total={
+                    contacts?.length % 5 === 0
+                      ? contacts?.length / 5
+                      : Math.floor(contacts?.length / 5) + 1
+                  }
+                  onChange={page => setContactListPage(page)}
+                />
+              }
+            >
+              <TableHeader>
+                <TableColumn>Name</TableColumn>
+                <TableColumn>Email</TableColumn>
+                <TableColumn>Subject</TableColumn>
+                <TableColumn>Content</TableColumn>
+              </TableHeader>
+              <TableBody>
+                {contactFormItems.map((contact, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{contact.fullName}</TableCell>
+                    <TableCell>{contact.email}</TableCell>
+                    <TableCell>{contact.subject}</TableCell>
+                    <TableCell>{contact.content}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
