@@ -50,6 +50,7 @@ import { createNewTicket, getUserTickets } from "@/services/tickets";
 import toast from "react-hot-toast";
 import { Dater } from "@/utils/Dater";
 import { successToast } from "@/components/toaster";
+import { resetPasswordService } from "@/services/auth";
 
 const dummyPurchaseData = [
   {
@@ -115,6 +116,17 @@ export default function DashboardPage() {
         setTickets(response.data);
       });
     });
+  };
+
+  const handleChangePassword = () => {
+    resetPasswordService(inputPassword, inputPasswordConfirm)
+      .then(response => {
+        successToast("Password changed successfully.");
+        setEditMode(false);
+      })
+      .catch(error => {
+        toast.error("An error occurred while changing the password.");
+      });
   };
 
   useEffect(() => {
@@ -196,6 +208,7 @@ export default function DashboardPage() {
                     </span>
                     <span className="text-body text-md text-gray-900">
                       <Input
+                        disabled
                         readOnly={!editMode}
                         classNames={{
                           base: "w-full",
@@ -232,7 +245,7 @@ export default function DashboardPage() {
                     <div className="grid grid-cols-2 justify-between flex-row gap-2 p-2 bg-gray-100 rounded-lg">
                       <span className="flex items-center gap-2 text-body text-sm text-gray-600">
                         <PasswordIcon className="w-4 h-4" />
-                        Confirm Password:
+                        New Password:
                       </span>
                       <span className="text-body text-md text-gray-900">
                         <Input
@@ -262,13 +275,9 @@ export default function DashboardPage() {
                     {editMode ? "Cancel Edit Mode" : "Edit Information"}
                   </Button>
                   <Button
-                    disabled={
-                      !editMode ||
-                      inputPassword !== inputPasswordConfirm ||
-                      inputPassword.length < 8
-                    }
+                    disabled={!editMode}
                     className="bg-green-50 text-green-900 w-full disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={() => {}}
+                    onClick={handleChangePassword}
                   >
                     <EditIcon />
                     Save Information
