@@ -87,7 +87,7 @@ export default function LoginPage() {
                 }
                 return "";
               }}
-              className="grid grid-cols-[1fr,2fr]"
+              className="grid grid-cols-1 gap-2 md:grid-cols-[1fr,2fr]"
               type="email"
               label="Email"
               name="email"
@@ -98,7 +98,7 @@ export default function LoginPage() {
               labelPlacement="outside-left"
             ></Input>
             <Input
-              className="grid grid-cols-[1fr,2fr]"
+              className="grid grid-cols-1 gap-2 md:grid-cols-[1fr,2fr]"
               type="password"
               label="Password"
               name="password"

@@ -286,7 +286,7 @@ export default function DashboardPage() {
               </motion.div>
               {/* User Info Section - Last Purchasings */}
               <motion.div
-                className="!opacity-0 flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
+                className="!opacity-0 hidden lg:flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}

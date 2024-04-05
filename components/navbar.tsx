@@ -56,13 +56,20 @@ export const Navbar = () => {
     user: state.auth.user
   }));
 
+  const [toggle, setToggle] = useState(false);
+
   function handleLogout() {
     dispatch(logoutAction.request());
     router.push("/");
   }
 
   return (
-    <NextUINavbar maxWidth="xl" position="sticky">
+    <NextUINavbar
+      maxWidth="xl"
+      position="sticky"
+      isMenuOpen={toggle}
+      onMenuOpenChange={setToggle}
+    >
       <NavbarContent
         aria-busy="true"
         className="basis-1/5 sm:basis-full"
@@ -120,14 +127,20 @@ export const Navbar = () => {
           <NavbarItem className="flex items-center">
             <Button
               className="flex gap-2 items-center bg-gray-100/10 p-2 rounded-full"
-              onClick={() => router.push("/dashboard")}
+              onClick={() => {
+                router.push("/dashboard");
+                setToggle(false);
+              }}
             >
               <UserIcon className="text-md text-white" />
               <span className="text-white text-sm">{user.email}</span>
             </Button>
             <Button
               className="bg-transparent p-0 rounded-full min-w-unit-10"
-              onClick={handleLogout}
+              onClick={() => {
+                handleLogout();
+                setToggle(false);
+              }}
             >
               <LogoutIcon className="text-lg text-white" />
             </Button>
@@ -136,7 +149,10 @@ export const Navbar = () => {
           <NavbarItem>
             <Button
               className="primary-button border-none bg-white/10 py-2 px-12 hover:bg-white/20"
-              onClick={() => router.push("/login")}
+              onClick={() => {
+                router.push("/login");
+                setToggle(false);
+              }}
             >
               <Text className="text-body text-white text-lg">Sign In</Text>
             </Button>
@@ -185,6 +201,21 @@ export const Navbar = () => {
               <Text className="text-body text-white text-lg">Sign In</Text>
             </Button>
           )}
+          <ul className="flex flex-col gap-2 mt-4">
+            {siteConfig.navItems.map(item => (
+              <NavbarMenuItem
+                key={item.href}
+                onClick={() => {
+                  router.push(item.href);
+                  setToggle(false);
+                }}
+              >
+                <span className={"pl-4 text-white text-lg cursor-pointer"}>
+                  {item.label}
+                </span>
+              </NavbarMenuItem>
+            ))}
+          </ul>
         </div>
       </NavbarMenu>
     </NextUINavbar>
