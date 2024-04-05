@@ -44,7 +44,7 @@ export default function BlogPage() {
   return (
     <div className="max-w-7xl relative overflow-hidden w-full h-full flex flex-col items-center">
       <div className="relative overflow-hidden w-full h-full flex gap-4">
-        <div className="sticky top-0 w-1/4 h-auto flex-col gap-2 p-4 sm:flex hidden">
+        <div className="sticky top-0 w-1/4 h-auto flex-col gap-2 p-4 md:flex hidden">
           <div className="flex flex-col gap-2">
             <h1 className="text-major text-3xl text-black">Blog</h1>
             <span className="text-md text-gray-800">
@@ -121,7 +121,7 @@ export default function BlogPage() {
             </div>
           </ScrollShadow>
         </div>
-        <div className="w-full sm:w-3/4 min-h-[100vh] max-h-[150vh] overflow-auto flex flex-col gap-4 p-4 pb-24 text-black">
+        <div className="w-full md:w-3/4 min-h-[100vh] max-h-[150vh] overflow-auto flex flex-col gap-4 p-4 pb-24 text-black">
           <div className="flex items-center gap-2">
             <ActivePageIcon className="text-2xl text-gray-500" />
             <span className="text-lg font-bold">{selectedBlog?.title}</span>
@@ -152,6 +152,30 @@ export default function BlogPage() {
             <div
               dangerouslySetInnerHTML={htmlParser(selectedBlog?.content || "")}
             />
+          </div>
+          <div className="flex md:hidden flex-wrap gap-4 mt-auto pt-12">
+            <h1 className="text-md font-bold text-black">Read more posts</h1>
+            <div className="flex flex-wrap gap-2">
+              {mockBlogPosts
+                .filter(blog => blog.id !== selectedBlog?.id)
+                .map((blog, index) => (
+                  <Button
+                    key={index}
+                    size="sm"
+                    className="py-1 px-2 bg-transparent border-2 border-gray-300 text-black"
+                    onClick={() => setSelectedBlog(blog)}
+                  >
+                    {blog.title}
+                  </Button>
+                ))}
+              <Button
+                size="sm"
+                className="py-1 px-2 bg-transparent border-2 border-gray-300 text-black"
+                onClick={() => setSelectedBlog(mockBlogPosts[0])}
+              >
+                Back to top
+              </Button>
+            </div>
           </div>
         </div>
       </div>
