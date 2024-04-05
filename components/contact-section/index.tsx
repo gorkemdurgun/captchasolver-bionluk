@@ -13,6 +13,7 @@ import {
 } from "react-icons/pi";
 import { useState } from "react";
 import { sendContactForm } from "@/services/tickets";
+import { successToast } from "../toaster";
 
 type Props = {
   layoutClassName?: string;
@@ -33,7 +34,15 @@ export const ContactSection = ({ layoutClassName }: Props) => {
     });
   };
   const handleContactFormSubmit = () => {
-    sendContactForm(contactForm);
+    sendContactForm(contactForm).then(response => {
+      successToast("Message sent successfully");
+      setContactForm({
+        fullName: "",
+        email: "",
+        subject: "",
+        content: ""
+      });
+    });
   };
 
   return (

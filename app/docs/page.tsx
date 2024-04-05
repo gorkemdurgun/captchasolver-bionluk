@@ -1,7 +1,16 @@
 "use client";
 
 import { getDocumentations } from "@/services/docs";
-import { Accordion, AccordionItem, Button } from "@nextui-org/react";
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownSection,
+  DropdownTrigger
+} from "@nextui-org/react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 // import { LuArrowUpDown as ExpandIcon } from "react-icons/lu";
@@ -31,9 +40,42 @@ export default function DocsPage() {
   }, []);
 
   return (
-    <div className="max-w-7xl relative overflow-hidden w-full h-full flex flex-col items-center">
-      <div className="relative overflow-hidden w-full h-full flex">
-        <div className="sticky top-0 w-1/4 h-auto overflow-auto scroll-smooth p-4 border-l border-gray-100 bg-white drop-shadow-2xl">
+    <div className="max-w-7xl relative overflow-hidden w-full h-full flex">
+      <div className="relative overflow-hidden w-full h-full flex flex-col lg:flex-row">
+        <Dropdown className="flex lg:hidden" title="Select a category">
+          <DropdownTrigger>
+            <Button
+              variant="bordered"
+              className="flex lg:hidden m-4 text-gray-900"
+            >
+              {docTrees[parseInt(activePage.split("_")[0])]?.title + " - " +
+                docTrees[parseInt(activePage.split("_")[0])]?.subItems[
+                  parseInt(activePage.split("_")[1])
+                ].title}
+              <ExpandIcon className="w-4 h-4" />
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu variant="faded">
+            {docTrees.map((page, index) => (
+              <DropdownSection
+                key={index}
+                title={page.title}
+                className="justify-between text-start"
+              >
+                {page.subItems.map((subItem, subIndex) => (
+                  <DropdownItem
+                    key={subIndex}
+                    onClick={() => setActivePage(`${index}_${subIndex}`)}
+                  >
+                    {subItem.title}
+                  </DropdownItem>
+                ))}
+              </DropdownSection>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
+
+        <div className="hidden lg:flex flex-col sticky top-0 w-1/4 h-auto overflow-auto scroll-smooth p-4 border-l border-gray-100 bg-white drop-shadow-2xl">
           <h1 className="text-major text-3xl text-black">Documentation</h1>
           {docTrees.map((page, index) => (
             <Accordion
@@ -76,7 +118,7 @@ export default function DocsPage() {
             </Accordion>
           ))}
         </div>
-        <div className="w-3/4 min-h-[100vh] max-h-[150vh] overflow-auto p-4 bg-white text-black">
+        <div className="w-full sm:w-3/4 min-h-[100vh] max-h-[150vh] overflow-auto p-4 bg-white text-black">
           <div
             dangerouslySetInnerHTML={htmlParser(
               docTrees[parseInt(activePage.split("_")[0])]?.subItems[

@@ -286,7 +286,7 @@ export default function DashboardPage() {
               </motion.div>
               {/* User Info Section - Last Purchasings */}
               <motion.div
-                className="!opacity-0 flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
+                className="!opacity-0 hidden lg:flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -459,12 +459,12 @@ export default function DashboardPage() {
                     Open Tickets
                   </span>
                 </div>
-                {tickets.filter(ticket => ticket.status === "pending").length >
+                {tickets?.filter(ticket => ticket.status === "pending").length >
                   0 && (
                   <Accordion>
                     {tickets
-                      .filter(ticket => ticket.status === "pending")
-                      .map(ticket => (
+                      ?.filter(ticket => ticket.status === "pending")
+                      ?.map(ticket => (
                         <AccordionItem
                           key={ticket.id}
                           classNames={{
@@ -475,7 +475,7 @@ export default function DashboardPage() {
                             <ExpandIcon className="w-4 h-4 rotate-90" />
                           }
                         >
-                          {ticket?.messages.map((message, index) => (
+                          {ticket?.messages?.map((message, index) => (
                             <div
                               key={index}
                               className={`w-full flex text-start gap-4 p-2 border-b bg-transparent  ${
@@ -503,9 +503,10 @@ export default function DashboardPage() {
                       ))}
                   </Accordion>
                 )}
-                {tickets.filter(ticket => ticket.status === "pending")
-                  .length === 0 && (
-                  <div className="flex flex-col gap-4 items-center justify-center pt-8">
+                {(!tickets ||
+                  tickets?.filter(ticket => ticket.status === "pending")
+                    ?.length === 0) && (
+                  <div className="flex flex-col gap-4 items-center justify-center py-4">
                     <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
                       <TicketIcon className="w-4 h-4" />
                       Any open ticket found.
@@ -525,12 +526,12 @@ export default function DashboardPage() {
                     Closed Tickets
                   </span>
                 </div>
-                {tickets.filter(ticket => ticket.status === "closed").length >
+                {tickets?.filter(ticket => ticket.status === "closed")?.length >
                   0 && (
                   <Accordion>
                     {tickets
-                      .filter(ticket => ticket.status === "closed")
-                      .map(ticket => (
+                      ?.filter(ticket => ticket.status === "closed")
+                      ?.map(ticket => (
                         <AccordionItem
                           key={ticket.id}
                           classNames={{
@@ -542,7 +543,7 @@ export default function DashboardPage() {
                           }
                         >
                           <div className="flex flex-col gap-2 p-2 bg-gray-100 rounded-lg shadow-lg">
-                            {ticket?.messages.map((message, index) => (
+                            {ticket?.messages?.map((message, index) => (
                               <div
                                 key={index}
                                 className={`w-full flex text-start gap-4 p-2 border-b bg-transparent  ${
@@ -571,9 +572,10 @@ export default function DashboardPage() {
                       ))}
                   </Accordion>
                 )}
-                {tickets.filter(ticket => ticket.status === "closed").length ===
-                  0 && (
-                  <div className="flex flex-col gap-4 items-center justify-center pt-8">
+                {(!tickets ||
+                  tickets?.filter(ticket => ticket.status === "closed")
+                    ?.length === 0) && (
+                  <div className="flex flex-col gap-4 items-center justify-center py-4">
                     <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
                       <TicketIcon className="w-4 h-4" />
                       Any closed ticket found.
