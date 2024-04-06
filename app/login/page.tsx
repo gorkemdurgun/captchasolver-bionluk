@@ -87,25 +87,25 @@ export default function LoginPage() {
                 }
                 return "";
               }}
-              className="grid grid-cols-1 gap-2 md:grid-cols-[1fr,2fr]"
+              className="grid grid-cols-[1fr,2fr]"
+              classNames={{ inputWrapper: "border border-white" }}
               type="email"
               label="Email"
               name="email"
               value={loginForm.email}
               onChange={handleChangeForm}
               isRequired
-              classNames={styles}
               labelPlacement="outside-left"
             ></Input>
             <Input
-              className="grid grid-cols-1 gap-2 md:grid-cols-[1fr,2fr]"
+              className="grid grid-cols-[1fr,2fr]"
+              classNames={{ inputWrapper: "border border-white" }}
               type="password"
               label="Password"
               name="password"
               value={loginForm.password}
               onChange={handleChangeForm}
               isRequired
-              classNames={styles}
               labelPlacement="outside-left"
             ></Input>
             <div className="flex items-center justify-end w-full ">
