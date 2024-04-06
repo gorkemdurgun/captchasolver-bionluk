@@ -7,6 +7,7 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
+  Checkbox,
   Divider,
   Input,
   InputSlots,
@@ -23,13 +24,6 @@ import { errorToast, successToast } from "@/components/toaster";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { register as registerAction } from "@/redux/actions";
 import { useRouter } from "next/navigation";
-
-const styles: SlotsToClasses<InputSlots> = {
-  label: "text-white text-lg whitespace-nowrap",
-  input: "!text-black pl-4",
-  inputWrapper: "max-w-lg !bg-white text-body p-0",
-  mainWrapper: "w-full"
-};
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -55,6 +49,10 @@ export default function RegisterPage() {
       isValid = false;
     } else if (registerForm.password !== registerForm.confirmPassword) {
       isValid = false;
+    } else if (registerForm.password.length < 8) {
+      isValid = false;
+    } else if (!passwordRegex()) {
+      isValid = false;
     } else {
       isValid = true;
     }
@@ -64,6 +62,13 @@ export default function RegisterPage() {
 
   function handleChangeForm(e: React.ChangeEvent<HTMLInputElement>) {
     setRegisterForm({ ...registerForm, [e.target.name]: e.target.value });
+  }
+
+  function passwordRegex() {
+    // Password should contain at least one uppercase, one lowercase, one number, and can include special characters
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{0,}$/;
+    return regex.test(registerForm.password);
   }
 
   function handleRegister() {
@@ -90,7 +95,7 @@ export default function RegisterPage() {
           </p>
         </span>
         <Divider />
-        <Card className="flex items-center w-full max-w-4xl bg-gray-800">
+        <Card className="flex items-center w-full max-w-4xl bg-gray-900">
           <CardHeader className="flex gap-3">
             <div className="flex items-center gap-2">
               <Image
@@ -106,37 +111,74 @@ export default function RegisterPage() {
           <CardBody className="flex items-center gap-4 py-12 w-full max-w-xl">
             <Input
               className="grid grid-cols-[1fr,2fr]"
+              classNames={{ inputWrapper: "border border-white" }}
               type="email"
               label="Email"
               name="email"
               isRequired
-              classNames={styles}
               labelPlacement="outside-left"
               value={registerForm.email}
               onChange={handleChangeForm}
             ></Input>
             <Input
               className="grid grid-cols-[1fr,2fr]"
+              classNames={{ inputWrapper: "border border-white" }}
               type="password"
               label="Password"
               name="password"
               isRequired
-              classNames={styles}
               labelPlacement="outside-left"
               value={registerForm.password}
               onChange={handleChangeForm}
             ></Input>
             <Input
               className="grid grid-cols-[1fr,2fr]"
+              classNames={{ inputWrapper: "border border-white" }}
               type="password"
               label="Confirm Password"
               name="confirmPassword"
               isRequired
-              classNames={styles}
               labelPlacement="outside-left"
               value={registerForm.confirmPassword}
               onChange={handleChangeForm}
             ></Input>
+            <div className="w-full flex flex-col items-start gap-2 my-2">
+              <Checkbox
+                isReadOnly
+                isSelected={registerForm.email !== ""}
+                color="default"
+                classNames={{ label: "text-sm" }}
+              >
+                Email must not be empty
+              </Checkbox>
+              <Checkbox
+                isReadOnly
+                isSelected={registerForm.password.length >= 8}
+                color="default"
+                classNames={{ label: "text-sm" }}
+              >
+                Password must be at least 8 characters
+              </Checkbox>
+              <Checkbox
+                isReadOnly
+                isSelected={passwordRegex()}
+                color="default"
+                classNames={{ label: "text-sm" }}
+              >
+                Password must contain uppercase, lowercase, number
+              </Checkbox>
+              <Checkbox
+                isReadOnly
+                isSelected={
+                  registerForm.password === registerForm.confirmPassword &&
+                  registerForm.password !== ""
+                }
+                color="default"
+                classNames={{ label: "text-sm" }}
+              >
+                Password must match with confirm password
+              </Checkbox>
+            </div>
             <Button
               disabled={!formValidation()}
               className="primary-button  w-full bg-red-400 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -148,7 +190,7 @@ export default function RegisterPage() {
             </Button>
           </CardBody>
           <Divider />
-          <CardFooter className="flex flex-col justify-center items-center gap-4 bg-gray-700">
+          <CardFooter className="flex flex-col justify-center items-center gap-4 bg-gray-800">
             <span>
               Already have an account?
               <Link
