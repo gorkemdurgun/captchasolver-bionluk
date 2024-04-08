@@ -56,7 +56,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     getAllTickets().then(response => {
-      setTickets(response.data);
+      setTickets(response.data.tickets);
     });
     getContactForms().then(res => setContacts(res.data));
   }, []);
@@ -122,7 +122,7 @@ export default function AdminPage() {
                   ticketReply
                 ).then(() => {
                   getAllTickets().then(response => {
-                    setTickets(response.data);
+                    setTickets(response.data.tickets);
                   });
                   setTicketReplyModal(false);
                 })
@@ -183,7 +183,7 @@ export default function AdminPage() {
                                   : "closed"
                               ).then(() => {
                                 getAllTickets().then(response => {
-                                  setTickets(response.data);
+                                  setTickets(response.data.tickets);
                                 });
                               });
                             }}

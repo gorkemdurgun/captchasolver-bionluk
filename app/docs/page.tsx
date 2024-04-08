@@ -35,7 +35,7 @@ export default function DocsPage() {
 
   useEffect(() => {
     getDocumentations().then(({ data }) => {
-      setDocTrees(data);
+      setDocTrees(data.documentations);
     });
   }, []);
 

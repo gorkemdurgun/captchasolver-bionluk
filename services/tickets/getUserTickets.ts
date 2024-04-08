@@ -1,5 +1,10 @@
 import { Axios } from "@/Axios";
 
+type GetUserTicketsResponse = {
+  status: boolean;
+  tickets: Ticket[];
+};
+
 export const getUserTickets = () => {
-  return Axios.get<Ticket[]>("/getTickets");
+  return Axios.get<GetUserTicketsResponse>("/getTickets");
 };

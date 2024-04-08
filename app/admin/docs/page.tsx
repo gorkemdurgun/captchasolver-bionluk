@@ -174,8 +174,8 @@ export default function AdminPage() {
   }, [selectedPage, selectedSubItem]);
 
   useEffect(() => {
-    getDocumentations().then(({ data }) => {
-      setDocTrees(data);
+    getDocumentations().then(({ data : response }) => {
+      setDocTrees(response.documentations);
     });
   }, []);
 
