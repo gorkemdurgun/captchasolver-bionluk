@@ -137,18 +137,17 @@ export default function AdminPage() {
     });
   }
   function addNewSubItem(index: number) {
-    /*
+    const newSubItem = {
+      title: `Sub Page ${docTrees[index].subItems.length + 1}`,
+      content: "<p>Start typing here</p>"
+    };
     const newSubItems = docTrees[index].subItems;
-    newSubItems.push({
-      title: "New Sub Page " + (newSubItems.length + 1),
-      content: "<p>New Sub Page " + (newSubItems.length + 1) + "</p>"
-    });
+    newSubItems.push(newSubItem);
     setDocTrees([
       ...docTrees.slice(0, index),
       { ...docTrees[index], subItems: newSubItems },
       ...docTrees.slice(index + 1)
     ]);
-    */
   }
 
   function handleSelectPage(index: number) {
@@ -159,9 +158,24 @@ export default function AdminPage() {
     setSelectedSubItem(index);
   }
 
-  function handleSave(selectedDoc: Documentation) {
-    editDocumentation(selectedDoc).then(({ data }) => {
-      getDocumentations();
+  function handleSave(selectedDoc: Documentation, selectedSubItem: number) {
+    const newDoc = {
+      id: selectedDoc.id,
+      title: selectedDoc.title,
+      subItems: selectedDoc.subItems?.map((subItem, index) => {
+        if (index === selectedSubItem) {
+          return {
+            title: subItem.title,
+            content: editor?.getHTML() || ""
+          };
+        }
+        return subItem;
+      })
+    };
+    editDocumentation(newDoc).then(({ data }) => {
+      getDocumentations().then(({ data: response }) => {
+        setDocTrees(response.documentations);
+      });
     });
   }
 
@@ -174,7 +188,7 @@ export default function AdminPage() {
   }, [selectedPage, selectedSubItem]);
 
   useEffect(() => {
-    getDocumentations().then(({ data : response }) => {
+    getDocumentations().then(({ data: response }) => {
       setDocTrees(response.documentations);
     });
   }, []);
@@ -190,7 +204,7 @@ export default function AdminPage() {
           >
             + ADD PAGE
           </Button>
-          {docTrees.map((page, index) => (
+          {docTrees?.map((page, index) => (
             <Button
               key={index}
               aria-checked={selectedPage === index}
@@ -222,8 +236,7 @@ export default function AdminPage() {
         <span className="text-white">Select a sub page:</span>
         <div className="flex gap-4">
           <Button
-            disabled
-            // disabled={selectedPage === -1}
+            disabled={selectedPage === -1}
             className="text-black bg-white border-2 text-xs font-bold disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => addNewSubItem(selectedPage)}
           >
@@ -262,7 +275,7 @@ export default function AdminPage() {
       <div className="w-full flex flex-col justify-start mt-8">
         <div className="flex flex-wrap items-center  gap-2 bg-gray-800 p-4 rounded-t-lg">
           {/* Dropdown for text styles */}
-          {editorTextStyles.map((button, index) => (
+          {editorTextStyles?.map((button, index) => (
             <Button
               key={index}
               onClick={button.function}
@@ -273,7 +286,7 @@ export default function AdminPage() {
           ))}
           <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
           {/* Dropdown for list styles */}
-          {editorListStyles.map((button, index) => (
+          {editorListStyles?.map((button, index) => (
             <Button
               key={index}
               onClick={button.function}
@@ -284,7 +297,7 @@ export default function AdminPage() {
           ))}
           <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
           {/* Dropdown for font styles */}
-          {editorFontStyles.map((button, index) => (
+          {editorFontStyles?.map((button, index) => (
             <Button
               key={index}
               onClick={button.function}
@@ -307,7 +320,7 @@ export default function AdminPage() {
               </Button>
             </DropdownTrigger>
             <DropdownMenu aria-label="Static Actions">
-              {editorColors.map((color, index) => (
+              {editorColors?.map((color, index) => (
                 <DropdownItem
                   key={index}
                   className="bg-white text-black"
@@ -354,17 +367,7 @@ export default function AdminPage() {
       <Button
         className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
         onClick={() => {
-          const newDoc = {
-            id: docTrees[selectedPage].id,
-            title: docTrees[selectedPage].title,
-            subItems: docTrees[selectedPage].subItems.map(subItem => {
-              return {
-                title: subItem.title,
-                content: editor?.getHTML() || ""
-              };
-            })
-          };
-          handleSave(newDoc);
+          handleSave(docTrees[selectedPage], selectedSubItem);
         }}
       >
         Save

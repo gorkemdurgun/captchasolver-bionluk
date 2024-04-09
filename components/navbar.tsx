@@ -90,7 +90,7 @@ export const Navbar = () => {
           aria-busy="true"
           className="hidden lg:flex gap-4 justify-start ml-2 !list-none"
         >
-          {siteConfig.navItems.map(item => (
+          {siteConfig.navItems?.map(item => (
             <NavbarItem
               className="!before:hidden !after:hidden"
               key={item.href}
@@ -202,7 +202,7 @@ export const Navbar = () => {
             </Button>
           )}
           <ul className="flex flex-col gap-2 mt-4">
-            {siteConfig.navItems.map(item => (
+            {siteConfig.navItems?.map(item => (
               <NavbarMenuItem
                 key={item.href}
                 onClick={() => {

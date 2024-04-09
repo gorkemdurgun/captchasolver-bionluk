@@ -30,7 +30,7 @@ export default function AdminPage() {
       <div className="container max-w-7xl px-4">
         <h1 className="text-3xl font-bold text-white mb-4">Admin</h1>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {adminPages.map(page => (
+          {adminPages?.map(page => (
             <Link href={`/admin${page.path}`} key={page.path}>
               <Card className="flex gap-2 p-4 cursor-pointer bg-white hover:shadow-lg">
                 <page.icon className="text-4xl text-black" />

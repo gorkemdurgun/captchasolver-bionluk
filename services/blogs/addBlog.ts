@@ -21,7 +21,7 @@ export const addBlog = ({
 
   return imageToBase64(image).then(base64Image => {
     const base64 = base64Image.split(",")[1];
-    return Axios.post<Blog>("/uploadBlogImage", {
+    return Axios.post<Blog>("/addBlog", {
       title,
       //   content,
       tags,

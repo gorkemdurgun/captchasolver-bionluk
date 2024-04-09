@@ -125,7 +125,7 @@ export const LaunchSection = () => {
         </div>
       </div>
       <div className="grid items-center justify-center gap-4 py-2 px-6 w-full lg:grid-cols-4 md:grid-cols-2">
-        {features.map((feature, index) => {
+        {features?.map((feature, index) => {
           const Icon = feature.icon;
           return (
             <Card

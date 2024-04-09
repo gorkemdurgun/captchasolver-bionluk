@@ -65,7 +65,7 @@ export default function BlogPage() {
               {blogs
                 .flatMap(blog => blog.tags)
                 .filter((tag, index, self) => self.indexOf(tag) === index)
-                .map((tag, index) => (
+                ?.map((tag, index) => (
                   <Button
                     size="sm"
                     key={index}
@@ -99,7 +99,7 @@ export default function BlogPage() {
                 .filter(blog =>
                   selectedTags.every(tag => blog.tags.includes(tag))
                 )
-                .map((page, index) => (
+                ?.map((page, index) => (
                   <div
                     key={index}
                     className="flex gap-2 items-center justify-between w-full p-2 border-b border-gray-200
@@ -111,7 +111,7 @@ export default function BlogPage() {
                         {page.title}
                       </span>
                       <span className="flex flex-wrap gap-2">
-                        {page.tags.map((tag, index) => (
+                        {page.tags?.map((tag, index) => (
                           <span
                             key={index}
                             className={`text-[10px] text-white p-1 rounded-md ${colorGeneratorByFirstLetter(
@@ -142,7 +142,7 @@ export default function BlogPage() {
             className="rounded-md"
           />
           <div className="flex flex-wrap gap-2">
-            {selectedBlog?.tags.map((tag, index) => (
+            {selectedBlog?.tags?.map((tag, index) => (
               <span
                 key={index}
                 className={`text-[10px] text-white p-1 rounded-md ${colorGeneratorByFirstLetter(
@@ -166,7 +166,7 @@ export default function BlogPage() {
             <div className="flex flex-wrap gap-2">
               {blogs
                 .filter(blog => blog.id !== selectedBlog?.id)
-                .map((blog, index) => (
+                ?.map((blog, index) => (
                   <Button
                     key={index}
                     size="sm"

@@ -54,7 +54,7 @@ import {
 
 import Image from "next/image";
 import { mockBlogPosts } from "@/mocks/blogs";
-import { addBlog } from "@/services/blogs";
+import { addBlog, deleteBlog, editBlog, getBlogs } from "@/services/blogs";
 import { errorToast, successToast } from "@/components/toaster";
 
 export default function AdminPage() {
@@ -142,14 +142,14 @@ export default function AdminPage() {
   const [newBlogModal, setNewBlogModal] = useState<boolean>(false);
   const [newPost, setNewPost] = useState<{
     title: string;
-    // content: string;
+    content: string;
     tags: string[];
     image?: File;
   }>({
     image: undefined,
     title: "New Blog Post",
-
-    tags: ["new", "blog", "post"]
+    content: "",
+    tags: []
   });
 
   function handleAddPost() {
@@ -175,6 +175,28 @@ export default function AdminPage() {
     newPosts[selectedPost].title = name;
     setBlogPosts(newPosts);
   }
+  function handleSavePost() {
+    const editedPost = {
+      ...blogPosts[selectedPost],
+      content: editor?.getHTML() || ""
+    };
+
+    console.log(editedPost);
+
+    editBlog(editedPost)
+      .then(() => {
+        successToast("Blog post saved successfully");
+      })
+      .catch(err => {
+        errorToast(err.message);
+      });
+  }
+
+  useEffect(() => {
+    getBlogs().then(response => {
+      setBlogPosts(response);
+    });
+  }, []);
 
   useEffect(() => {
     if (editor) {
@@ -204,7 +226,7 @@ export default function AdminPage() {
                 onChange={e =>
                   setNewPost({
                     ...newPost,
-                    tags: e.target.value.split(",").map(tag => tag.trim())
+                    tags: e.target.value.split(",")?.map(tag => tag.trim())
                   })
                 }
               />
@@ -259,7 +281,7 @@ export default function AdminPage() {
                 .filter(post =>
                   post.title.toLowerCase().includes(searchQuery.toLowerCase())
                 )
-                .map((post, index) => (
+                ?.map((post, index) => (
                   <div
                     className="flex flex-row items-center justify-start p-2 gap-2 min-h-[80px] rounded-md bg-gray-600"
                     key={index}
@@ -271,35 +293,70 @@ export default function AdminPage() {
                       width={50}
                       height={50}
                     />
-                    <Input
-                      className="w-full max-w-lg"
-                      value={post.title}
-                      onChange={e => handleChangeName(e.target.value)}
-                    />
+                    <span className="text-white">{post.title}</span>
 
-                    <Button
+                    {/* <Button
                       size="sm"
                       className="ml-auto bg-gray-500 text-white text-sm"
                       onClick={() => handleSelectPost(index)}
                     >
                       <EditIcon className="w-4 h-4" />
-                    </Button>
-                    <Button
+                    </Button> */}
+                    {/* <Button
                       size="sm"
                       className="bg-gray-500 text-white text-sm"
+                      onClick={() => {
+                        deleteBlog(post.id).then(() => {
+                          const newPosts = [...blogPosts];
+                          newPosts.splice(index, 1);
+                          setBlogPosts(newPosts);
+                          successToast("Blog post deleted successfully");
+                        });
+                      }}
                     >
                       <DeleteIcon className="w-4 h-4" />
-                    </Button>
+                    </Button> */}
                   </div>
                 ))}
             </div>
           </div>
         </div>
 
-        <div className="w-full flex flex-col justify-start mt-8">
+        <div className="w-full flex flex-col justify-start gap-2 mt-8">
+          <Input
+            className="w-full max-w-xl"
+            placeholder="Title"
+            value={blogPosts[selectedPost].title}
+            onChange={e => handleChangeName(e.target.value)}
+          />
+          <div className="w-full flex flex-row flex-wrap items-center gap-2 bg-gray-800 p-4 rounded-t-lg">
+            {blogPosts[selectedPost].tags?.map((tag, index) => (
+              <Input
+                key={index}
+                className="w-fit bg-gray-600 text-white"
+                value={tag}
+                onChange={e => {
+                  const newPosts = [...blogPosts];
+                  newPosts[selectedPost].tags[index] = e.target.value;
+                  setBlogPosts(newPosts);
+                }}
+              />
+            ))}
+            <Button
+              className="bg-gray-500 text-white text-sm"
+              onClick={() => {
+                const newPosts = [...blogPosts];
+                newPosts[selectedPost].tags.push("");
+                setBlogPosts(newPosts);
+              }}
+            >
+              <AddIcon className="w-4 h-4" />
+            </Button>
+          </div>
+
           <div className="flex flex-wrap items-center  gap-2 bg-gray-800 p-4 rounded-t-lg">
             {/* Dropdown for text styles */}
-            {editorTextStyles.map((button, index) => (
+            {editorTextStyles?.map((button, index) => (
               <Button
                 key={index}
                 onClick={button.function}
@@ -310,7 +367,7 @@ export default function AdminPage() {
             ))}
             <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
             {/* Dropdown for list styles */}
-            {editorListStyles.map((button, index) => (
+            {editorListStyles?.map((button, index) => (
               <Button
                 key={index}
                 onClick={button.function}
@@ -321,7 +378,7 @@ export default function AdminPage() {
             ))}
             <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
             {/* Dropdown for font styles */}
-            {editorFontStyles.map((button, index) => (
+            {editorFontStyles?.map((button, index) => (
               <Button
                 key={index}
                 onClick={button.function}
@@ -344,7 +401,7 @@ export default function AdminPage() {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu aria-label="Static Actions">
-                {editorColors.map((color, index) => (
+                {editorColors?.map((color, index) => (
                   <DropdownItem
                     key={index}
                     className="bg-white text-black"
@@ -391,7 +448,7 @@ export default function AdminPage() {
         <Button
           className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
           onClick={() => {
-            console.log(editor?.getHTML());
+            handleSavePost();
           }}
         >
           Save
