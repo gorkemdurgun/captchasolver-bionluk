@@ -207,7 +207,7 @@ export default function AdminPage() {
 
   const { user } = useAppSelector(state => state.auth);
 
-  if (!user || user?.email !== "development@capsmasher.com") {
+  if (!user || user?.type !== "admin") {
     return (
       <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
         <div className="container max-w-7xl px-4">
