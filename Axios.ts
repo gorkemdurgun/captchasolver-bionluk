@@ -38,7 +38,7 @@ const onResponse = (response: AxiosResponse): AxiosResponse => {
 const onResponseError = (error: AxiosError): Promise<AxiosError> => {
   if (error?.response?.status === 401) {
     store.dispatch(logoutAction.request());
-    // window.location.href = "/login";
+    window.location.href = "/login";
   }
   return Promise.reject(error);
 };

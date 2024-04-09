@@ -11,7 +11,7 @@ export function* getUser() {
 
       const { data: response } = yield* call(getUserService);
 
-      yield* put(getUserAction.success({ user: response }));
+      yield* put(getUserAction.success({ user: response.user}));
     } catch (error) {
       const e = toError(error);
       yield* put(getUserAction.failure({ errorMessage: e.message }));

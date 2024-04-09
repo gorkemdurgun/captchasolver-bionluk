@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
     { media: "(prefers-color-scheme: dark)", color: "black" }
   ],
   icons: {
@@ -92,6 +92,10 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link
+          href="https://cdn.sellix.io/static/css/embed.css"
+          rel="stylesheet"
+        />
+        <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/apple-touch-icon.png"
@@ -128,13 +132,13 @@ export default function RootLayout({
                 {siteConfig.name.toUpperCase()}
               </h1>
               <div className="max-w-7xl w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 pt-16 lg:pt-20 pb-8 px-4 xl:px-0">
-                {footerLinks.map((section, index) => (
+                {footerLinks?.map((section, index) => (
                   <div key={index} className="flex flex-col gap-4">
                     <h3 className="text-body text-lg font-semibold text-black">
                       {section.title}
                     </h3>
                     <div className="flex flex-col gap-2">
-                      {section.links.map((link, index) => (
+                      {section.links?.map((link, index) => (
                         <Link
                           key={index}
                           href={link.href}

@@ -113,7 +113,7 @@ export default function DashboardPage() {
         message: ""
       });
       getUserTickets().then(response => {
-        setTickets(response.data);
+        setTickets(response.data.tickets);
       });
     });
   };
@@ -142,7 +142,7 @@ export default function DashboardPage() {
   useEffect(() => {
     dispatch(getUserAction.request());
     getUserTickets().then(response => {
-      setTickets(response.data);
+      setTickets(response.data.tickets);
     });
   }, []);
 

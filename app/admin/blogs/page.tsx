@@ -21,7 +21,11 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
-  Input
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalHeader
 } from "@nextui-org/react";
 
 import {
@@ -50,6 +54,8 @@ import {
 
 import Image from "next/image";
 import { mockBlogPosts } from "@/mocks/blogs";
+import { addBlog, deleteBlog, editBlog, getBlogs } from "@/services/blogs";
+import { errorToast, successToast } from "@/components/toaster";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -133,16 +139,33 @@ export default function AdminPage() {
   const [selectedPost, setSelectedPost] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const [newBlogModal, setNewBlogModal] = useState<boolean>(false);
+  const [newPost, setNewPost] = useState<{
+    title: string;
+    content: string;
+    tags: string[];
+    image?: File;
+  }>({
+    image: undefined,
+    title: "New Blog Post",
+    content: "",
+    tags: []
+  });
+
   function handleAddPost() {
-    const newPosts = [...blogPosts];
-    newPosts.push({
-      id: `${blogPosts.length + 1}`,
-      imageUrl: "https://via.placeholder.com/150",
-      title: "New Blog Post",
-      content: "<p>New blog post content</p>",
-      tags: ["new", "blog", "post"]
-    });
-    setBlogPosts(newPosts);
+    addBlog({
+      title: newPost.title,
+      // content: editor?.getHTML() || "",
+      tags: newPost.tags,
+      image: newPost.image
+    })
+      .then(() => {
+        setNewBlogModal(false);
+        successToast("Blog post added successfully");
+      })
+      .catch(err => {
+        errorToast(err.message);
+      });
   }
   function handleSelectPost(index: number) {
     setSelectedPost(index);
@@ -152,6 +175,28 @@ export default function AdminPage() {
     newPosts[selectedPost].title = name;
     setBlogPosts(newPosts);
   }
+  function handleSavePost() {
+    const editedPost = {
+      ...blogPosts[selectedPost],
+      content: editor?.getHTML() || ""
+    };
+
+    console.log(editedPost);
+
+    editBlog(editedPost)
+      .then(() => {
+        successToast("Blog post saved successfully");
+      })
+      .catch(err => {
+        errorToast(err.message);
+      });
+  }
+
+  useEffect(() => {
+    getBlogs().then(response => {
+      setBlogPosts(response);
+    });
+  }, []);
 
   useEffect(() => {
     if (editor) {
@@ -160,162 +205,255 @@ export default function AdminPage() {
   }, [selectedPost]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
-      <div className="w-full flex flex-row gap-20">
-        <div className="w-full flex flex-col justify-start gap-4 p-4">
-          <div className="w-full flex flex-row justify-between">
-            <Input
-              className="w-full max-w-xl"
-              placeholder="Search blog post"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-            <Button
-              className="h-full bg-gray-500 text-white text-sm"
-              onClick={handleAddPost}
-            >
-              <AddIcon className="w-8 h-8" />
-            </Button>
-          </div>
-          <div className="w-full grid grid-cols-2 justify-start gap-2 p-2 max-h-[300px] overflow-auto bg-gray-800 rounded-md">
-            {blogPosts
-              .filter(post =>
-                post.title.toLowerCase().includes(searchQuery.toLowerCase())
-              )
-              .map((post, index) => (
-                <div
-                  className="flex flex-row items-center justify-start p-2 gap-2 min-h-[80px] rounded-md bg-gray-600"
-                  key={index}
-                  onClick={() => handleSelectPost(index)}
-                >
-                  <Image
-                    src={post.imageUrl}
-                    alt={post.title}
-                    width={50}
-                    height={50}
-                  />
-                  <Input
-                    className="w-full max-w-lg"
-                    value={post.title}
-                    onChange={e => handleChangeName(e.target.value)}
-                  />
-
-                  <Button
-                    size="sm"
-                    className="ml-auto bg-gray-500 text-white text-sm"
+    <>
+      <Modal isOpen={newBlogModal} onClose={() => setNewBlogModal(false)}>
+        <ModalContent>
+          <ModalHeader>Add Blog Post</ModalHeader>
+          <ModalBody>
+            <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
+              <Input
+                className="w-full max-w-xl"
+                placeholder="Title"
+                value={newPost.title}
+                onChange={e =>
+                  setNewPost({ ...newPost, title: e.target.value })
+                }
+              />
+              <Input
+                className="w-full max-w-xl"
+                placeholder="Tags"
+                value={newPost.tags.join(", ")}
+                onChange={e =>
+                  setNewPost({
+                    ...newPost,
+                    tags: e.target.value.split(",")?.map(tag => tag.trim())
+                  })
+                }
+              />
+              <input
+                type="file"
+                accept="image/*"
+                className="w-full max-w-xl"
+                onChange={e =>
+                  setNewPost({
+                    ...newPost,
+                    image: e.target.files ? e.target.files[0] : undefined
+                  })
+                }
+              />
+              {newPost.image && (
+                <Image
+                  src={URL.createObjectURL(newPost.image)}
+                  alt={newPost.title}
+                  width={150}
+                  height={150}
+                />
+              )}
+              <Button
+                className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
+                onClick={handleAddPost}
+              >
+                Save
+              </Button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
+        <div className="w-full flex flex-row gap-20">
+          <div className="w-full flex flex-col justify-start gap-4 p-4">
+            <div className="w-full flex flex-row justify-between">
+              <Input
+                className="w-full max-w-xl"
+                placeholder="Search blog post"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+              <Button
+                className="h-full bg-gray-500 text-white text-sm"
+                onClick={() => setNewBlogModal(true)}
+              >
+                <AddIcon className="w-8 h-8" />
+              </Button>
+            </div>
+            <div className="w-full grid grid-cols-2 justify-start gap-2 p-2 max-h-[300px] overflow-auto bg-gray-800 rounded-md">
+              {blogPosts
+                .filter(post =>
+                  post.title.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+                ?.map((post, index) => (
+                  <div
+                    className="flex flex-row items-center justify-start p-2 gap-2 min-h-[80px] rounded-md bg-gray-600"
+                    key={index}
                     onClick={() => handleSelectPost(index)}
                   >
-                    <EditIcon className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" className="bg-gray-500 text-white text-sm">
-                    <DeleteIcon className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full flex flex-col justify-start mt-8">
-        <div className="flex flex-wrap items-center  gap-2 bg-gray-800 p-4 rounded-t-lg">
-          {/* Dropdown for text styles */}
-          {editorTextStyles.map((button, index) => (
-            <Button
-              key={index}
-              onClick={button.function}
-              className="bg-transparent text-white border-2 rounded-md"
-            >
-              {button.icon}
-            </Button>
-          ))}
-          <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
-          {/* Dropdown for list styles */}
-          {editorListStyles.map((button, index) => (
-            <Button
-              key={index}
-              onClick={button.function}
-              className="bg-transparent text-white border-2 rounded-md"
-            >
-              {button.icon}
-            </Button>
-          ))}
-          <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
-          {/* Dropdown for font styles */}
-          {editorFontStyles.map((button, index) => (
-            <Button
-              key={index}
-              onClick={button.function}
-              className="bg-transparent text-white border-2 rounded-md"
-            >
-              {button.icon}
-            </Button>
-          ))}
-          <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
-          {/* Dropdown for color selection */}
-          <Dropdown
-            classNames={{
-              base: "bg-white",
-              content: "bg-white"
-            }}
-          >
-            <DropdownTrigger>
-              <Button className="bg-transparent text-white border-2 min-w-1 rounded-md">
-                <ColorIcon className="w-4 h-4 color-white" />
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Static Actions">
-              {editorColors.map((color, index) => (
-                <DropdownItem
-                  key={index}
-                  className="bg-white text-black"
-                  onClick={() => {
-                    if (color !== "black") {
-                      editor?.chain().focus().setColor(color).run();
-                    } else {
-                      editor?.chain().focus().unsetColor().run();
-                    }
-                  }}
-                >
-                  <div className="flex flex-row items-center">
-                    <div
-                      style={{ backgroundColor: color }}
-                      className="w-4 h-4 rounded-full mr-2"
+                    <Image
+                      src={post.imageUrl}
+                      alt={post.title}
+                      width={50}
+                      height={50}
                     />
-                    {color}
+                    <span className="text-white">{post.title}</span>
+
+                    {/* <Button
+                      size="sm"
+                      className="ml-auto bg-gray-500 text-white text-sm"
+                      onClick={() => handleSelectPost(index)}
+                    >
+                      <EditIcon className="w-4 h-4" />
+                    </Button> */}
+                    {/* <Button
+                      size="sm"
+                      className="bg-gray-500 text-white text-sm"
+                      onClick={() => {
+                        deleteBlog(post.id).then(() => {
+                          const newPosts = [...blogPosts];
+                          newPosts.splice(index, 1);
+                          setBlogPosts(newPosts);
+                          successToast("Blog post deleted successfully");
+                        });
+                      }}
+                    >
+                      <DeleteIcon className="w-4 h-4" />
+                    </Button> */}
                   </div>
-                </DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          {/* Undo and Redo */}
-          <div className="flex gap-2">
-            <Button
-              onClick={() => editor?.chain().focus().undo().run()}
-              className="bg-transparent text-white border-2 min-w-1 rounded-md"
-            >
-              <UndoIcon className="w-4 h-4" />
-            </Button>
-            <Button
-              onClick={() => editor?.chain().focus().redo().run()}
-              className="bg-transparent text-white border-2 min-w-1 rounded-md"
-            >
-              <RedoIcon className="w-4 h-4" />
-            </Button>
+                ))}
+            </div>
           </div>
         </div>
-        <EditorContent
-          className="w-full h-full p-4 outline-none bg-white text-black rounded-b-lg shadow-md text-body max-h-[1000px] overflow-auto"
-          editor={editor}
-        />
+
+        <div className="w-full flex flex-col justify-start gap-2 mt-8">
+          <Input
+            className="w-full max-w-xl"
+            placeholder="Title"
+            value={blogPosts[selectedPost].title}
+            onChange={e => handleChangeName(e.target.value)}
+          />
+          <div className="w-full flex flex-row flex-wrap items-center gap-2 bg-gray-800 p-4 rounded-t-lg">
+            {blogPosts[selectedPost].tags?.map((tag, index) => (
+              <Input
+                key={index}
+                className="w-fit bg-gray-600 text-white"
+                value={tag}
+                onChange={e => {
+                  const newPosts = [...blogPosts];
+                  newPosts[selectedPost].tags[index] = e.target.value;
+                  setBlogPosts(newPosts);
+                }}
+              />
+            ))}
+            <Button
+              className="bg-gray-500 text-white text-sm"
+              onClick={() => {
+                const newPosts = [...blogPosts];
+                newPosts[selectedPost].tags.push("");
+                setBlogPosts(newPosts);
+              }}
+            >
+              <AddIcon className="w-4 h-4" />
+            </Button>
+          </div>
+
+          <div className="flex flex-wrap items-center  gap-2 bg-gray-800 p-4 rounded-t-lg">
+            {/* Dropdown for text styles */}
+            {editorTextStyles?.map((button, index) => (
+              <Button
+                key={index}
+                onClick={button.function}
+                className="bg-transparent text-white border-2 rounded-md"
+              >
+                {button.icon}
+              </Button>
+            ))}
+            <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
+            {/* Dropdown for list styles */}
+            {editorListStyles?.map((button, index) => (
+              <Button
+                key={index}
+                onClick={button.function}
+                className="bg-transparent text-white border-2 rounded-md"
+              >
+                {button.icon}
+              </Button>
+            ))}
+            <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
+            {/* Dropdown for font styles */}
+            {editorFontStyles?.map((button, index) => (
+              <Button
+                key={index}
+                onClick={button.function}
+                className="bg-transparent text-white border-2 rounded-md"
+              >
+                {button.icon}
+              </Button>
+            ))}
+            <Divider className="bg-gray-500 mx-2 h-10 w-[2px]" />
+            {/* Dropdown for color selection */}
+            <Dropdown
+              classNames={{
+                base: "bg-white",
+                content: "bg-white"
+              }}
+            >
+              <DropdownTrigger>
+                <Button className="bg-transparent text-white border-2 min-w-1 rounded-md">
+                  <ColorIcon className="w-4 h-4 color-white" />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                {editorColors?.map((color, index) => (
+                  <DropdownItem
+                    key={index}
+                    className="bg-white text-black"
+                    onClick={() => {
+                      if (color !== "black") {
+                        editor?.chain().focus().setColor(color).run();
+                      } else {
+                        editor?.chain().focus().unsetColor().run();
+                      }
+                    }}
+                  >
+                    <div className="flex flex-row items-center">
+                      <div
+                        style={{ backgroundColor: color }}
+                        className="w-4 h-4 rounded-full mr-2"
+                      />
+                      {color}
+                    </div>
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            {/* Undo and Redo */}
+            <div className="flex gap-2">
+              <Button
+                onClick={() => editor?.chain().focus().undo().run()}
+                className="bg-transparent text-white border-2 min-w-1 rounded-md"
+              >
+                <UndoIcon className="w-4 h-4" />
+              </Button>
+              <Button
+                onClick={() => editor?.chain().focus().redo().run()}
+                className="bg-transparent text-white border-2 min-w-1 rounded-md"
+              >
+                <RedoIcon className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+          <EditorContent
+            className="w-full h-full p-4 outline-none bg-white text-black rounded-b-lg shadow-md text-body max-h-[1000px] overflow-auto"
+            editor={editor}
+          />
+        </div>
+        <Button
+          className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
+          onClick={() => {
+            handleSavePost();
+          }}
+        >
+          Save
+        </Button>
       </div>
-      <Button
-        className="w-full max-w-xs bg-green-500 text-white text-body text-sm font-bold"
-        onClick={() => {
-          console.log(editor?.getHTML());
-        }}
-      >
-        Save
-      </Button>
-    </div>
+    </>
   );
 }

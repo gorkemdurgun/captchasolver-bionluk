@@ -35,7 +35,7 @@ export default function DocsPage() {
 
   useEffect(() => {
     getDocumentations().then(({ data }) => {
-      setDocTrees(data);
+      setDocTrees(data.documentations);
     });
   }, []);
 
@@ -48,7 +48,8 @@ export default function DocsPage() {
               variant="bordered"
               className="flex lg:hidden m-4 text-gray-900"
             >
-              {docTrees[parseInt(activePage.split("_")[0])]?.title + " - " +
+              {docTrees[parseInt(activePage.split("_")[0])]?.title +
+                " - " +
                 docTrees[parseInt(activePage.split("_")[0])]?.subItems[
                   parseInt(activePage.split("_")[1])
                 ].title}
@@ -56,13 +57,13 @@ export default function DocsPage() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu variant="faded">
-            {docTrees.map((page, index) => (
+            {docTrees?.map((page, index) => (
               <DropdownSection
                 key={index}
                 title={page.title}
                 className="justify-between text-start"
               >
-                {page.subItems.map((subItem, subIndex) => (
+                {page.subItems?.map((subItem, subIndex) => (
                   <DropdownItem
                     key={subIndex}
                     onClick={() => setActivePage(`${index}_${subIndex}`)}
@@ -77,7 +78,7 @@ export default function DocsPage() {
 
         <div className="hidden lg:flex flex-col sticky top-0 w-1/4 h-auto overflow-auto scroll-smooth p-4 border-l border-gray-100 bg-white drop-shadow-2xl">
           <h1 className="text-major text-3xl text-black">Documentation</h1>
-          {docTrees.map((page, index) => (
+          {docTrees?.map((page, index) => (
             <Accordion
               defaultExpandedKeys="all"
               key={index}
@@ -99,7 +100,7 @@ export default function DocsPage() {
                   <ExpandIcon className="text-gray-800 w-4 h-4 rotate-90" />
                 }
               >
-                {page.subItems.map((subItem, subIndex) => (
+                {page.subItems?.map((subItem, subIndex) => (
                   <Button
                     aria-checked={activePage === `${index}_${subIndex}`}
                     key={index}

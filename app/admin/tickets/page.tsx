@@ -56,7 +56,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     getAllTickets().then(response => {
-      setTickets(response.data);
+      setTickets(response.data.tickets);
     });
     getContactForms().then(res => setContacts(res.data));
   }, []);
@@ -85,7 +85,7 @@ export default function AdminPage() {
           <ModalHeader>Reply to Ticket</ModalHeader>
           <ModalBody>
             <Card className="flex items-center justify-center gap-2 p-4">
-              {selectedTicket?.messages.map((message, index) => (
+              {selectedTicket?.messages?.map((message, index) => (
                 <span
                   key={index}
                   className={`w-full flex text-start gap-4 p-4 ${
@@ -122,7 +122,7 @@ export default function AdminPage() {
                   ticketReply
                 ).then(() => {
                   getAllTickets().then(response => {
-                    setTickets(response.data);
+                    setTickets(response.data.tickets);
                   });
                   setTicketReplyModal(false);
                 })
@@ -165,7 +165,7 @@ export default function AdminPage() {
                 <TableColumn>Reply</TableColumn>
               </TableHeader>
               <TableBody>
-                {ticketItems.map((ticket, index) => (
+                {ticketItems?.map((ticket, index) => (
                   <TableRow key={index}>
                     <TableCell>{ticket.subject}</TableCell>
                     <TableCell>
@@ -183,7 +183,7 @@ export default function AdminPage() {
                                   : "closed"
                               ).then(() => {
                                 getAllTickets().then(response => {
-                                  setTickets(response.data);
+                                  setTickets(response.data.tickets);
                                 });
                               });
                             }}
@@ -248,7 +248,7 @@ export default function AdminPage() {
                 <TableColumn>Content</TableColumn>
               </TableHeader>
               <TableBody>
-                {contactFormItems.map((contact, index) => (
+                {contactFormItems?.map((contact, index) => (
                   <TableRow key={index}>
                     <TableCell>{contact.fullName}</TableCell>
                     <TableCell>{contact.email}</TableCell>

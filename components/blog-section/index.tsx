@@ -17,12 +17,20 @@ import {
   Button,
   Divider
 } from "@nextui-org/react";
-import { mockBlogPosts } from "@/mocks/blogs";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getBlogs } from "@/services/blogs";
 
 export const BlogSection = () => {
-
   const router = useRouter();
+
+  const [blogPosts, setBlogPosts] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    getBlogs().then(response => {
+      setBlogPosts(response);
+    });
+  }, []);
 
   return (
     <BlogSectionLayout>
@@ -42,7 +50,7 @@ export const BlogSection = () => {
         </Text>
         <Divider className="w-full my-4" />
         <div className="grid grid-cols-12 grid-rows-2 gap-4 mt-4 w-full">
-          {mockBlogPosts.slice(0, 3).map((post, index) => (
+          {blogPosts.slice(0, 3)?.map((post, index) => (
             <div
               key={index}
               className="relative cursor-pointer col-span-12 sm:col-span-4 h-[300px] border-4 rounded-3xl transition-all hover:scale-95"
@@ -61,7 +69,7 @@ export const BlogSection = () => {
               />
             </div>
           ))}
-          {mockBlogPosts?.slice(3, 5).map((post, index) => (
+          {blogPosts?.slice(3, 5)?.map((post, index) => (
             <div
               key={index}
               className="relative cursor-pointer col-span-12 sm:col-span-6 h-[300px] border-4 rounded-3xl transition-all hover:scale-95"
@@ -81,7 +89,10 @@ export const BlogSection = () => {
             </div>
           ))}
         </div>
-        <Button className="primary-button bg-black mt-4 w-full hover:bg-black lg:min-w-[400px]">
+        <Button
+          className="primary-button bg-black mt-4 w-full hover:bg-black lg:min-w-[400px]"
+          onClick={() => router.push("/blog")}
+        >
           <Text className="text-body text-white text-lg">Read More</Text>
           <PiArrowDownIcon className="text-white text-xl" />
         </Button>

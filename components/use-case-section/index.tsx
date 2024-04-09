@@ -123,7 +123,7 @@ export const UseCaseSection = () => {
                 <Tabs aria-label="Options">
                   <Tab key="python" title="Python">
                     <Card className="bg-white w-full p-4 my-4 gap-4">
-                      {pythonCodeSteps.map((step, index) => (
+                      {pythonCodeSteps?.map((step, index) => (
                         <span
                           key={index}
                           className="flex flex-col items-start justify-start gap-1"
@@ -140,7 +140,7 @@ export const UseCaseSection = () => {
                   </Tab>
                   <Tab key="Go" title="Go">
                     <Card className="bg-white w-full p-4 my-4 gap-4">
-                      {goCodeSteps.map((step, index) => (
+                      {goCodeSteps?.map((step, index) => (
                         <span
                           key={index}
                           className="flex flex-col items-start justify-start gap-1"
