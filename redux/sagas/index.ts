@@ -5,7 +5,8 @@ import {
   logoutSaga,
   registerSaga,
   getUserSaga,
-  resetClientKeySaga
+  resetClientKeySaga,
+  addCreditSaga
 } from "./auth";
 
 export default function* root() {
@@ -14,6 +15,7 @@ export default function* root() {
     fork(logoutSaga),
     fork(registerSaga),
     fork(getUserSaga),
-    fork(resetClientKeySaga)
+    fork(resetClientKeySaga),
+    fork(addCreditSaga)
   ]);
 }

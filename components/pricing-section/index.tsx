@@ -101,7 +101,7 @@ export const PricingSection = ({ layoutClassName }: Props) => {
               <Button
                 className="primary-button bg-gray-50 mt-auto mb-0"
                 as={"a"}
-                href="https://capsmasher.mysellix.io/product/6613fe0929a9c"
+                href="/dashboard"
                 rel="noopener noreferrer"
               >
                 <Text className="text-body text-black text-lg">
