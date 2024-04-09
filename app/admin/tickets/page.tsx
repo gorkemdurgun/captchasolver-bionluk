@@ -43,6 +43,7 @@ import {
   addMessageToTicket
 } from "@/services/tickets";
 import { Dater } from "@/utils/Dater";
+import { useAppSelector } from "@/hooks";
 
 export default function AdminPage() {
   const [tickets, setTickets] = useState<Ticket[]>();
@@ -76,6 +77,23 @@ export default function AdminPage() {
 
     return contacts?.slice(start, end);
   }, [contacts, contactListPage]);
+
+  const { user } = useAppSelector(state => state.auth);
+
+  if (!user || user?.email !== "development@capsmasher.com") {
+    return (
+      <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
+        <div className="container max-w-7xl px-4">
+          <h1 className="text-3xl font-bold text-white mb-4">Admin</h1>
+          <Card className="flex gap-2 p-4 bg-white">
+            <h2 className="text-xl text-black font-bold">
+              You are not authorized to access this page
+            </h2>
+          </Card>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>

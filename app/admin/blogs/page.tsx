@@ -16,6 +16,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 
 import {
+  Card,
   Divider,
   Dropdown,
   DropdownItem,
@@ -56,6 +57,7 @@ import Image from "next/image";
 import { mockBlogPosts } from "@/mocks/blogs";
 import { addBlog, deleteBlog, editBlog, getBlogs } from "@/services/blogs";
 import { errorToast, successToast } from "@/components/toaster";
+import { useAppSelector } from "@/hooks";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -203,6 +205,23 @@ export default function AdminPage() {
       editor?.commands.setContent(blogPosts[selectedPost].content);
     }
   }, [selectedPost]);
+
+  const { user } = useAppSelector(state => state.auth);
+
+  if (!user || user?.email !== "development@capsmasher.com") {
+    return (
+      <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
+        <div className="container max-w-7xl px-4">
+          <h1 className="text-3xl font-bold text-white mb-4">Admin</h1>
+          <Card className="flex gap-2 p-4 bg-white">
+            <h2 className="text-xl text-black font-bold">
+              You are not authorized to access this page
+            </h2>
+          </Card>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>

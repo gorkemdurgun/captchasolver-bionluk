@@ -1,3 +1,6 @@
+"use client";
+
+import { useAppSelector } from "@/hooks";
 import { Card } from "@nextui-org/react";
 import Link from "next/link";
 import {
@@ -25,6 +28,23 @@ const adminPages = [
 ];
 
 export default function AdminPage() {
+  const { user } = useAppSelector(state => state.auth);
+
+  if (!user || user?.email !== "development@capsmasher.com") {
+    return (
+      <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
+        <div className="container max-w-7xl px-4">
+          <h1 className="text-3xl font-bold text-white mb-4">Admin</h1>
+          <Card className="flex gap-2 p-4 bg-white">
+            <h2 className="text-xl text-black font-bold">
+              You are not authorized to access this page
+            </h2>
+          </Card>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
       <div className="container max-w-7xl px-4">
