@@ -54,7 +54,6 @@ import {
 } from "react-icons/md";
 
 import Image from "next/image";
-import { mockBlogPosts } from "@/mocks/blogs";
 import { addBlog, deleteBlog, editBlog, getBlogs } from "@/services/blogs";
 import { errorToast, successToast } from "@/components/toaster";
 import { useAppSelector } from "@/hooks";
@@ -78,7 +77,7 @@ export default function AdminPage() {
     content: "<p>Please select a page and sub page for editing</p>"
   });
 
-  const [blogPosts, setBlogPosts] = useState<Blog[]>(mockBlogPosts);
+  const [blogPosts, setBlogPosts] = useState<Blog[]>([]);
 
   const editorFontStyles = [
     {
