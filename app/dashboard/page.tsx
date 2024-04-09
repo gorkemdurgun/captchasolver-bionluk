@@ -424,7 +424,6 @@ export default function DashboardPage() {
                     className="bg-transparent text-body text-sm text-gray-500 p-0"
                     as={"a"}
                     href="https://capsmasher.mysellix.io/product/6613fe0929a9c"
-                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     <AddCreditIcon />

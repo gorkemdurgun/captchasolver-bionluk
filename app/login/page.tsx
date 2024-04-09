@@ -108,9 +108,9 @@ export default function LoginPage() {
               isRequired
               labelPlacement="outside-left"
             ></Input>
-            <div className="flex items-center justify-end w-full ">
+            {/* <div className="flex items-center justify-end w-full ">
               <Button className="bg-gray-100/10">Forgot password</Button>
-            </div>
+            </div> */}
             <Button
               className="primary-button w-full bg-red-400 hover:bg-red-600"
               onClick={handleLogin}
