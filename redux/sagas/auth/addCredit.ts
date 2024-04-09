@@ -6,6 +6,7 @@ import {
   createOrder as createOrderService,
   getSellixUrl as getSellixUrlService
 } from "@/services/payments";
+import { loadingToast, successToast, toastController } from "@/components/toaster";
 
 export function* addCredit() {
   while (true) {
@@ -13,6 +14,7 @@ export function* addCredit() {
       const {
         payload: { amount }
       } = yield* take(addCreditAction.request);
+      const loading = loadingToast();
 
       const { data: response } = yield* call(createOrderService, amount);
 
@@ -21,7 +23,11 @@ export function* addCredit() {
         response.productID
       );
 
-      window.location.href = sellix.sellixUrl;
+      toastController.remove(loading);
+      successToast("You will be redirected to the payment page!");
+      setTimeout(() => {
+        window.location.href = sellix.sellixUrl;
+      }, 2000);
 
       yield* put(addCreditAction.success());
     } catch (error) {
