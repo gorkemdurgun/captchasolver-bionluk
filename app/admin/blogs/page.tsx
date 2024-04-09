@@ -16,6 +16,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 
 import {
+  Card,
   Divider,
   Dropdown,
   DropdownItem,
@@ -56,6 +57,7 @@ import Image from "next/image";
 import { mockBlogPosts } from "@/mocks/blogs";
 import { addBlog, deleteBlog, editBlog, getBlogs } from "@/services/blogs";
 import { errorToast, successToast } from "@/components/toaster";
+import { useAppSelector } from "@/hooks";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -154,7 +156,7 @@ export default function AdminPage() {
 
   function handleAddPost() {
     addBlog({
-      title: newPost.title,
+      title: newPost?.title,
       // content: editor?.getHTML() || "",
       tags: newPost.tags,
       image: newPost.image
@@ -204,6 +206,23 @@ export default function AdminPage() {
     }
   }, [selectedPost]);
 
+  const { user } = useAppSelector(state => state.auth);
+
+  if (!user || user?.email !== "development@capsmasher.com") {
+    return (
+      <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
+        <div className="container max-w-7xl px-4">
+          <h1 className="text-3xl font-bold text-white mb-4">Admin</h1>
+          <Card className="flex gap-2 p-4 bg-white">
+            <h2 className="text-xl text-black font-bold">
+              You are not authorized to access this page
+            </h2>
+          </Card>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <>
       <Modal isOpen={newBlogModal} onClose={() => setNewBlogModal(false)}>
@@ -214,7 +233,7 @@ export default function AdminPage() {
               <Input
                 className="w-full max-w-xl"
                 placeholder="Title"
-                value={newPost.title}
+                value={newPost?.title}
                 onChange={e =>
                   setNewPost({ ...newPost, title: e.target.value })
                 }
@@ -244,7 +263,7 @@ export default function AdminPage() {
               {newPost.image && (
                 <Image
                   src={URL.createObjectURL(newPost.image)}
-                  alt={newPost.title}
+                  alt={newPost?.title}
                   width={150}
                   height={150}
                 />
@@ -279,7 +298,7 @@ export default function AdminPage() {
             <div className="w-full grid grid-cols-2 justify-start gap-2 p-2 max-h-[300px] overflow-auto bg-gray-800 rounded-md">
               {blogPosts
                 .filter(post =>
-                  post.title.toLowerCase().includes(searchQuery.toLowerCase())
+                  post?.title.toLowerCase().includes(searchQuery.toLowerCase())
                 )
                 ?.map((post, index) => (
                   <div
@@ -289,11 +308,11 @@ export default function AdminPage() {
                   >
                     <Image
                       src={post.imageUrl}
-                      alt={post.title}
+                      alt={post?.title}
                       width={50}
                       height={50}
                     />
-                    <span className="text-white">{post.title}</span>
+                    <span className="text-white">{post?.title}</span>
 
                     {/* <Button
                       size="sm"
@@ -323,14 +342,16 @@ export default function AdminPage() {
         </div>
 
         <div className="w-full flex flex-col justify-start gap-2 mt-8">
+          <h5 className="text-white">Title</h5>
           <Input
             className="w-full max-w-xl"
             placeholder="Title"
-            value={blogPosts[selectedPost].title}
+            value={blogPosts[selectedPost]?.title}
             onChange={e => handleChangeName(e.target.value)}
           />
           <div className="w-full flex flex-row flex-wrap items-center gap-2 bg-gray-800 p-4 rounded-t-lg">
-            {blogPosts[selectedPost].tags?.map((tag, index) => (
+            <h5 className="text-white">Tags</h5>
+            {blogPosts[selectedPost]?.tags?.map((tag, index) => (
               <Input
                 key={index}
                 className="w-fit bg-gray-600 text-white"
@@ -342,16 +363,18 @@ export default function AdminPage() {
                 }}
               />
             ))}
-            <Button
-              className="bg-gray-500 text-white text-sm"
-              onClick={() => {
-                const newPosts = [...blogPosts];
-                newPosts[selectedPost].tags.push("");
-                setBlogPosts(newPosts);
-              }}
-            >
-              <AddIcon className="w-4 h-4" />
-            </Button>
+            {blogPosts[selectedPost] && (
+              <Button
+                className="bg-gray-500 text-white text-sm"
+                onClick={() => {
+                  const newPosts = [...blogPosts];
+                  newPosts[selectedPost].tags.push("");
+                  setBlogPosts(newPosts);
+                }}
+              >
+                <AddIcon className="w-4 h-4" />
+              </Button>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center  gap-2 bg-gray-800 p-4 rounded-t-lg">

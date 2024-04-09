@@ -129,7 +129,7 @@ export const UseCaseSection = () => {
                           className="flex flex-col items-start justify-start gap-1"
                         >
                           <Text className="text-body text-black text-xs font-bold lg:text-sm">
-                            {`${index + 1}. ${step.title}`}
+                            {`${index + 1}. ${step?.title}`}
                           </Text>
                           <Snippet className="text-body text-black text-xs bg-gray-200 lg:text-sm">
                             {step.snippet}
@@ -146,7 +146,7 @@ export const UseCaseSection = () => {
                           className="flex flex-col items-start justify-start gap-1"
                         >
                           <Text className="text-body text-black text-xs font-bold lg:text-sm">
-                            {`${index + 1}. ${step.title}`}
+                            {`${index + 1}. ${step?.title}`}
                           </Text>
                           <Snippet className="text-body text-black text-xs bg-gray-200 lg:text-sm">
                             {step.snippet}

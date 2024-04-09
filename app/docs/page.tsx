@@ -52,7 +52,7 @@ export default function DocsPage() {
                 " - " +
                 docTrees[parseInt(activePage.split("_")[0])]?.subItems[
                   parseInt(activePage.split("_")[1])
-                ].title}
+                ]?.title}
               <ExpandIcon className="w-4 h-4" />
             </Button>
           </DropdownTrigger>
@@ -60,7 +60,7 @@ export default function DocsPage() {
             {docTrees?.map((page, index) => (
               <DropdownSection
                 key={index}
-                title={page.title}
+                title={page?.title}
                 className="justify-between text-start"
               >
                 {page.subItems?.map((subItem, subIndex) => (
@@ -68,7 +68,7 @@ export default function DocsPage() {
                     key={subIndex}
                     onClick={() => setActivePage(`${index}_${subIndex}`)}
                   >
-                    {subItem.title}
+                    {subItem?.title}
                   </DropdownItem>
                 ))}
               </DropdownSection>
@@ -89,7 +89,7 @@ export default function DocsPage() {
             >
               <AccordionItem
                 key={index}
-                title={page.title}
+                title={page?.title}
                 classNames={{
                   base: "p-0",
                   titleWrapper: "pl-2 text-major font-light",
@@ -108,7 +108,7 @@ export default function DocsPage() {
                     onClick={() => setActivePage(`${index}_${subIndex}`)}
                   >
                     <span className="text-body text-md text-gray-900">
-                      {subItem.title}
+                      {subItem?.title}
                     </span>
                     {activePage === `${index}_${subIndex}` && (
                       <ActivePageIcon className="w-8 h-8 text-red-500" />

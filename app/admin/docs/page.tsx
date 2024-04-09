@@ -16,6 +16,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 
 import {
+  Card,
   Divider,
   Dropdown,
   DropdownItem,
@@ -48,6 +49,7 @@ import {
   editDocumentation,
   getDocumentations
 } from "@/services/docs";
+import { useAppSelector } from "@/hooks";
 
 export default function AdminPage() {
   const editor = useEditor({
@@ -144,9 +146,9 @@ export default function AdminPage() {
     const newSubItems = docTrees[index].subItems;
     newSubItems.push(newSubItem);
     setDocTrees([
-      ...docTrees.slice(0, index),
+      ...docTrees?.slice(0, index),
       { ...docTrees[index], subItems: newSubItems },
-      ...docTrees.slice(index + 1)
+      ...docTrees?.slice(index + 1)
     ]);
   }
 
@@ -161,11 +163,11 @@ export default function AdminPage() {
   function handleSave(selectedDoc: Documentation, selectedSubItem: number) {
     const newDoc = {
       id: selectedDoc.id,
-      title: selectedDoc.title,
+      title: selectedDoc?.title,
       subItems: selectedDoc.subItems?.map((subItem, index) => {
         if (index === selectedSubItem) {
           return {
-            title: subItem.title,
+            title: subItem?.title,
             content: editor?.getHTML() || ""
           };
         }
@@ -193,6 +195,23 @@ export default function AdminPage() {
     });
   }, []);
 
+  const { user } = useAppSelector(state => state.auth);
+
+  if (!user || user?.email !== "development@capsmasher.com") {
+    return (
+      <section className="flex flex-col items-center w-full h-full gap-4 lg:py-10 bg-gray-900">
+        <div className="container max-w-7xl px-4">
+          <h1 className="text-3xl font-bold text-white mb-4">Admin</h1>
+          <Card className="flex gap-2 p-4 bg-white">
+            <h2 className="text-xl text-black font-bold">
+              You are not authorized to access this page
+            </h2>
+          </Card>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full gap-4 p-8 max-w-7xl bg-gray-900 rounded-sm">
       <div className="w-full flex flex-col justify-start gap-2">
@@ -211,7 +230,7 @@ export default function AdminPage() {
               className="text-white bg-transparent border-2 aria-checked:border-green-500"
               onClick={() => handleSelectPage(index)}
             >
-              {page.title}
+              {page?.title}
             </Button>
           ))}
         </div>
@@ -224,9 +243,9 @@ export default function AdminPage() {
             onChange={e => {
               const newTitle = e.target.value;
               setDocTrees([
-                ...docTrees.slice(0, selectedPage),
+                ...docTrees?.slice(0, selectedPage),
                 { ...docTrees[selectedPage], title: newTitle },
-                ...docTrees.slice(selectedPage + 1)
+                ...docTrees?.slice(selectedPage + 1)
               ]);
             }}
           />
@@ -250,7 +269,7 @@ export default function AdminPage() {
               className="text-white bg-transparent border-2 aria-checked:border-green-500"
               onClick={() => handleSelectSubItem(index)}
             >
-              {subItem.title}
+              {subItem?.title}
             </Button>
           ))}
         </div>
@@ -264,9 +283,9 @@ export default function AdminPage() {
               const newSubItems = docTrees[selectedPage].subItems;
               newSubItems[selectedSubItem].title = e.target.value;
               setDocTrees([
-                ...docTrees.slice(0, selectedPage),
+                ...docTrees?.slice(0, selectedPage),
                 { ...docTrees[selectedPage], subItems: newSubItems },
-                ...docTrees.slice(selectedPage + 1)
+                ...docTrees?.slice(selectedPage + 1)
               ]);
             }}
           />

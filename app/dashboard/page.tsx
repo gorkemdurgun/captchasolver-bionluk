@@ -46,11 +46,21 @@ import {
   resetClientKey as resetClientKeyAction,
   getUser as getUserAction
 } from "@/redux/actions";
-import { createNewTicket, getUserTickets } from "@/services/tickets";
+import {
+  addMessageToTicket,
+  createNewTicket,
+  editTicketStatus,
+  getUserTickets
+} from "@/services/tickets";
 import toast from "react-hot-toast";
 import { Dater } from "@/utils/Dater";
-import { successToast } from "@/components/toaster";
+import { errorToast, successToast } from "@/components/toaster";
 import { resetPasswordService } from "@/services/auth";
+
+import {
+  MdOutlineReply as ReplyIcon,
+  MdClose as CloseIcon
+} from "react-icons/md";
 
 const dummyPurchaseData = [
   {
@@ -93,6 +103,7 @@ export default function DashboardPage() {
     message: ""
   });
   const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [ticketReply, setTicketReply] = useState("");
 
   const scrollTo = (elementId: string) => {
     const element = document.getElementById(elementId);
@@ -125,7 +136,9 @@ export default function DashboardPage() {
         setEditMode(false);
       })
       .catch(error => {
-        toast.error("An error occurred while changing the password.");
+        toast.error(
+          "An error occurred while changing the password. Passwords must be at least 8 characters long and must match."
+        );
       });
   };
 
@@ -409,6 +422,10 @@ export default function DashboardPage() {
                   <Button
                     disableRipple
                     className="bg-transparent text-body text-sm text-gray-500 p-0"
+                    as={"a"}
+                    href="https://capsmasher.mysellix.io/product/6613fe0929a9c"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <AddCreditIcon />
                     Add Credit
@@ -419,7 +436,7 @@ export default function DashboardPage() {
                     Active Credit
                   </span>
                   <span className="text-body text-2xl text-gray-900">
-                    {balance}
+                    ${balance}
                   </span>
                 </div>
                 <Button
@@ -499,6 +516,56 @@ export default function DashboardPage() {
                               </div>
                             </div>
                           ))}
+                          <div className="flex flex-row items-center justify-end gap-2 mt-2">
+                            <Input
+                              type="text"
+                              placeholder="Your reply"
+                              value={ticketReply}
+                              onChange={e => setTicketReply(e.target.value)}
+                            />
+                            <Button
+                              onClick={() =>
+                                ticket &&
+                                addMessageToTicket(
+                                  parseInt(ticket.id),
+                                  ticketReply
+                                )
+                                  .then(() => {
+                                    successToast("Reply sent successfully.");
+                                    getUserTickets().then(response => {
+                                      setTickets(response.data.tickets);
+                                    });
+                                    setTicketReply("");
+                                  })
+                                  .catch(error => {
+                                    errorToast(
+                                      "An error occurred while sending the reply."
+                                    );
+                                  })
+                              }
+                            >
+                              Reply
+                            </Button>
+                            <Button
+                              color="danger"
+                              onClick={() =>
+                                editTicketStatus(parseInt(ticket.id), "closed")
+                                  .then(() => {
+                                    successToast("Ticket closed successfully.");
+                                    getUserTickets().then(response => {
+                                      setTickets(response.data.tickets);
+                                    });
+                                  })
+                                  .catch(error => {
+                                    errorToast(
+                                      "An error occurred while closing the ticket."
+                                    );
+                                  })
+                              }
+                            >
+                              Close Ticket
+                            </Button>
+                          </div>
                         </AccordionItem>
                       ))}
                   </Accordion>

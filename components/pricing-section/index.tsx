@@ -60,13 +60,13 @@ export const PricingSection = ({ layoutClassName }: Props) => {
                 className={`flex gap-4 max-w-fit px-6 py-2 rounded-md bg-gray-200/50`}
               >
                 <Text className="text-major text-black text-xl">
-                  {plan.title}
+                  {plan?.title}
                 </Text>
               </div>
               {/*
               <div className="flex flex-row items-end justify-start w-full gap-2 my-2">
                 <Text className="text-major text-black text-3xl md:text-5xl">
-                  {`${plan.title}` || "0"}
+                  {`${plan?.title}` || "0"}
                 </Text>
                 <Text className="text-body font-semibold text-gray-300 text-lg md:text-2xl">
                   /monthly
