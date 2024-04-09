@@ -1,6 +1,6 @@
 "use client";
 
-import { mockBlogPosts } from "@/mocks/blogs";
+import { getBlogs } from "@/services/blogs";
 import {
   Accordion,
   AccordionItem,
@@ -10,7 +10,7 @@ import {
 } from "@nextui-org/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 // import { LuArrowUpDown as ExpandIcon } from "react-icons/lu";
 import { FaChevronRight as ReadIcon } from "react-icons/fa6";
 import { PiDotDuotone as ActivePageIcon } from "react-icons/pi";
@@ -23,8 +23,9 @@ export default function BlogPage() {
   const pathname = usePathname();
   const blogId = pathname.split("/")[2];
 
+  const [blogs, setBlogs] = useState<Blog[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [selectedBlog, setSelectedBlog] = useState<Blog>(mockBlogPosts[0]);
+  const [selectedBlog, setSelectedBlog] = useState<Blog>(blogs[0]);
 
   function colorGeneratorByFirstLetter(str: string) {
     const colors = [
@@ -41,6 +42,13 @@ export default function BlogPage() {
     return colors[index % colors.length];
   }
 
+  useEffect(() => {
+    getBlogs().then(response => {
+      setBlogs(response);
+      setSelectedBlog(response[0]);
+    });
+  }, []);
+
   return (
     <div className="max-w-7xl relative overflow-hidden w-full h-full flex flex-col items-center">
       <div className="relative overflow-hidden w-full h-full flex gap-4">
@@ -48,13 +56,13 @@ export default function BlogPage() {
           <div className="flex flex-col gap-2">
             <h1 className="text-major text-3xl text-black">Blog</h1>
             <span className="text-md text-gray-800">
-              All blog posts ({mockBlogPosts.length})
+              All blog posts ({blogs.length})
             </span>
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-md font-bold text-black">Tags</span>
             <div className="flex flex-wrap gap-2">
-              {mockBlogPosts
+              {blogs
                 .flatMap(blog => blog.tags)
                 .filter((tag, index, self) => self.indexOf(tag) === index)
                 .map((tag, index) => (
@@ -87,7 +95,7 @@ export default function BlogPage() {
             visibility={"both"}
           >
             <div className="flex flex-col items-start gap-3 overflow-auto scroll-smooth">
-              {mockBlogPosts
+              {blogs
                 .filter(blog =>
                   selectedTags.every(tag => blog.tags.includes(tag))
                 )
@@ -156,7 +164,7 @@ export default function BlogPage() {
           <div className="flex md:hidden flex-wrap gap-4 mt-auto pt-12">
             <h1 className="text-md font-bold text-black">Read more posts</h1>
             <div className="flex flex-wrap gap-2">
-              {mockBlogPosts
+              {blogs
                 .filter(blog => blog.id !== selectedBlog?.id)
                 .map((blog, index) => (
                   <Button
@@ -171,7 +179,7 @@ export default function BlogPage() {
               <Button
                 size="sm"
                 className="py-1 px-2 bg-transparent border-2 border-gray-300 text-black"
-                onClick={() => setSelectedBlog(mockBlogPosts[0])}
+                onClick={() => setSelectedBlog(blogs[0])}
               >
                 Back to top
               </Button>
