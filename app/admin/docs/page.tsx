@@ -144,9 +144,9 @@ export default function AdminPage() {
     const newSubItems = docTrees[index].subItems;
     newSubItems.push(newSubItem);
     setDocTrees([
-      ...docTrees.slice(0, index),
+      ...docTrees?.slice(0, index),
       { ...docTrees[index], subItems: newSubItems },
-      ...docTrees.slice(index + 1)
+      ...docTrees?.slice(index + 1)
     ]);
   }
 
@@ -161,11 +161,11 @@ export default function AdminPage() {
   function handleSave(selectedDoc: Documentation, selectedSubItem: number) {
     const newDoc = {
       id: selectedDoc.id,
-      title: selectedDoc.title,
+      title: selectedDoc?.title,
       subItems: selectedDoc.subItems?.map((subItem, index) => {
         if (index === selectedSubItem) {
           return {
-            title: subItem.title,
+            title: subItem?.title,
             content: editor?.getHTML() || ""
           };
         }
@@ -211,7 +211,7 @@ export default function AdminPage() {
               className="text-white bg-transparent border-2 aria-checked:border-green-500"
               onClick={() => handleSelectPage(index)}
             >
-              {page.title}
+              {page?.title}
             </Button>
           ))}
         </div>
@@ -224,9 +224,9 @@ export default function AdminPage() {
             onChange={e => {
               const newTitle = e.target.value;
               setDocTrees([
-                ...docTrees.slice(0, selectedPage),
+                ...docTrees?.slice(0, selectedPage),
                 { ...docTrees[selectedPage], title: newTitle },
-                ...docTrees.slice(selectedPage + 1)
+                ...docTrees?.slice(selectedPage + 1)
               ]);
             }}
           />
@@ -250,7 +250,7 @@ export default function AdminPage() {
               className="text-white bg-transparent border-2 aria-checked:border-green-500"
               onClick={() => handleSelectSubItem(index)}
             >
-              {subItem.title}
+              {subItem?.title}
             </Button>
           ))}
         </div>
@@ -264,9 +264,9 @@ export default function AdminPage() {
               const newSubItems = docTrees[selectedPage].subItems;
               newSubItems[selectedSubItem].title = e.target.value;
               setDocTrees([
-                ...docTrees.slice(0, selectedPage),
+                ...docTrees?.slice(0, selectedPage),
                 { ...docTrees[selectedPage], subItems: newSubItems },
-                ...docTrees.slice(selectedPage + 1)
+                ...docTrees?.slice(selectedPage + 1)
               ]);
             }}
           />

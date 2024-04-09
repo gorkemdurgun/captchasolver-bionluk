@@ -136,7 +136,7 @@ export const LaunchSection = () => {
             >
               <Icon className="text-red-700 text-4xl" />
               <Text className="text-major text-red-700 text-xl font-bold">
-                {feature.title}
+                {feature?.title}
               </Text>
               <Text className="text-body text-gray-900 text-md text-center">
                 {feature.description}

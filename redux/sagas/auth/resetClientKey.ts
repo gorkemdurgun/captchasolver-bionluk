@@ -3,7 +3,7 @@ import { call, delay, put, take } from "typed-redux-saga";
 import { resetClientKey as resetClientKeyAction } from "@/redux/actions";
 import { toError } from "@/utils";
 import { resetClientKeyService } from "@/services/auth";
-import { successToast } from "@/components/toaster";
+import { errorToast, successToast } from "@/components/toaster";
 
 export function* resetClientKey() {
   while (true) {
@@ -19,6 +19,10 @@ export function* resetClientKey() {
       successToast("Client key has been reset successfully");
     } catch (error) {
       const e = toError(error);
+
+      // @ts-ignore
+      errorToast(error?.response?.data?.errorDescription || e.message);
+
       yield* put(resetClientKeyAction.failure({ errorMessage: e.message }));
     }
   }

@@ -58,7 +58,9 @@ export default function AdminPage() {
     getAllTickets().then(response => {
       setTickets(response.data.tickets);
     });
-    getContactForms().then(res => setContacts(res.data));
+    getContactForms().then(res => {
+      setContacts(res.data.contactForms);
+    });
   }, []);
 
   const ticketItems = React.useMemo(() => {

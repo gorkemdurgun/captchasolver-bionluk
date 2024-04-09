@@ -50,7 +50,7 @@ export const BlogSection = () => {
         </Text>
         <Divider className="w-full my-4" />
         <div className="grid grid-cols-12 grid-rows-2 gap-4 mt-4 w-full">
-          {blogPosts.slice(0, 3)?.map((post, index) => (
+          {blogPosts?.slice(0, 3)?.map((post, index) => (
             <div
               key={index}
               className="relative cursor-pointer col-span-12 sm:col-span-4 h-[300px] border-4 rounded-3xl transition-all hover:scale-95"
@@ -58,7 +58,7 @@ export const BlogSection = () => {
             >
               <div className="absolute z-10 top-4 left-4">
                 <h4 className="text-white font-medium text-large">
-                  {post.title}
+                  {post?.title}
                 </h4>
               </div>
               <Image
@@ -77,7 +77,7 @@ export const BlogSection = () => {
             >
               <div className="absolute z-10 top-4 left-4">
                 <h4 className="text-white font-medium text-large">
-                  {post.title}
+                  {post?.title}
                 </h4>
               </div>
               <Image

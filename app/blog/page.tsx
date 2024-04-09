@@ -108,7 +108,7 @@ export default function BlogPage() {
                   >
                     <div className="flex flex-col gap-1">
                       <span className="text-md text-gray-800">
-                        {page.title}
+                        {page?.title}
                       </span>
                       <span className="flex flex-wrap gap-2">
                         {page.tags?.map((tag, index) => (
@@ -173,7 +173,7 @@ export default function BlogPage() {
                     className="py-1 px-2 bg-transparent border-2 border-gray-300 text-black"
                     onClick={() => setSelectedBlog(blog)}
                   >
-                    {blog.title}
+                    {blog?.title}
                   </Button>
                 ))}
               <Button

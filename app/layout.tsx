@@ -12,6 +12,7 @@ import {
   PiGithubLogo as GithubIcon
 } from "react-icons/pi";
 import { Divider } from "@nextui-org/react";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: {
@@ -123,6 +124,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Script src="https://cdn.sellix.io/static/js/embed.js" />
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <div className="relative flex flex-col h-screen">
             <Navbar />
@@ -135,7 +137,7 @@ export default function RootLayout({
                 {footerLinks?.map((section, index) => (
                   <div key={index} className="flex flex-col gap-4">
                     <h3 className="text-body text-lg font-semibold text-black">
-                      {section.title}
+                      {section?.title}
                     </h3>
                     <div className="flex flex-col gap-2">
                       {section.links?.map((link, index) => (
@@ -145,7 +147,7 @@ export default function RootLayout({
                           className="flex items-center gap-2 text-gray-500"
                         >
                           {link?.icon && <link.icon />}
-                          <a className="text-body">{link.title}</a>
+                          <a className="text-body">{link?.title}</a>
                         </Link>
                       ))}
                     </div>

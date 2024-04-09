@@ -13,7 +13,7 @@ import {
 } from "react-icons/pi";
 import { useState } from "react";
 import { sendContactForm } from "@/services/tickets";
-import { successToast } from "../toaster";
+import { errorToast, successToast } from "../toaster";
 
 type Props = {
   layoutClassName?: string;
@@ -34,15 +34,39 @@ export const ContactSection = ({ layoutClassName }: Props) => {
     });
   };
   const handleContactFormSubmit = () => {
-    sendContactForm(contactForm).then(response => {
-      successToast("Message sent successfully");
-      setContactForm({
-        fullName: "",
-        email: "",
-        subject: "",
-        content: ""
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    if (contactForm.fullName === "") {
+      errorToast("Full name is required");
+      return;
+    } else if (contactForm.email === "") {
+      errorToast("Email is required");
+      return;
+    } else if (!emailRegex.test(contactForm.email)) {
+      errorToast("Invalid email address");
+      return;
+    } else if (contactForm.subject === "") {
+      errorToast("Subject is required");
+      return;
+    } else if (contactForm.content === "") {
+      errorToast("Message content is required");
+      return;
+    } else if (contactForm.content.length < 10) {
+      errorToast("Message content must be at least 10 characters");
+      return;
+    } else if (contactForm.content.length > 500) {
+      errorToast("Message content must be at most 500 characters");
+      return;
+    } else {
+      sendContactForm(contactForm).then(response => {
+        successToast("Message sent successfully");
+        setContactForm({
+          fullName: "",
+          email: "",
+          subject: "",
+          content: ""
+        });
       });
-    });
+    }
   };
 
   return (
