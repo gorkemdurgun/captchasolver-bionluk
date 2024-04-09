@@ -60,3 +60,10 @@ export const resetClientKey = {
   success: createAction<{ clientKey: string }>(RESET_CLIENT_KEY.success),
   failure: createAction<{ errorMessage: string }>(RESET_CLIENT_KEY.failure)
 };
+
+export const ADD_CREDIT = createAsyncAction("ADD_CREDIT");
+export const addCredit = {
+  request: createAction<{ amount: number }>(ADD_CREDIT.request),
+  success: createAction(ADD_CREDIT.success),
+  failure: createAction<{ errorMessage: string }>(ADD_CREDIT.failure)
+};

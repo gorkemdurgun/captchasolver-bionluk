@@ -44,7 +44,8 @@ import { useAppDispatch, useAppSelector } from "@/hooks";
 import { useRouter } from "next/navigation";
 import {
   resetClientKey as resetClientKeyAction,
-  getUser as getUserAction
+  getUser as getUserAction,
+  addCredit
 } from "@/redux/actions";
 import {
   addMessageToTicket,
@@ -104,6 +105,8 @@ export default function DashboardPage() {
   });
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [ticketReply, setTicketReply] = useState("");
+  const [addCreditModalOpen, setAddCreditModalOpen] = useState(false);
+  const [addCreditAmount, setAddCreditAmount] = useState("");
 
   const scrollTo = (elementId: string) => {
     const element = document.getElementById(elementId);
@@ -141,6 +144,14 @@ export default function DashboardPage() {
         );
       });
   };
+
+  function handleChangeAmount(e: React.ChangeEvent<HTMLInputElement>) {
+    if (parseInt(e.target.value) < 0) {
+      setAddCreditAmount("0");
+    } else {
+      setAddCreditAmount(e.target.value);
+    }
+  }
 
   useEffect(() => {
     if (editMode) {
@@ -188,6 +199,46 @@ export default function DashboardPage() {
                 }}
               >
                 Reset Key
+              </Button>
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      <Modal
+        backdrop="opaque"
+        isOpen={addCreditModalOpen}
+        onClose={() => setAddCreditModalOpen(false)}
+      >
+        <ModalContent className="p-4 bg-white rounded-lg shadow-lg text-gray-900">
+          <ModalHeader>Add Credit</ModalHeader>
+          <ModalBody>
+            <p className="text-body text-sm">
+              You can add credit to your account by entering the amount you want
+              to add. Please enter the amount you want to add below.
+            </p>
+            <Input
+              type="number"
+              label="Amount"
+              placeholder="Enter the amount you want to add"
+              value={addCreditAmount}
+              onChange={handleChangeAmount}
+            />
+            <div className="flex flex-row items-center justify-end gap-2 mt-4">
+              <Button
+                className="bg-red-50 text-red-900"
+                onClick={() => setAddCreditModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="bg-green-50 text-green-900"
+                onClick={() => {
+                  dispatch(
+                    addCredit.request({ amount: parseInt(addCreditAmount) })
+                  );
+                }}
+              >
+                Add Credit
               </Button>
             </div>
           </ModalBody>
@@ -422,9 +473,7 @@ export default function DashboardPage() {
                   <Button
                     disableRipple
                     className="bg-transparent text-body text-sm text-gray-500 p-0"
-                    as={"a"}
-                    href="https://capsmasher.mysellix.io/product/6613fe0929a9c"
-                    rel="noopener noreferrer"
+                    onClick={() => setAddCreditModalOpen(true)}
                   >
                     <AddCreditIcon />
                     Add Credit
