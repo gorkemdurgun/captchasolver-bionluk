@@ -95,8 +95,8 @@ export default function RegisterPage() {
           </p>
         </span>
         <Divider />
-        <Card className="flex items-center w-full max-w-4xl bg-gray-900">
-          <CardHeader className="flex gap-3">
+        <div className="flex flex-col items-center p-4 w-full max-w-4xl bg-gray-900 rounded-lg">
+          <div className="flex gap-3 pb-4">
             <div className="flex items-center gap-2">
               <Image
                 src={svg.Logo}
@@ -106,9 +106,9 @@ export default function RegisterPage() {
               />
               <p className="font-bold text-inherit">Capsmasher</p>
             </div>
-          </CardHeader>
+          </div>
           <Divider />
-          <CardBody className="flex items-center gap-4 py-12 w-full max-w-xl">
+          <div className="flex flex-col items-center gap-4 py-12 w-full max-w-xl">
             <Input
               className="grid grid-cols-[1fr,2fr]"
               classNames={{ inputWrapper: "border border-white" }}
@@ -188,9 +188,9 @@ export default function RegisterPage() {
                 Sign Up
               </Text>
             </Button>
-          </CardBody>
+          </div>
           <Divider />
-          <CardFooter className="flex flex-col justify-center items-center gap-4 bg-gray-800">
+          <div className="flex flex-col justify-center items-center gap-4 pt-4">
             <span>
               Already have an account?
               <Link
@@ -200,8 +200,8 @@ export default function RegisterPage() {
                 Login
               </Link>
             </span>
-          </CardFooter>
-        </Card>
+          </div>
+        </div>
       </div>
     </RegisterLayout>
   );
