@@ -24,6 +24,28 @@ const timeAgo = (timestamp: string) => {
   }
 };
 
+const toLocaleDate = (timestamp?: number) => {
+  if (!timestamp) {
+    return "";
+  }
+  // Unix zaman damgasını milisaniyeye dönüştür
+  var unixTimeStampInMilliseconds = timestamp * 1000;
+
+  // Yeni bir Date nesnesi oluştur ve Unix zaman damgasını kullanarak ayarla
+  var date = new Date(unixTimeStampInMilliseconds);
+
+  // Tarihi istediğiniz formata dönüştürmek için kullanılabilir metotlar
+  var year = date.getFullYear();
+  var month = date.getMonth() + 1; // JavaScript'te aylar 0'dan başlar, bu yüzden +1 ekliyoruz
+  var day = date.getDate();
+
+  // İstenilen formatta tarih oluşturmak için
+  var formattedDate = day + "/" + month + "/" + year;
+
+  return formattedDate;
+};
+
 export const Dater = {
-  timeAgo
+  timeAgo,
+  toLocaleDate
 };

@@ -8,8 +8,9 @@ type Pricing = {
 
 type Payment = {
   id: number;
+  uniqId: string;
   total: number;
-  customerId: number;
-  customerEmail: string;
-  createdTimestamp: number;
+  customerID: string;
+  customer_email: string;
+  created_at: number;
 };

@@ -62,24 +62,8 @@ import {
   MdOutlineReply as ReplyIcon,
   MdClose as CloseIcon
 } from "react-icons/md";
-
-const dummyPurchaseData = [
-  {
-    date: "20 July 2024",
-    amount: 50.0,
-    credit: 500
-  },
-  {
-    date: "10 August 2024",
-    amount: 100.0,
-    credit: 1000
-  },
-  {
-    date: "16 September 2023",
-    amount: 120.0,
-    credit: 1200
-  }
-];
+import { getUserPayments } from "@/services/payments";
+import { it } from "node:test";
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch();
@@ -107,6 +91,7 @@ export default function DashboardPage() {
   const [ticketReply, setTicketReply] = useState("");
   const [addCreditModalOpen, setAddCreditModalOpen] = useState(false);
   const [addCreditAmount, setAddCreditAmount] = useState("");
+  const [lastPayments, setLastPayments] = useState<Payment[]>([]);
 
   const scrollTo = (elementId: string) => {
     const element = document.getElementById(elementId);
@@ -167,6 +152,9 @@ export default function DashboardPage() {
     dispatch(getUserAction.request());
     getUserTickets().then(response => {
       setTickets(response.data.tickets);
+    });
+    getUserPayments().then(response => {
+      setLastPayments(response.data.payments);
     });
   }, []);
 
@@ -350,7 +338,7 @@ export default function DashboardPage() {
               </motion.div>
               {/* User Info Section - Last Purchasings */}
               <motion.div
-                className="!opacity-0 hidden lg:flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
+                className="lg:flex flex-col gap-4 p-4 bg-gray-50 border border-gray-100 shadow-lg rounded-lg w-full lg:w-2/5"
                 initial={{ y: -50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -360,51 +348,63 @@ export default function DashboardPage() {
                     Last Purchasings
                   </span>
                 </div>
-                <Table
-                  classNames={{
-                    table: "bg-gray-100 text-gray-900",
-                    wrapper: "p-0 shadow-none rounded-lg",
-                    th: "bg-gray-300 text-body text-sm font-normal",
-                    td: "border-b border-gray-200 py-3 text-body text-md"
-                  }}
-                >
-                  <TableHeader
-                    columns={[
-                      {
-                        key: "date",
-                        label: "Date",
-                        icon: <CalendarIcon className="w-4 h-4" />
-                      },
-                      {
-                        key: "amount",
-                        label: "Amount",
-                        icon: <AmountIcon className="w-4 h-4" />
-                      }
-                    ]}
+                {lastPayments && lastPayments.length > 0 && (
+                  <Table
+                    classNames={{
+                      table: "bg-gray-100 text-gray-900",
+                      wrapper: "p-0 shadow-none rounded-lg",
+                      th: "bg-gray-300 text-body text-sm font-normal",
+                      td: "border-b border-gray-200 py-3 text-body text-md"
+                    }}
                   >
-                    {column => (
-                      <TableColumn key={column.key}>
-                        <span className="flex items-center gap-2">
-                          {column.icon}
-                          {column.label}
-                        </span>
-                      </TableColumn>
-                    )}
-                  </TableHeader>
-                  <TableBody items={dummyPurchaseData}>
-                    {item => (
-                      <TableRow key={item.date}>
-                        <TableCell>{getKeyValue(item, "date")}</TableCell>
-                        <TableCell>
-                          {getKeyValue(
-                            `$${item.amount} (${item.credit} credits)`,
-                            "amount"
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
+                    <TableHeader
+                      columns={[
+                        {
+                          key: "date",
+                          label: "Date",
+                          icon: <CalendarIcon className="w-4 h-4" />
+                        },
+                        {
+                          key: "amount",
+                          label: "Amount",
+                          icon: <AmountIcon className="w-4 h-4" />
+                        }
+                      ]}
+                    >
+                      {column => (
+                        <TableColumn key={column.key}>
+                          <span className="flex items-center gap-2">
+                            {column.icon}
+                            {column.label}
+                          </span>
+                        </TableColumn>
+                      )}
+                    </TableHeader>
+                    <TableBody items={lastPayments}>
+                      {item => (
+                        <TableRow key={item.id}>
+                          <TableCell>
+                            {getKeyValue(
+                              Dater.toLocaleDate(item?.created_at),
+                              "date"
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {getKeyValue(`$${item.total}`, "amount")}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                )}
+                {lastPayments && lastPayments.length === 0 && (
+                  <div className="flex flex-col gap-4 items-center justify-center py-4">
+                    <span className="flex flex-row items-center gap-2 text-body text-sm text-gray-600">
+                      <TicketIcon className="w-4 h-4" />
+                      Any purchase found.
+                    </span>
+                  </div>
+                )}
               </motion.div>
             </div>
           </div>
@@ -445,7 +445,7 @@ export default function DashboardPage() {
                 <div className="flex flex-row items-center justify-end gap-2 mt-auto">
                   <Button
                     className="bg-blue-50 text-blue-900 w-full"
-                    onClick={() => router.push("/docs" + "?category=1_0")}
+                    onClick={() => router.push("/docs" + "?category=0_0")}
                   >
                     <QuestionIcon />
                     How can I use this key?

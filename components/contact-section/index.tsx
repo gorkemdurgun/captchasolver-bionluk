@@ -57,15 +57,19 @@ export const ContactSection = ({ layoutClassName }: Props) => {
       errorToast("Message content must be at most 500 characters");
       return;
     } else {
-      sendContactForm(contactForm).then(response => {
-        successToast("Message sent successfully");
-        setContactForm({
-          fullName: "",
-          email: "",
-          subject: "",
-          content: ""
+      sendContactForm(contactForm)
+        .then(response => {
+          successToast("Message sent successfully");
+          setContactForm({
+            fullName: "",
+            email: "",
+            subject: "",
+            content: ""
+          });
+        })
+        .catch(error => {
+          errorToast(error.response.data.errorDescription as string);
         });
-      });
     }
   };
 

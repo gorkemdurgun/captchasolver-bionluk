@@ -98,7 +98,7 @@ export const PricingSection = ({ layoutClassName }: Props) => {
 
                 {/* ))} */}
               </div>
-              <Button
+              {/* <Button
                 className="primary-button bg-gray-50 mt-auto mb-0"
                 as={"a"}
                 href="/dashboard"
@@ -107,7 +107,7 @@ export const PricingSection = ({ layoutClassName }: Props) => {
                 <Text className="text-body text-black text-lg">
                   Get Started
                 </Text>
-              </Button>
+              </Button> */}
             </Card>
           ))}
         </div>
