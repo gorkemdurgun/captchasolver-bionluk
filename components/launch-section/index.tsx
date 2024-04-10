@@ -105,7 +105,7 @@ export const LaunchSection = () => {
               onClick={() => scrollTo("landing-pricing-section")}
             >
               <Text className="font-body text-white text-lg font-semibold">
-                Get started with free trial
+                Get started
               </Text>
             </Button>
             <Button
