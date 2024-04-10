@@ -90,7 +90,7 @@ export const BlogSection = () => {
           ))}
         </div>
         <Button
-          className="primary-button bg-black mt-4 w-full hover:bg-black lg:min-w-[400px]"
+          className="animate-bounce primary-button bg-black mt-4 w-full hover:bg-black lg:min-w-[400px]"
           onClick={() => router.push("/blog")}
         >
           <Text className="text-body text-white text-lg">Read More</Text>

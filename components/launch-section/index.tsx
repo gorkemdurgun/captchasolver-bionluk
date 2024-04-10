@@ -16,6 +16,7 @@ import Text from "../text";
 import { LottieOptions, useLottie } from "lottie-react";
 import LaunchSectionLayout from "./layout";
 import { useRouter, usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -96,7 +97,7 @@ export const LaunchSection = () => {
           <Text className="text-body font-Xsemibold text-black text-justify text-md mb-2 max-w-[500px] md:text-xl mt-2 mb-4">
             We provide a simple and easy-to-use API to solve Recaptcha systems
             with a high success rate. Can be integrated into any project with
-            ease. Get started with our free plan today!
+            ease.
           </Text>
           {/* Buttons */}
           <div className="flex flex-col items-center justify-start gap-4 mt-4 w-full max-w-[500px]">
@@ -119,17 +120,24 @@ export const LaunchSection = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center gap-4 order-1">
-          <div className="h-full xl:scale-105">
+          <motion.div
+            className="h-full xl:scale-105"
+            whileInView={{ scale: 1.1 }}
+            transition={{ duration: 3 }}
+          >
             {SolvePuzzleLottieAnimation}
-          </div>
+          </motion.div>
         </div>
       </div>
       <div className="grid items-center justify-center gap-4 py-2 px-6 w-full lg:grid-cols-4 md:grid-cols-2">
         {features?.map((feature, index) => {
           const Icon = feature.icon;
           return (
-            <Card
+            <motion.div
               key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.5 }}
               className={`
               flex flex-col
                items-center justify-center gap-1 w-full lg:max-w-[300px] max-w-full p-4 bg-red-200/50 shadow-lg rounded-sm`}
@@ -141,7 +149,7 @@ export const LaunchSection = () => {
               <Text className="text-body text-gray-900 text-md text-center">
                 {feature.description}
               </Text>
-            </Card>
+            </motion.div>
           );
         })}
       </div>
